@@ -9,6 +9,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Http\Authenticator\AbstractLoginFormAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\CsrfTokenBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\RememberMeBadge;
@@ -41,7 +43,11 @@ class AppCustomAuthenticator extends AbstractLoginFormAuthenticator
 
         return new Passport(
             new UserBadge($credentials['email_or_pseudo'], function ($userIdentifier) {
-                return $this->userRepository->findByEmailOrUsername($userIdentifier);
+                $user =  $this->userRepository->findByEmailOrUsername($userIdentifier);
+                if(!$user->isIsActif()){
+                    throw new CustomUserMessageAuthenticationException("Utilisateur non actif");
+                }
+                return $user;
             }),
             new PasswordCredentials($credentials['password']),
             [
