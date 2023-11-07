@@ -3,6 +3,7 @@
 namespace App\Security;
 
 use App\Repository\UserRepository;
+use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -45,20 +46,30 @@ class AppCustomAuthenticator extends AbstractLoginFormAuthenticator
             new PasswordCredentials($credentials['password']),
             [
                 new CsrfTokenBadge('authenticate', $credentials['csrf_token']),
-                new RememberMeBadge(),
             ]
         );
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
+        $rememberMe = $request->request->get('_remember_me');
+
         if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
-            return new RedirectResponse($targetPath);
+            $response = new RedirectResponse($targetPath);
+        }else{
+            //TODO mettre home
+            $response = new RedirectResponse($this->urlGenerator->generate('login'));
         }
 
-        // For example:
-        //TODO mettre home
-         return new RedirectResponse($this->urlGenerator->generate('login'));
+        if ($rememberMe != null){
+            $cookie = Cookie::create('REMEMBERME', $request->request->get('email_or_pseudo'), strtotime('+1 year'));
+            $response->headers->setCookie($cookie);
+        }else{
+            $cookie = Cookie::create('REMEMBERME', '', time() - 3600, '/');
+            $response->headers->setCookie($cookie);
+        }
+
+        return $response;
     }
 
     protected function getLoginUrl(Request $request): string

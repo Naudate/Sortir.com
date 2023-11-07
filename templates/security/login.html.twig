@@ -19,6 +19,10 @@
     <input type="text" value="{{ last_username }}" name="email_or_pseudo" id="inputPseudoOrUsername" class="form-control" required autofocus>
     <label for="inputPassword">Password</label>
     <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+    <label>
+        <input type="checkbox" name="_remember_me" {{ isRemember == true ? "Checked" }}>
+        Remember me
+    </label>
 
     <input type="hidden" name="_csrf_token"
            value="{{ csrf_token('authenticate') }}"
