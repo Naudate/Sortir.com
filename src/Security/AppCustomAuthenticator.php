@@ -2,6 +2,7 @@
 
 namespace App\Security;
 
+use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,7 +23,7 @@ class AppCustomAuthenticator extends AbstractLoginFormAuthenticator
 
     public const LOGIN_ROUTE = 'app_login';
 
-    public function __construct(private UrlGeneratorInterface $urlGenerator)
+    public function __construct(private UrlGeneratorInterface $urlGenerator, private UserRepository $userRepository)
     {
     }
 
@@ -30,18 +31,20 @@ class AppCustomAuthenticator extends AbstractLoginFormAuthenticator
     {
 
         $credentials = [
-            'email_or_username' => $request->request->get('email_or_username'),
-            'password' => $request->request->get('password'),
+            'email_or_pseudo' => $request->request->get('email_or_pseudo'),
+            'password' => $request->request->get('password', ''),
             'csrf_token' => $request->request->get('_csrf_token'),
         ];
 
-        $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $credentials['email_or_username']);
+        $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $credentials['email_or_pseudo']);
 
         return new Passport(
-            new UserBadge($credentials['email_or_username']),
-            new PasswordCredentials($request->request->get('password', '')),
+            new UserBadge($credentials['email_or_pseudo'], function ($userIdentifier) {
+                return $this->userRepository->findByEmailOrUsername($userIdentifier);
+            }),
+            new PasswordCredentials($credentials['password']),
             [
-                new CsrfTokenBadge('authenticate', $request->request->get('_csrf_token')),
+                new CsrfTokenBadge('authenticate', $credentials['csrf_token']),
                 new RememberMeBadge(),
             ]
         );
