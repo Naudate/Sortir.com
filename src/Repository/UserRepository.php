@@ -8,6 +8,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @extends ServiceEntityRepository<User>
@@ -38,6 +39,26 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $user->setPassword($newHashedPassword);
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush();
+    }
+
+    public function loadUserByIdentifier(string $usernameOrEmail): ?UserInterface
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.username = :identifier')
+            ->orWhere('u.email = :identifier')
+            ->setParameter('identifier', $usernameOrEmail)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function findByEmailOrUsername(string $pseudoOrEmail): ?UserInterface
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.pseudo = :identifier')
+            ->orWhere('u.email = :identifier')
+            ->setParameter('identifier', $pseudoOrEmail)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
 //    /**
