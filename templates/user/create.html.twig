@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register{% endblock %}
+
+{% block body %}
+    <h1>Register</h1>
+
+
+    {{ form_start(registrationForm) }}
+
+    {{ form_errors(registrationForm) }}
+
+    {{ form_label(registrationForm.nom) }}
+    {{ form_errors(registrationForm.nom) }}
+    {{ form_widget(registrationForm.nom) }}
+    {{ form_help(registrationForm.nom) }}
+
+    <br/>
+    {{ form_label(registrationForm.prenom) }}
+    {{ form_errors(registrationForm.prenom) }}
+    {{ form_widget(registrationForm.prenom) }}
+    {{ form_help(registrationForm.prenom) }}
+
+    <br/>
+    {{ form_label(registrationForm.pseudo) }}
+    {{ form_errors(registrationForm.pseudo) }}
+    {{ form_widget(registrationForm.pseudo) }}
+    {{ form_help(registrationForm.pseudo) }}
+
+    <br/>
+    {{ form_label(registrationForm.telephone) }}
+    {{ form_errors(registrationForm.telephone) }}
+    {{ form_widget(registrationForm.telephone) }}
+    {{ form_help(registrationForm.telephone) }}
+
+    <br/>
+    {{ form_label(registrationForm.email) }}
+    {{ form_errors(registrationForm.email) }}
+    {{ form_widget(registrationForm.email) }}
+    {{ form_help(registrationForm.email) }}
+
+    <br/>
+    {{ form_label(registrationForm.site) }}
+    {{ form_errors(registrationForm.site) }}
+    {{ form_widget(registrationForm.site) }}
+    {{ form_help(registrationForm.site) }}
+
+
+    <br/>
+    {{ form_label(registrationForm.plainPassword) }}
+    {{ form_errors(registrationForm.plainPassword) }}
+    {{ form_widget(registrationForm.plainPassword) }}
+    {{ form_help(registrationForm.plainPassword) }}
+
+
+    <br/>
+    {{ form_row(registrationForm.agreeTerms) }}
+
+
+    <button type="submit" class="btn">Créer un nouvel utilisateur</button>
+    {{ form_end(registrationForm) }}
+{% endblock %}
