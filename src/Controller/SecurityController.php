@@ -22,13 +22,11 @@ class SecurityController extends AbstractController
         $lastUsername = $authenticationUtils->getLastUsername();
 
         if ($lastUsername == null && $cookies->has('REMEMBERME')) {
-            dump("test");
             $lastUsername = $cookies->get('REMEMBERME');
         }
 
         if ($cookies->has('REMEMBERME'))
             $isRemember = true;
-
 
         return $this->render('security/login.html.twig', [
             'last_username' => $lastUsername,
