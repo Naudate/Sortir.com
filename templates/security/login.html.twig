@@ -49,6 +49,49 @@
                             sm:leading-6">
                     </div>
                 </div>
+                <div>
+                    <div class="flex items-center justify-between">
+                        <label  for="inputPassword"
+                                class="block text-sm font-medium leading-6 text-gray-900">
+                            Mot de passse
+                        </label>
+                        <div class="text-sm">
+                            <a href="#"
+                               class="font-semibold text-indigo-600 hover:text-indigo-500">
+                                mot de passe oublié ?
+                            </a>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <input id="inputPassword"
+                               name="password"
+                               type="password"
+                               autocomplete="current-password"
+                               required
+                               class="block w-full rounded-md border-0
+                           py-1.5 text-red-900 shadow-sm ring-1
+                           ring-inset ring-red-300 placeholder:text-red-400
+                           focus:ring-2 focus:ring-inset focus:ring-red-600
+                           sm:text-sm sm:leading-6">
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <div class="relative flex gap-x-3">
+                        <div class="flex h-6 items-center">
+                            <input name="remember_me"
+                                   type="checkbox"
+                                   class="h-4 w-4 rounded border-gray-300
+                               text-indigo-600 focus:ring-indigo-600"
+                                    {{ isRemember == true ? "Checked" }}>
+                        </div>
+                        <div class="text-sm leading-6">
+                            <label for="comments"
+                                   class="font-medium text-gray-900">
+                                Se souvenir de moi
+                            </label>
+                        </div>
+                    </div>
+                </div>
             {% else %}
                 <div>
                     <label  for="inputEmailOrUsername"
@@ -72,51 +115,50 @@
                             sm:leading-6">
                     </div>
                 </div>
-            {% endif %}
-
-            <div>
-                <div class="flex items-center justify-between">
-                    <label  for="inputPassword"
-                            class="block text-sm font-medium leading-6 text-gray-900">
-                        Mot de passse
-                    </label>
-                    <div class="text-sm">
-                        <a href="#"
-                           class="font-semibold text-indigo-600 hover:text-indigo-500">
-                            mot de passe oublié ?
-                        </a>
+                <div>
+                    <div class="flex items-center justify-between">
+                        <label  for="inputPassword"
+                                class="block text-sm font-medium leading-6 text-gray-900">
+                            Mot de passse
+                        </label>
+                        <div class="text-sm">
+                            <a href="#"
+                               class="font-semibold text-indigo-600 hover:text-indigo-500">
+                                mot de passe oublié ?
+                            </a>
+                        </div>
                     </div>
-                </div>
-                <div class="mt-2">
-                    <input id="inputPassword"
-                           name="password"
-                           type="password"
-                           autocomplete="current-password"
-                           required
-                           class="block w-full rounded-md border-0
+                    <div class="mt-2">
+                        <input id="inputPassword"
+                               name="password"
+                               type="password"
+                               autocomplete="current-password"
+                               required
+                               class="block w-full rounded-md border-0
                            py-1.5 text-gray-900 shadow-sm ring-1
                            ring-inset ring-gray-300 placeholder:text-gray-400
                            focus:ring-2 focus:ring-inset focus:ring-indigo-600
                            sm:text-sm sm:leading-6">
+                    </div>
                 </div>
-            </div>
-            <div class="mt-2">
-                <div class="relative flex gap-x-3">
-                    <div class="flex h-6 items-center">
-                        <input name="remember_me"
-                               type="checkbox"
-                               class="h-4 w-4 rounded border-gray-300
+                <div class="mt-2">
+                    <div class="relative flex gap-x-3">
+                        <div class="flex h-6 items-center">
+                            <input name="remember_me"
+                                   type="checkbox"
+                                   class="h-4 w-4 rounded border-gray-300
                                text-indigo-600 focus:ring-indigo-600"
-                               {{ isRemember == true ? "Checked" }}>
-                    </div>
-                    <div class="text-sm leading-6">
-                        <label for="comments"
-                               class="font-medium text-gray-900">
-                            Se souvenir de moi
-                        </label>
+                                    {{ isRemember == true ? "Checked" }}>
+                        </div>
+                        <div class="text-sm leading-6">
+                            <label for="comments"
+                                   class="font-medium text-gray-900">
+                                Se souvenir de moi
+                            </label>
+                        </div>
                     </div>
                 </div>
-            </div>
+            {% endif %}
             <div>
                 <input type="hidden" name="_csrf_token"
                        value="{{ csrf_token('authenticate') }}">
