@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil{% endblock %}
+
+{% block body %}
+
+    <center>
+        <h1>{{ user.pseudo }}</h1>
+    </center>
+
+    <br/>
+    <div>
+        <label>nom</label>
+        <br/>
+        {{ user.nom }}
+    </div>
+
+    <br/>
+    <div>
+        <label>prenom</label>
+        <br/>
+        {{ user.prenom }}
+    </div>
+
+    <br/>
+    <div>
+        <label>adresse mail</label>
+        <br/>
+        {{ user.email }}
+    </div>
+
+    <br/>
+    <div>
+        <label>télephone</label>
+        <br/>
+        {{ user.telephone }}
+    </div>
+
+    <br/>
+    <div>
+        <label>ville de rattachement</label>
+        <br/>
+        {{ user.site.nom }}
+    </div>
+
+    {% if 'ROLE_ADMIN' in app.user.roles %}
+        <br/>
+        <div>
+            <label>Actif</label>
+            <br/>
+            {% if user.isActif == 1 %}
+                oui
+            {% else %}
+                non
+            {% endif %}
+        </div>
+    {% endif %}
+
+
+
+    <br/>
+    <a href="{{ path('app_home') }}">Retour</a>
+{% endblock %}
