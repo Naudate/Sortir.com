@@ -2,6 +2,7 @@
   "build/app.css": "/build/app.css",
   "build/app.js": "/build/app.js",
   "build/runtime.js": "/build/runtime.js",
-  "build/img/logo.jpg": "/build/img/logo.jpg",
-  "build/img/imageProfilDefaut.jpg": "/build/img/imageProfilDefaut.jpg"
+  "build/images/logo.ico": "/build/images/logo.bde3320e.ico",
+  "build/images/logo.jpg": "/build/images/logo.bcbbba54.jpg",
+  "build/images/imageProfilDefaut.jpg": "/build/images/imageProfilDefaut.062ac4fd.jpg"
 }
