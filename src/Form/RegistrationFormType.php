@@ -10,11 +10,13 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -96,9 +98,6 @@ class RegistrationFormType extends AbstractType
                     'placeholder' => '0123456789'
                 ),
                 'constraints'=>[
-                    new NotBlank([
-                        'message' => 'Numéro de téléphone invalide',
-                    ]),
                     new Length([
                         'min' => 10,
                         'minMessage' => 'Le numéro de téléphone doit contenir {{ limit }} caractères',
@@ -106,6 +105,20 @@ class RegistrationFormType extends AbstractType
                         'maxMessage' => 'Le numéro de téléphone doit contenir {{ limit }} caractères',
                     ]),
                 ]
+            ])
+            ->add('avatar', FileType::class, [
+                'label'=> 'Photo de profil',
+                'mapped' => false,
+                'required' => false,
+                'constraints' => [
+                    new File([
+                        'maxSize' => '2048k',
+                        'mimeTypes' => [
+                            'image/*',
+                        ],
+                        'mimeTypesMessage' => 'Veuillez importer un fichier de type image . ',
+                    ])
+                ],
             ])
             ->add('site', EntityType::class,[
                 'class'=> Site::class,

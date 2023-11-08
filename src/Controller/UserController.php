@@ -4,8 +4,10 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
+use App\Helper\Uploader;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -23,13 +25,21 @@ class UserController extends AbstractController
     }
 
     #[Route('/create', name: '_create')]
-    public function Create(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager) : Response {
+    public function Create(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, Uploader $uploader) : Response {
 
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            // upload de l'image
+            $imageUpload = $form->get('avatar')->getData();
+            //dd($imageUpload);
+          /*  if(!empty($imageUpload) && $imageUpload instanceof UploadedFile){
+                $pathAvatar = $uploader->upload($imageUpload,'assets/avatar/', $form->get('pseudo')->getData() );
+                $user->setPhoto($pathAvatar);
+            }*/
             // encode the plain password
             $user->setPassword(
                 $userPasswordHasher->hashPassword(
