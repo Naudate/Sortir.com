@@ -108,7 +108,7 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ]
             ])
-            ->add('avatar', FileType::class, [
+          /*  ->add('avatar', FileType::class, [
                 'label'=> 'Photo de profil',
                 'mapped' => false,
                 'required' => false,
@@ -121,7 +121,7 @@ class RegistrationFormType extends AbstractType
                         'mimeTypesMessage' => 'Veuillez importer un fichier de type image . ',
                     ])
                 ],
-            ])
+            ])*/
             ->add('site', EntityType::class,[
                 'class'=> Site::class,
                 'choice_label'=> 'nom',
@@ -135,6 +135,7 @@ class RegistrationFormType extends AbstractType
             ])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
+                'label' => 'Mot de passe :',
                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller
                 'mapped' => false,
@@ -148,7 +149,7 @@ class RegistrationFormType extends AbstractType
                             'message' => 'Veuillez saisir un mot de passe',
                         ]),
                         new Length([
-                            'min' => 6,
+                            'min' => 8,
                             'minMessage' => 'Your password should be at least {{ limit }} characters',
                             // max length allowed by Symfony for security reasons
                             'max' => 4096,

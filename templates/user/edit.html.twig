@@ -3,68 +3,110 @@
 {% block title %}Profil{% endblock %}
 
 {% block body %}
-    <h1>Register</h1>
+    <h1>Modifier profil</h1>
 
 
-    {{ form_start(registrationForm) }}
+    {{ form_start(userForm) }}
 
-    {{ form_errors(registrationForm) }}
+    {{ form_errors(userForm) }}
 
-    {{ form_label(registrationForm.nom) }}
-    {{ form_errors(registrationForm.nom) }}
-    {{ form_widget(registrationForm.nom) }}
-    {{ form_help(registrationForm.nom) }}
+    {% if 'ROLE_ADMIN' in app.user.roles %}
+        <br/>
 
-    <br/>
-    {{ form_label(registrationForm.prenom) }}
-    {{ form_errors(registrationForm.prenom) }}
-    {{ form_widget(registrationForm.prenom) }}
-    {{ form_help(registrationForm.prenom) }}
+        {{ form_label(userForm.nom) }}
+        {{ form_errors(userForm.nom) }}
+        {{ form_widget(userForm.nom)}}
+        {{ form_help(userForm.nom) }}
 
-    <br/>
-    {{ form_label(registrationForm.pseudo) }}
-    {{ form_errors(registrationForm.pseudo) }}
-    {{ form_widget(registrationForm.pseudo) }}
-    {{ form_help(registrationForm.pseudo) }}
+        <br/>
+        {{ form_label(userForm.prenom) }}
+        {{ form_errors(userForm.prenom) }}
+        {{ form_widget(userForm.prenom) }}
+        {{ form_help(userForm.prenom) }}
 
-    <br/>
-    {{ form_label(registrationForm.telephone) }}
-    {{ form_errors(registrationForm.telephone) }}
-    {{ form_widget(registrationForm.telephone) }}
-    {{ form_help(registrationForm.telephone) }}
+    {% else%}
+        <br/>
 
-    <br/>
-    {{ form_label(registrationForm.email) }}
-    {{ form_errors(registrationForm.email) }}
-    {{ form_widget(registrationForm.email) }}
-    {{ form_help(registrationForm.email) }}
+        {{ form_label(userForm.nom) }}
+        {{ form_errors(userForm.nom) }}
+        {{ form_widget(userForm.nom, {
+            'attr':{'disabled':'disabled'}
+        }) }}
+        {{ form_help(userForm.nom) }}
 
-    <br/>
-    {{ form_label(registrationForm.site) }}
-    {{ form_errors(registrationForm.site) }}
-    {{ form_widget(registrationForm.site) }}
-    {{ form_help(registrationForm.site) }}
+        <br/>
+        {{ form_label(userForm.prenom) }}
+        {{ form_errors(userForm.prenom) }}
+        {{ form_widget(userForm.prenom, {
+            'attr':{'disabled':'disabled'}
+        })  }}
+        {{ form_help(userForm.prenom) }}
+    {% endif %}
 
 
-    <br/>
-    {{ form_label(registrationForm.avatar) }}
-    {{ form_errors(registrationForm.avatar) }}
-    {{ form_widget(registrationForm.avatar) }}
-    {{ form_help(registrationForm.avatar) }}
 
 
     <br/>
-    {{ form_label(registrationForm.plainPassword) }}
-    {{ form_errors(registrationForm.plainPassword) }}
-    {{ form_widget(registrationForm.plainPassword) }}
-    {{ form_help(registrationForm.plainPassword) }}
+    {{ form_label(userForm.pseudo) }}
+    {{ form_errors(userForm.pseudo) }}
+    {{ form_widget(userForm.pseudo) }}
+    {{ form_help(userForm.pseudo) }}
 
     <br/>
-    {{ form_row(registrationForm.isActif) }}
+    {{ form_label(userForm.telephone) }}
+    {{ form_errors(userForm.telephone) }}
+    {{ form_widget(userForm.telephone) }}
+    {{ form_help(userForm.telephone) }}
 
     <br/>
-    <button type="submit" class="btn">Créer un nouvel utilisateur</button>
+    {{ form_label(userForm.email) }}
+    {{ form_errors(userForm.email) }}
+    {{ form_widget(userForm.email) }}
+    {{ form_help(userForm.email) }}
+
+    {% if 'ROLE_ADMIN' in app.user.roles %}
+        <br/>
+        {{ form_label(userForm.site) }}
+        {{ form_errors(userForm.site) }}
+        {{ form_widget(userForm.site) }}
+        {{ form_help(userForm.site) }}
+
+    {% else%}
+        <br/>
+        {{ form_label(userForm.site) }}
+        {{ form_errors(userForm.site) }}
+        {{ form_widget(userForm.site, {
+            'attr':{'disabled':'disabled'}
+        }) }}
+        {{ form_help(userForm.site) }}
+    {% endif %}
+
+
 
     <br/>
-    <a href="{{ path('app_home') }}">Annuler</a>
+    {{ form_label(userForm.plainPassword) }}
+    {{ form_errors(userForm.plainPassword) }}
+    {{ form_widget(userForm.plainPassword) }}
+    {{ form_help(userForm.plainPassword) }}
+
+    {% if 'ROLE_ADMIN' in app.user.roles %}
+        {{ form_row(userForm.isActif) }}
+    {% else%}
+        {{ form_row(userForm.isActif, {
+            'attr':{'disabled':'disabled'}
+        }) }}
+    {% endif %}
+    <br/>
+
+
+    <br/>
+    <button type="submit" class="btn">Modifier</button>
+    {{ form_end(userForm) }}
+
+    <br/>
+    {% if 'ROLE_ADMIN' in app.user.roles %}
+        <a href="{{ path('user_home') }}">Annuler</a>
+    {% else%}
+        <a href="{{ path('app_home') }}">Annuler</a>
+    {% endif %}
 {% endblock %}
