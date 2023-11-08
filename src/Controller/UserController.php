@@ -5,18 +5,24 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Helper\Uploader;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/user', name: 'user')]
+#[IsGranted('ROLE_USER')]
 class UserController extends AbstractController
 {
     #[Route('/', name: '_home')]
+    #[IsGranted('ROLE_ADMIN')]
     public function index(): Response
     {
         return $this->render('user/index.html.twig', [
@@ -24,8 +30,39 @@ class UserController extends AbstractController
         ]);
     }
 
+    #[Route('/show/{id}', name: '_details', requirements: ['id' => '\d+'])]
+    #[IsGranted('ROLE_USER')]
+    public function details(UserRepository $userRepository, int $id ){
+      //Récupération des informations de l'utilisateur connectée`
+        $userConnect = $this->getUser();
+        // si utilisateur connecter cherche a consulter son profil et quil a le role user
+        if($userConnect->getId() == $id && in_array('ROLE_USER', $this->getUser()->getRoles(), true) ){
+
+            // affichage dan sla vie information de l'utilisateur connectee
+            return $this->render('user/details.html.twig', [
+                'user' => $userConnect
+            ]);
+        }
+        // si pas id utilisateur connectee, récupération information utilisateur
+        $user = $userRepository->find($id);
+        // si utilisateur existe et que l'utilisateur connectee  a le role admin
+        if ( in_array('ROLE_ADMIN', $this->getUser()->getRoles(), true) && !empty($user)){
+            //Affichage dans la vue information utilisateur
+            return $this->render('user/details.html.twig', [
+                'user' => $user
+            ]);
+        }
+        else if (empty($user)){
+            throw new Exception("Utilisateur inconnu", 404);
+        }
+        else {
+            throw new Exception("Accès refusé", 403);
+        }
+    }
+
     #[Route('/create', name: '_create')]
-    public function Create(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, Uploader $uploader) : Response {
+    #[IsGranted('ROLE_ADMIN')]
+    public function create(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, Uploader $uploader) : Response {
 
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
