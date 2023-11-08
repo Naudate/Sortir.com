@@ -71,7 +71,7 @@ class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             // upload de l'image
-            $imageUpload = $form->get('avatar')->getData();
+           // $imageUpload = $form->get('avatar')->getData();
             //dd($imageUpload);
           /*  if(!empty($imageUpload) && $imageUpload instanceof UploadedFile){
                 $pathAvatar = $uploader->upload($imageUpload,'assets/avatar/', $form->get('pseudo')->getData() );
@@ -84,9 +84,10 @@ class UserController extends AbstractController
                     $form->get('plainPassword')->getData()
                 )
             );
-            $user->setIsActif(true);
+           // $user->setIsActif(true);
             $user->setRoles(array('ROLE_USER'));
 
+            dd($user);
             $entityManager->persist($user);
             $entityManager->flush();
 
@@ -98,5 +99,22 @@ class UserController extends AbstractController
         return $this->render('user/create.html.twig', [
             'registrationForm'=> $form->createView(),
         ]);
+    }
+
+    #[Route('/edit/{id}', name: '_edit', requirements: ['id' => '\d+'])]
+    #[IsGranted('ROLE_USER')]
+    public function edit(User $user,Request $request, EntityManagerInterface $entityManager){
+
+        $userForm = $this->createForm(RegistrationFormType::class, $user);
+        $userForm->handleRequest($request);
+
+        if($userForm->isSubmitted() && $userForm->isValid()){
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            $this->addFlash("success", "Votre profil a bien été modifié");
+            return $this->redirectToRoute('user_details',array('id'=> $user->getId()));
+        }
+
     }
 }
