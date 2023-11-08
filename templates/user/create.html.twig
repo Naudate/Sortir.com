@@ -47,6 +47,13 @@
 
 
     <br/>
+    {{ form_label(registrationForm.avatar) }}
+    {{ form_errors(registrationForm.avatar) }}
+    {{ form_widget(registrationForm.avatar) }}
+    {{ form_help(registrationForm.avatar) }}
+
+
+    <br/>
     {{ form_label(registrationForm.plainPassword) }}
     {{ form_errors(registrationForm.plainPassword) }}
     {{ form_widget(registrationForm.plainPassword) }}

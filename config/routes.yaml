@@ -4,5 +4,8 @@ controllers:
         namespace: App\Controller
     type: attribute
 
+redirect:
+    path: '/'
+    controller: App\Controller\RedirectController::redirectToLocale
 login:
     path: /login
