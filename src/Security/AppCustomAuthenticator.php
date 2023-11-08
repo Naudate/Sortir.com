@@ -40,10 +40,12 @@ class AppCustomAuthenticator extends AbstractLoginFormAuthenticator
         ];
 
         $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $credentials['email_or_pseudo']);
-
         return new Passport(
             new UserBadge($credentials['email_or_pseudo'], function ($userIdentifier) {
                 $user =  $this->userRepository->findByEmailOrUsername($userIdentifier);
+                if($user == null){
+                    throw new UserNotFoundException();
+                }
                 if(!$user->isIsActif()){
                     throw new CustomUserMessageAuthenticationException("Utilisateur non actif");
                 }
