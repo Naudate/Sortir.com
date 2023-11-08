@@ -71,12 +71,10 @@ class AppCustomAuthenticator extends AbstractLoginFormAuthenticator
 
         if ($rememberMe != null){
             $cookie = Cookie::create('REMEMBERME', $request->request->get('email_or_pseudo'), strtotime('+1 year'));
-            $response->headers->setCookie($cookie);
         }else{
             $cookie = Cookie::create('REMEMBERME', '', time() - 3600, '/');
-            $response->headers->setCookie($cookie);
         }
-
+        $response->headers->setCookie($cookie);
         return $response;
     }
 
