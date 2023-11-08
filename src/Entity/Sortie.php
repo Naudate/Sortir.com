@@ -29,7 +29,7 @@ class Sortie
     #[ORM\Column]
     private ?int $nombreMaxParticipant = null;
 
-    #[ORM\Column(length: 500)]
+    #[ORM\Column(length: 500, nullable: true)]
     private ?string $description = null;
 
     #[ORM\Column]
@@ -37,6 +37,9 @@ class Sortie
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $motif = null;
+
+    #[ORM\ManyToOne]
+    private ?Ville $ville = null;
 
     public function getId(): ?int
     {
@@ -135,6 +138,18 @@ class Sortie
     public function setMotif(?string $motif): static
     {
         $this->motif = $motif;
+
+        return $this;
+    }
+
+    public function getVille(): ?Ville
+    {
+        return $this->ville;
+    }
+
+    public function setVille(?Ville $ville): static
+    {
+        $this->ville = $ville;
 
         return $this;
     }
