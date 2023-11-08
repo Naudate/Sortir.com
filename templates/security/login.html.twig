@@ -84,23 +84,6 @@
                            sm:text-sm sm:leading-6">
                     </div>
                 </div>
-                <div class="mt-2">
-                    <div class="relative flex gap-x-3">
-                        <div class="flex h-6 items-center">
-                            <input name="remember_me"
-                                   type="checkbox"
-                                   class="h-4 w-4 rounded border-gray-300
-                               text-indigo-600 focus:ring-indigo-600"
-                                    {{ isRemember == true ? "Checked" }}>
-                        </div>
-                        <div class="text-sm leading-6">
-                            <label for="comments"
-                                   class="font-medium text-gray-900">
-                                Se souvenir de moi
-                            </label>
-                        </div>
-                    </div>
-                </div>
             {% else %}
                 <div>
                     <label  for="inputEmailOrUsername"
@@ -150,24 +133,24 @@
                            sm:text-sm sm:leading-6">
                     </div>
                 </div>
-                <div class="mt-2">
-                    <div class="relative flex gap-x-3">
-                        <div class="flex h-6 items-center">
-                            <input name="remember_me"
-                                   type="checkbox"
-                                   class="h-4 w-4 rounded border-gray-300
+            {% endif %}
+            <div class="mt-2">
+                <div class="relative flex gap-x-3">
+                    <div class="flex h-6 items-center">
+                        <input name="remember_me"
+                               type="checkbox"
+                               class="h-4 w-4 rounded border-gray-300
                                text-indigo-600 focus:ring-indigo-600"
-                                    {{ isRemember == true ? "Checked" }}>
-                        </div>
-                        <div class="text-sm leading-6">
-                            <label for="comments"
-                                   class="font-medium text-gray-900">
-                                Se souvenir de moi
-                            </label>
-                        </div>
+                                {{ isRemember == true ? "Checked" }}>
+                    </div>
+                    <div class="text-sm leading-6">
+                        <label for="comments"
+                               class="font-medium text-gray-900">
+                            Se souvenir de moi
+                        </label>
                     </div>
                 </div>
-            {% endif %}
+            </div>
             <div>
                 <input type="hidden" name="_csrf_token"
                        value="{{ csrf_token('authenticate') }}">
