@@ -1,35 +1,187 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block title %}Bienvenue !{% endblock %}
 
 {% block body %}
-<form method="post">
-    {% if error %}
-        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
-
+<div class="flex min-h-full flex-col justify-center px-6 py-6 lg:px-8">
     {% if app.user %}
         <div class="mb-3">
-            You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+            You are logged in as {{ app.user.userIdentifier }},
+            <a href="{{ path('app_logout') }}">Logout</a>
         </div>
     {% endif %}
-
-    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-    <label for="inputPseudoOrUsername">Email or Pseudo</label>
-    <input type="text" value="{{ last_username }}" name="email_or_pseudo" id="inputPseudoOrUsername" class="form-control" required autofocus>
-    <label for="inputPassword">Password</label>
-    <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
-    <label>
-        <input type="checkbox" name="_remember_me" {{ isRemember == true ? "Checked" }}>
-        Remember me
-    </label>
-
-    <input type="hidden" name="_csrf_token"
-           value="{{ csrf_token('authenticate') }}"
-    >
-
-    <button class="btn btn-lg btn-primary" type="submit">
-        Sign in
-    </button>
-</form>
+    <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+        <img class="mx-auto h-20 w-auto"
+             src="{{ asset('build/images/logo.jpg') }}"
+             alt="Your Company">
+        <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+            Connectez-vous à votre compte
+        </h2>
+    </div>
+    <div class="mt-10 md:mx-auto md:w-full md:max-w-sm">
+        <form class="space-y-6" method="POST">
+            {% if error %}
+                <div id="alert-1"
+                     class="flex items-center px-6 py-2.5 sm:px-3.5
+                     text-red-800 rounded-lg bg-red-50" role="alert">
+                    <svg class="flex-shrink-0 w-4 h-4"
+                         aria-hidden="true"
+                         xmlns="http://www.w3.org/2000/svg"
+                         fill="currentColor"
+                         viewBox="0 0 20 20">
+                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                    </svg>
+                    <span class="sr-only">Info</span>
+                    <div class="ml-3 text-sm font-medium">
+                        {{ error.messageKey|trans(error.messageData, 'security') }}
+                    </div>
+                </div>
+                <div>
+                    <label  for="inputEmailOrUsername"
+                            class="block text-sm font-medium leading-6 text-gray-900">
+                        Adresse email ou pseudo
+                    </label>
+                    <div class="mt-2">
+                        <input  id="inputEmailOrUsername"
+                                name="email_or_pseudo"
+                                type="text"
+                                value="{{ last_username }}"
+                                autofocus
+                                required
+                                class="block w-full
+                            rounded-md border-0 py-1.5
+                            text-red-900 shadow-sm ring-1
+                            ring-inset ring-red-300
+                            placeholder:text-red-400
+                            focus:ring-2 focus:ring-inset
+                            focus:ring-red-600 sm:text-sm
+                            sm:leading-6">
+                    </div>
+                </div>
+                <div>
+                    <div class="flex items-center justify-between">
+                        <label  for="inputPassword"
+                                class="block text-sm font-medium leading-6 text-gray-900">
+                            Mot de passe
+                        </label>
+                        <div class="text-sm">
+                            <a href="#"
+                               class="font-semibold text-indigo-600 hover:text-indigo-500">
+                                mot de passe oublié ?
+                            </a>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <input id="inputPassword"
+                               name="password"
+                               type="password"
+                               autocomplete="current-password"
+                               required
+                               class="block w-full rounded-md border-0
+                           py-1.5 text-red-900 shadow-sm ring-1
+                           ring-inset ring-red-300 placeholder:text-red-400
+                           focus:ring-2 focus:ring-inset focus:ring-red-600
+                           sm:text-sm sm:leading-6">
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <div class="relative flex gap-x-3">
+                        <div class="flex h-6 items-center">
+                            <input name="remember_me"
+                                   type="checkbox"
+                                   class="h-4 w-4 rounded border-gray-300
+                               text-indigo-600 focus:ring-indigo-600"
+                                    {{ isRemember == true ? "Checked" }}>
+                        </div>
+                        <div class="text-sm leading-6">
+                            <label for="comments"
+                                   class="font-medium text-gray-900">
+                                Se souvenir de moi
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div>
+                    <label  for="inputEmailOrUsername"
+                            class="block text-sm font-medium leading-6 text-gray-900">
+                        Adresse email ou pseudo
+                    </label>
+                    <div class="mt-2">
+                        <input  id="inputEmailOrUsername"
+                                name="email_or_pseudo"
+                                type="text"
+                                value="{{ last_username }}"
+                                autofocus
+                                required
+                                class="block w-full
+                            rounded-md border-0 py-1.5
+                            text-gray-900 shadow-sm ring-1
+                            ring-inset ring-gray-300
+                            placeholder:text-gray-400
+                            focus:ring-2 focus:ring-inset
+                            focus:ring-indigo-600 sm:text-sm
+                            sm:leading-6">
+                    </div>
+                </div>
+                <div>
+                    <div class="flex items-center justify-between">
+                        <label  for="inputPassword"
+                                class="block text-sm font-medium leading-6 text-gray-900">
+                            Mot de passe
+                        </label>
+                        <div class="text-sm">
+                            <a href="#"
+                               class="font-semibold text-indigo-600 hover:text-indigo-500">
+                                mot de passe oublié ?
+                            </a>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <input id="inputPassword"
+                               name="password"
+                               type="password"
+                               autocomplete="current-password"
+                               required
+                               class="block w-full rounded-md border-0
+                           py-1.5 text-gray-900 shadow-sm ring-1
+                           ring-inset ring-gray-300 placeholder:text-gray-400
+                           focus:ring-2 focus:ring-inset focus:ring-indigo-600
+                           sm:text-sm sm:leading-6">
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <div class="relative flex gap-x-3">
+                        <div class="flex h-6 items-center">
+                            <input name="remember_me"
+                                   type="checkbox"
+                                   class="h-4 w-4 rounded border-gray-300
+                               text-indigo-600 focus:ring-indigo-600"
+                                    {{ isRemember == true ? "Checked" }}>
+                        </div>
+                        <div class="text-sm leading-6">
+                            <label for="comments"
+                                   class="font-medium text-gray-900">
+                                Se souvenir de moi
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            <div>
+                <input type="hidden" name="_csrf_token"
+                       value="{{ csrf_token('authenticate') }}">
+                <button type="submit"
+                        class="flex w-full justify-center
+                        rounded-md bg-indigo-600 px-3 py-1.5
+                        text-sm font-semibold leading-6 text-white
+                        shadow-sm hover:bg-indigo-500 focus-visible:outline
+                        focus-visible:outline-2 focus-visible:outline-offset-2
+                        focus-visible:outline-indigo-600">
+                    Se connecter
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %}
