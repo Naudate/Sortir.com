@@ -13,10 +13,46 @@
 <div class="example-wrapper">
     <h1>Hello {{ controller_name }}! ✅</h1>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ '/Users/francispiq/Downloads/Projet/Sortir.com/src/Controller/UserController.php'|file_link(0) }}">src/Controller/UserController.php</a></code></li>
-        <li>Your template at <code><a href="{{ '/Users/francispiq/Downloads/Projet/Sortir.com/templates/user/index.html.twig'|file_link(0) }}">templates/user/index.html.twig</a></code></li>
-    </ul>
+
+    <br/>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>NOM</th>
+                <th>PRENOM</th>
+                <th>PSEUDO</th>
+                <th>TELEPHONE</th>
+                <th>MAIL</th>
+                <th>SITE</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.nom }}</td>
+                <td>{{ user.prenom}}</td>
+                <td><a href="{{ path('user_details', {'id': user.id}) }}">{{ user.pseudo }}</a></td>
+                <td>{{ user.telephone }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.site.nom }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <section>
+        <div >
+            {% if currentPage > 1 %}
+                <a href="{{ path('user_home', {'page': currentPage - 1}) }}">Previous page</a>
+            {% endif %}
+            {% if currentPage < maxPage %}
+                <div></div>
+                <a href="{{ path('user_home', {'page' : currentPage + 1}) }}">Next page</a>
+            {% endif%}
+        </div>
+    </section>
 </div>
 {% endblock %}

@@ -21,12 +21,19 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_USER')]
 class UserController extends AbstractController
 {
-    #[Route('/', name: '_home')]
+    #[Route('/{page}', name: '_home', defaults: ['page' => 1])]
     #[IsGranted('ROLE_ADMIN')]
-    public function index(): Response
+    public function index(UserRepository  $userRepository, int $page = 1): Response
     {
+         $users = $userRepository->findUserWithPagination($page);
+
+        $maxPage = ceil($userRepository->count([]) / 10);
+
         return $this->render('user/index.html.twig', [
             'controller_name' => 'UserController',
+            'users'=> $users,
+            'currentPage' => $page,
+            'maxPage' => $maxPage
         ]);
     }
 
