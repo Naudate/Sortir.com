@@ -87,7 +87,6 @@ class UserController extends AbstractController
            // $user->setIsActif(true);
             $user->setRoles(array('ROLE_USER'));
 
-            dd($user);
             $entityManager->persist($user);
             $entityManager->flush();
 
@@ -115,6 +114,9 @@ class UserController extends AbstractController
             $this->addFlash("success", "Votre profil a bien été modifié");
             return $this->redirectToRoute('user_details',array('id'=> $user->getId()));
         }
+        return $this->render('user/edit.html.twig', [
+            'userForm'=> $userForm->createView(),
+        ]);
 
     }
 }
