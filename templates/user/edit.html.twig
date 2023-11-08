@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Profil{% endblock %}
 
 {% block body %}
     <h1>Register</h1>
@@ -59,11 +59,12 @@
     {{ form_widget(registrationForm.plainPassword) }}
     {{ form_help(registrationForm.plainPassword) }}
 
-
     <br/>
     {{ form_row(registrationForm.isActif) }}
 
-
+    <br/>
     <button type="submit" class="btn">Créer un nouvel utilisateur</button>
-    {{ form_end(registrationForm) }}
+
+    <br/>
+    <a href="{{ path('app_home') }}">Annuler</a>
 {% endblock %}

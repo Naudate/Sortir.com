@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -94,6 +95,7 @@ class RegistrationFormType extends AbstractType
             ])
             ->add('telephone', TelType::class,[
                 'label'=> 'Téléphone',
+                'required' => false,
                 'attr'=> array(
                     'placeholder' => '0123456789'
                 ),
@@ -127,32 +129,39 @@ class RegistrationFormType extends AbstractType
                    return $siteRepository->createQueryBuilder("s")->addOrderBy('s.nom');
                 }
             ])
-            ->add('agreeTerms', CheckboxType::class, [
-                'mapped' => false,
-                'constraints' => [
-                    new IsTrue([
-                        'message' => 'You should agree to our terms.',
-                    ]),
-                ],
+            ->add('isActif', CheckboxType::class, [
+                'label'=> 'Utilisateur Actif  ? ',
+                'required'=> false
             ])
-            ->add('plainPassword', PasswordType::class, [
+            ->add('plainPassword', RepeatedType::class, [
+                'type' => PasswordType::class,
                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller
                 'mapped' => false,
-                'label'=> 'Mot de passe',
-                'attr' => ['autocomplete' => 'new-password'],
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Please enter a password',
-                    ]),
-                    new Length([
-                        'min' => 8,
-                        'minMessage' => 'Le mot de passe doit contenir au moins {{ limit }} caractères',
-                        // max length allowed by Symfony for security reasons
-                        'max' => 4096,
-                    ]),
+                'options' => [
+                    'attr' => ['autocomplete' => 'new-password'],
                 ],
+                'first_options' => [
+                    'label' => 'Choisir un mot de passe',
+                    'constraints' => [
+                        new NotBlank([
+                            'message' => 'Veuillez saisir un mot de passe',
+                        ]),
+                        new Length([
+                            'min' => 6,
+                            'minMessage' => 'Your password should be at least {{ limit }} characters',
+                            // max length allowed by Symfony for security reasons
+                            'max' => 4096,
+                        ]),
+                    ]
+                ],
+                'second_options' => [
+                    'label' => 'Confirmer le mot de passe'
+                ],
+                'invalid_message' => 'Les mot de passe ne sont pas identiques.',
+
             ])
+
         ;
     }
 
