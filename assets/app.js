@@ -7,3 +7,6 @@
 
 // any CSS you import will output into a single css file (app.css in this case)
 import './styles/app.css';
+import './img/imageProfilDefaut.jpg';
+import './img/logo.jpg';
+import './favicon/logo.ico';
