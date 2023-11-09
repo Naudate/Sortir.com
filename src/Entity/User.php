@@ -54,6 +54,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\JoinColumn(nullable: false)]
     private ?Site $site = null;
 
+    #[ORM\Column]
+    private ?bool $firstConnection = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -204,6 +207,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setSite(?Site $site): static
     {
         $this->site = $site;
+
+        return $this;
+    }
+
+    public function isFirstConnection(): ?bool
+    {
+        return $this->firstConnection;
+    }
+
+    public function setFirstConnection(bool $firstConnection): static
+    {
+        $this->firstConnection = $firstConnection;
 
         return $this;
     }
