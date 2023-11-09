@@ -4,6 +4,8 @@ namespace App\Repository;
 
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Tools\Pagination\CountWalker;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -59,6 +61,22 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->setParameter('identifier', $pseudoOrEmail)
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+    public function findUserWithPagination (int $page =1){
+
+        $limit = 8;
+        $req = $this->createQueryBuilder('u')
+            ->setMaxResults($limit);
+
+        $offset = $limit * ($page -1);
+        $req->setFirstResult($offset);
+        $query = $req->getQuery();
+
+
+
+        $paginator = new Paginator($query, true);
+        return $paginator;
     }
 
 //    /**

@@ -1,0 +1,112 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil{% endblock %}
+
+{% block body %}
+    <h1>Modifier profil</h1>
+
+
+    {{ form_start(userForm) }}
+
+    {{ form_errors(userForm) }}
+
+    {% if 'ROLE_ADMIN' in app.user.roles %}
+        <br/>
+
+        {{ form_label(userForm.nom) }}
+        {{ form_errors(userForm.nom) }}
+        {{ form_widget(userForm.nom)}}
+        {{ form_help(userForm.nom) }}
+
+        <br/>
+        {{ form_label(userForm.prenom) }}
+        {{ form_errors(userForm.prenom) }}
+        {{ form_widget(userForm.prenom) }}
+        {{ form_help(userForm.prenom) }}
+
+    {% else%}
+        <br/>
+
+        {{ form_label(userForm.nom) }}
+        {{ form_errors(userForm.nom) }}
+        {{ form_widget(userForm.nom, {
+            'attr':{'disabled':'disabled'}
+        }) }}
+        {{ form_help(userForm.nom) }}
+
+        <br/>
+        {{ form_label(userForm.prenom) }}
+        {{ form_errors(userForm.prenom) }}
+        {{ form_widget(userForm.prenom, {
+            'attr':{'disabled':'disabled'}
+        })  }}
+        {{ form_help(userForm.prenom) }}
+    {% endif %}
+
+
+
+
+    <br/>
+    {{ form_label(userForm.pseudo) }}
+    {{ form_errors(userForm.pseudo) }}
+    {{ form_widget(userForm.pseudo) }}
+    {{ form_help(userForm.pseudo) }}
+
+    <br/>
+    {{ form_label(userForm.telephone) }}
+    {{ form_errors(userForm.telephone) }}
+    {{ form_widget(userForm.telephone) }}
+    {{ form_help(userForm.telephone) }}
+
+    <br/>
+    {{ form_label(userForm.email) }}
+    {{ form_errors(userForm.email) }}
+    {{ form_widget(userForm.email) }}
+    {{ form_help(userForm.email) }}
+
+    {% if 'ROLE_ADMIN' in app.user.roles %}
+        <br/>
+        {{ form_label(userForm.site) }}
+        {{ form_errors(userForm.site) }}
+        {{ form_widget(userForm.site) }}
+        {{ form_help(userForm.site) }}
+
+    {% else%}
+        <br/>
+        {{ form_label(userForm.site) }}
+        {{ form_errors(userForm.site) }}
+        {{ form_widget(userForm.site, {
+            'attr':{'disabled':'disabled'}
+        }) }}
+        {{ form_help(userForm.site) }}
+    {% endif %}
+
+
+
+    <br/>
+    {{ form_label(userForm.plainPassword) }}
+    {{ form_errors(userForm.plainPassword) }}
+    {{ form_widget(userForm.plainPassword) }}
+    {{ form_help(userForm.plainPassword) }}
+
+    {% if 'ROLE_ADMIN' in app.user.roles %}
+        {{ form_row(userForm.isActif) }}
+    {% else%}
+        {{ form_row(userForm.isActif, {
+            'attr':{'disabled':'disabled'}
+        }) }}
+    {% endif %}
+    <br/>
+
+
+    <br/>
+    <button type="submit" class="btn">Modifier</button>
+    {{ form_end(userForm) }}
+
+    <br/>
+    {% if 'ROLE_ADMIN' in app.user.roles %}
+        <a href="{{ path('user_home') }}">Annuler</a>
+    {% else%}
+        <a href="{{ path('app_home') }}">Annuler</a>
+    {% endif %}
+{% endblock %}

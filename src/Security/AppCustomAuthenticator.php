@@ -40,12 +40,14 @@ class AppCustomAuthenticator extends AbstractLoginFormAuthenticator
         ];
 
         $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $credentials['email_or_pseudo']);
-
         return new Passport(
             new UserBadge($credentials['email_or_pseudo'], function ($userIdentifier) {
                 $user =  $this->userRepository->findByEmailOrUsername($userIdentifier);
+                if($user == null){
+                    throw new UserNotFoundException("L'utilisateur renseigné n'existe pas");
+                }
                 if(!$user->isIsActif()){
-                    throw new CustomUserMessageAuthenticationException("Utilisateur non actif");
+                    throw new CustomUserMessageAuthenticationException("Utilisateur non actif. Contactez l'administrasteur pour plus d'inforamtions");
                 }
                 return $user;
             }),
@@ -64,17 +66,15 @@ class AppCustomAuthenticator extends AbstractLoginFormAuthenticator
             $response = new RedirectResponse($targetPath);
         }else{
             //TODO mettre home
-            $response = new RedirectResponse($this->urlGenerator->generate('login'));
+            $response = new RedirectResponse($this->urlGenerator->generate('app_home'));
         }
 
         if ($rememberMe != null){
             $cookie = Cookie::create('REMEMBERME', $request->request->get('email_or_pseudo'), strtotime('+1 year'));
-            $response->headers->setCookie($cookie);
         }else{
             $cookie = Cookie::create('REMEMBERME', '', time() - 3600, '/');
-            $response->headers->setCookie($cookie);
         }
-
+        $response->headers->setCookie($cookie);
         return $response;
     }
 

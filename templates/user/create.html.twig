@@ -3,7 +3,7 @@
 {% block title %}Register{% endblock %}
 
 {% block body %}
-    <h1>Register</h1>
+    <h1>Création utilisateur</h1>
 
 
     {{ form_start(registrationForm) }}
@@ -46,6 +46,8 @@
     {{ form_help(registrationForm.site) }}
 
 
+
+
     <br/>
     {{ form_label(registrationForm.plainPassword) }}
     {{ form_errors(registrationForm.plainPassword) }}
@@ -54,7 +56,7 @@
 
 
     <br/>
-    {{ form_row(registrationForm.agreeTerms) }}
+    {{ form_row(registrationForm.isActif) }}
 
 
     <button type="submit" class="btn">Créer un nouvel utilisateur</button>

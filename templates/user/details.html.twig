@@ -1,0 +1,114 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil{% endblock %}
+
+{% block body %}
+    <div class="mx-auto max-w-7xl px-4 py-24 sm:px-6 sm:py-32 lg:px-8">
+        <div class="mx-auto max-w-2xl">
+            <div>
+                <div class="px-4 sm:px-0 grid gap-4 grid-cols-2">
+                    <div>
+                        <h3 class="text-base font-semibold leading-7 text-gray-900">
+                            Informations du participant
+                        </h3>
+                        <p class="mt-1 max-w-2xl text-sm leading-6 text-gray-500">
+                            Détails personnel et site rattaché
+                        </p>
+                    </div>
+                    <div class="absolute inset-y-0 right-0 flex justify-end pr-2
+                    sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+                        {% if user.photo != null %}
+                            <img class="h-14 w-14 rounded-full"
+                                 src="{{ asset(user.photo) }}"
+                                 alt="Photo de l'utilisateur">
+                        {% else %}
+                            <img class="h-14 w-14 rounded-full"
+                                 src="{{ asset('build/images/imageProfilDefaut.jpg') }}"
+                                 alt="Photo de l'utilisateur">
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="mt-6 border-t border-gray-100">
+                    <dl class="divide-y divide-gray-100">
+                        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                            <dt class="text-sm font-medium leading-6 text-gray-900">
+                                Nom complet
+                            </dt>
+                            <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                                {{ user.nom }} {{ user.prenom }}
+                            </dd>
+                        </div>
+                        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                            <dt class="text-sm font-medium leading-6 text-gray-900">
+                                Pseudo
+                            </dt>
+                            <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                                {{ user.pseudo }}
+                            </dd>
+                        </div>
+                        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                            <dt class="text-sm font-medium leading-6 text-gray-900">
+                                Téléphone
+                            </dt>
+                            <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                                {{ user.telephone }}
+                            </dd>
+                        </div>
+                        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                            <dt class="text-sm font-medium leading-6 text-gray-900">
+                                Adresse email
+                            </dt>
+                            <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                                {{ user.email }}
+                            </dd>
+                        </div>
+                        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                            <dt class="text-sm font-medium leading-6 text-gray-900">
+                                Site
+                            </dt>
+                            <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                                {{ user.site.nom }}
+                            </dd>
+                        </div>
+                        {% if 'ROLE_ADMIN' in app.user.roles %}
+                        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                            <dt class="text-sm font-medium leading-6 text-gray-900">
+                                Status du compte
+                            </dt>
+                            {% if user.isActif %}
+                                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                                    Actif
+                                </dd>
+                            {% else %}
+                                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                                    Inactif
+                                </dd>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                        <div class="px-4 py-6 sm:px-0 items-center justify-end">
+                            <a href="{{ path('app_home') }}"
+                               type="button"
+                               class="inline-flex items-center rounded-md bg-gray-600
+                               px-3 py-2 text-sm font-semibold text-white shadow-sm
+                               hover:bg-gray-500 focus-visible:outline focus-visible:outline-2
+                               focus-visible:outline-offset-2 focus-visible:outline-gray-600">
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                     fill="none"
+                                     viewBox="0 0 24 24"
+                                     stroke-width="1.5"
+                                     stroke="currentColor"
+                                     class="-ml-0.5 mr-1.5 w-5 h-5">
+                                    <path stroke-linecap="round"
+                                          stroke-linejoin="round"
+                                          d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
+                                </svg>
+                                Retour
+                            </a>
+                        </div>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
