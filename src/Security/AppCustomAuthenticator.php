@@ -66,7 +66,7 @@ class AppCustomAuthenticator extends AbstractLoginFormAuthenticator
             $response = new RedirectResponse($targetPath);
         }else{
             //TODO mettre home
-            $response = new RedirectResponse($this->urlGenerator->generate('login'));
+            $response = new RedirectResponse($this->urlGenerator->generate('app_home'));
         }
 
         if ($rememberMe != null){

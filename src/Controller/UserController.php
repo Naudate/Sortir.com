@@ -21,7 +21,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_USER')]
 class UserController extends AbstractController
 {
-    #[Route('/{page}', name: '_home', defaults: ['page' => 1])]
+    #[Route('/list/{page}', name: '_home', defaults: ['page' => 1])]
     #[IsGranted('ROLE_ADMIN')]
     public function index(UserRepository  $userRepository, int $page = 1): Response
     {
