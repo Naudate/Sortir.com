@@ -62,8 +62,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?bool $isActif = null;
 
     #[ORM\ManyToOne(inversedBy: 'users')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?Site $site = null;
+
+    #[ORM\Column]
+    private ?bool $firstConnection = null;
 
     public function getId(): ?int
     {
@@ -215,6 +218,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setSite(?Site $site): static
     {
         $this->site = $site;
+
+        return $this;
+    }
+
+    public function isFirstConnection(): ?bool
+    {
+        return $this->firstConnection;
+    }
+
+    public function setFirstConnection(bool $firstConnection): static
+    {
+        $this->firstConnection = $firstConnection;
 
         return $this;
     }
