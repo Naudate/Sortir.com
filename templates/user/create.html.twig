@@ -5,7 +5,9 @@
         <div class="mx-auto max-w-2xl">
             {{ form_start(registrationForm) }}
 
-            {{ form_errors(registrationForm) }}
+            {{ form_errors(registrationForm, {
+                'attr':{'class':'text-red-700'}
+            }) }}
             <div class="space-y-12">
                 <div class="border-b border-gray-900/10 pb-12">
                     <div class="mt-6 border-gray-100">
