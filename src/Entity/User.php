@@ -65,7 +65,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\JoinColumn(nullable: true)]
     private ?Site $site = null;
 
-    #[ORM\Column]
+    #[ORM\Column( options: ["default" => true])]
     private ?bool $firstConnection = null;
 
     public function getId(): ?int
