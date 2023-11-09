@@ -21,6 +21,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
+    #[Assert\Regex('/^.+@.+\..+$/',
+        message: 'Le format de l\'email n\'est pas bon')]
     private ?string $email = null;
 
     #[ORM\Column]
@@ -30,6 +32,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The hashed password
      */
     #[ORM\Column]
+    #[Assert\Length(
+        min: 12,
+        max: 4096,
+        minMessage: 'Votre mot de passe doit contenir 12 caractères'
+    )]
+    #[Assert\Regex('/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).{8,}$/',
+        message: 'Le mot de passe doit contenir au moins 1 majuscule, 1 minuscule et 1 caractère spécial')]
     protected ?string $password = null;
 
     #[ORM\Column(length: 255)]
@@ -42,6 +51,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $photo = null;
 
     #[ORM\Column(length: 10, nullable: true)]
+    #[Assert\Regex('/^\d{10}$/',
+        message: 'Le numéro de téléphone doit être composé de 10 chiffres',)]
     private ?string $telephone = null;
 
     #[ORM\Column(length: 255, unique: true)]
