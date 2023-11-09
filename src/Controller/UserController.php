@@ -109,12 +109,19 @@ class UserController extends AbstractController
 
     #[Route('/edit/{id}', name: '_edit', requirements: ['id' => '\d+'])]
     #[IsGranted('ROLE_USER')]
-    public function edit(User $user,Request $request, EntityManagerInterface $entityManager){
+    public function edit(User $user,Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager){
 
         $userForm = $this->createForm(RegistrationFormType::class, $user);
         $userForm->handleRequest($request);
 
         if($userForm->isSubmitted() && $userForm->isValid()){
+
+            $user->setPassword(
+                $userPasswordHasher->hashPassword(
+                    $user,
+                    $userForm->get('plainPassword')->getData()
+                )
+            );
             $entityManager->persist($user);
             $entityManager->flush();
 
