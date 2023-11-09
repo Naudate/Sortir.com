@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Create Sortie{% endblock %}
+
+{% block body %}
+    <h1>Créer sortie</h1>
+
+    {{ form_start(form) }}
+
+    {{ form_errors(form) }}
+
+    {{ form_label(form.nom) }}
+    {{ form_errors(form.nom) }}
+    {{ form_widget(form.nom) }}
+    {{ form_help(form.nom) }}
+
+    <br/>
+    {{ form_label(form.dateHeureDebut) }}
+    {{ form_errors(form.dateHeureDebut) }}
+    {{ form_widget(form.dateHeureDebut) }}
+    {{ form_help(form.dateHeureDebut) }}
+
+    <br/>
+    {{ form_label(form.dateHeureFin) }}
+    {{ form_errors(form.dateHeureFin) }}
+    {{ form_widget(form.dateHeureFin) }}
+    {{ form_help(form.dateHeureFin) }}
+
+    <br/>
+    {{ form_label(form.dateLimiteInscription) }}
+    {{ form_errors(form.dateLimiteInscription) }}
+    {{ form_widget(form.dateLimiteInscription) }}
+    {{ form_help(form.dateLimiteInscription) }}
+
+    <br/>
+    {{ form_label(form.nombreMaxParticipant) }}
+    {{ form_errors(form.nombreMaxParticipant) }}
+    {{ form_widget(form.nombreMaxParticipant) }}
+    {{ form_help(form.nombreMaxParticipant) }}
+
+    <br/>
+    {{ form_label(form.description) }}
+    {{ form_errors(form.description) }}
+    {{ form_widget(form.description) }}
+    {{ form_help(form.description) }}
+
+    <button type="submit" class="btn">Créer une nouvelle sortie</button>
+    {{ form_end(form) }}
+{% endblock %}

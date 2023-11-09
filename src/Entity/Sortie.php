@@ -29,7 +29,7 @@ class Sortie
     #[ORM\Column]
     private ?int $nombreMaxParticipant = null;
 
-    #[ORM\Column(length: 500)]
+    #[ORM\Column(length: 500, nullable: true)]
     private ?string $description = null;
 
     #[ORM\Column]
