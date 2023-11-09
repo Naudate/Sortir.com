@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
+use App\Form\UserFormType;
 use App\Helper\Uploader;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -85,6 +86,7 @@ class UserController extends AbstractController
                 $user->setPhoto($pathAvatar);
             }*/
             // encode the plain password
+            $user->setIsActif(true);
             $user->setPassword(
                 $userPasswordHasher->hashPassword(
                     $user,
@@ -111,17 +113,20 @@ class UserController extends AbstractController
     #[IsGranted('ROLE_USER')]
     public function edit(User $user,Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager){
 
-        $userForm = $this->createForm(RegistrationFormType::class, $user);
+        $userForm = $this->createForm(UserFormType::class, $user);
         $userForm->handleRequest($request);
 
         if($userForm->isSubmitted() && $userForm->isValid()){
 
-            $user->setPassword(
-                $userPasswordHasher->hashPassword(
-                    $user,
-                    $userForm->get('plainPassword')->getData()
-                )
-            );
+            if (!empty($userForm->get('plainPassword')->getData())){
+                $user->setPassword(
+                    $userPasswordHasher->hashPassword(
+                        $user,
+                        $userForm->get('plainPassword')->getData()
+                    )
+                );
+            }
+
             $entityManager->persist($user);
             $entityManager->flush();
 
