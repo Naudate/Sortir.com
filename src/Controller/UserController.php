@@ -27,7 +27,7 @@ class UserController extends AbstractController
     {
          $users = $userRepository->findUserWithPagination($page);
 
-        $maxPage = ceil($userRepository->count([]) / 10);
+        $maxPage = ceil($userRepository->count([]) / 8);
 
         return $this->render('user/index.html.twig', [
             'controller_name' => 'UserController',

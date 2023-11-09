@@ -65,7 +65,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     public function findUserWithPagination (int $page =1){
 
-        $limit = 10;
+        $limit = 8;
         $req = $this->createQueryBuilder('u')
             ->setMaxResults($limit);
 
