@@ -11,6 +11,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
@@ -94,7 +95,7 @@ class RegistrationFormType extends AbstractType
                 ]
 
             ])
-            ->add('telephone', TelType::class,[
+            ->add('telephone', NumberType::class,[
                 'label'=> 'Téléphone',
                 'required' => false,
                 'attr'=> array(

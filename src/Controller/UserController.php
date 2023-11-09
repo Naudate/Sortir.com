@@ -112,26 +112,35 @@ class UserController extends AbstractController
     #[Route('/edit/{id}', name: '_edit', requirements: ['id' => '\d+'])]
     #[IsGranted('ROLE_USER')]
     public function edit(User $user,Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager){
+        $userConnect = $this->getUser();
+        // si utilisateur connecter cherche a consulter son profil et quil a le role user
+        if($userConnect->getId() == $user->getId() && in_array('ROLE_USER', $this->getUser()->getRoles(), true) ||  in_array('ROLE_ADMIN', $this->getUser()->getRoles(), true)){
+            $userForm = $this->createForm(UserFormType::class, $user);
 
-        $userForm = $this->createForm(UserFormType::class, $user);
-        $userForm->handleRequest($request);
+            $userForm->handleRequest($request);
 
-        if($userForm->isSubmitted() && $userForm->isValid()){
 
-            if (!empty($userForm->get('plainPassword')->getData())){
-                $user->setPassword(
-                    $userPasswordHasher->hashPassword(
-                        $user,
-                        $userForm->get('plainPassword')->getData()
-                    )
-                );
+
+            if($userForm->isSubmitted() && $userForm->isValid()){
+
+                if (!empty($userForm->get('plainPassword')->getData())){
+                    $user->setPassword(
+                        $userPasswordHasher->hashPassword(
+                            $user,
+                            $userForm->get('plainPassword')->getData()
+                        )
+                    );
+                }
+                $entityManager->persist($user);
+                $entityManager->flush();
+
+                $this->addFlash("success", "Votre profil a bien été modifié");
+                return $this->redirectToRoute('user_details',array('id'=> $user->getId()));
+
             }
-
-            $entityManager->persist($user);
-            $entityManager->flush();
-
-            $this->addFlash("success", "Votre profil a bien été modifié");
-            return $this->redirectToRoute('user_details',array('id'=> $user->getId()));
+        }
+        else{
+            throw new Exception("Accès refusé", 403);
         }
         return $this->render('user/edit.html.twig', [
             'userForm'=> $userForm->createView(),
