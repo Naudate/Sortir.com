@@ -44,7 +44,7 @@ class AppCustomAuthenticator extends AbstractLoginFormAuthenticator
             new UserBadge($credentials['email_or_pseudo'], function ($userIdentifier) {
                 $user =  $this->userRepository->findByEmailOrUsername($userIdentifier);
                 if($user == null){
-                    throw new UserNotFoundException("L'utilisateur renseigné n'existe pas");
+                    throw new UserNotFoundException();
                 }
                 if(!$user->isIsActif()){
                     throw new CustomUserMessageAuthenticationException("Utilisateur non actif. Contactez l'administrasteur pour plus d'inforamtions");
