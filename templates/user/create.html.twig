@@ -1,64 +1,160 @@
 {% extends 'base.html.twig' %}
-
-{% block title %}Register{% endblock %}
-
+{% block title %}Profil{% endblock %}
 {% block body %}
-    <h1>Création utilisateur</h1>
+    <div class="mx-auto max-w-7xl px-4 py-24 sm:px-6 sm:py-32 lg:px-8">
+        <div class="mx-auto max-w-2xl">
+            {{ form_start(registrationForm) }}
 
+            {{ form_errors(registrationForm, {
+                'attr':{'class':'text-red-700'}
+            }) }}
+            <div class="space-y-12">
+                <div class="border-b border-gray-900/10 pb-12">
+                    <div class="mt-6 border-gray-100">
+                        <h2 class="text-base font-semibold leading-7 text-gray-900">Profil</h2>
+                        <p class="mt-1 text-sm leading-6 text-gray-600">Ces informations seront affichées publiquement, alors faites attention à ce que vous partagez.</p>
+                        <div>
+                            <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                                <div class="sm:col-span-4">
+                                    {{ form_label(registrationForm.pseudo) }}
+                                    <div class="mt-2">
+                                        <div>
+                                            {{ form_errors(registrationForm.pseudo) }}
+                                            {{ form_widget(registrationForm.pseudo) }}
+                                            {{ form_help(registrationForm.pseudo) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-span-full">
+                                    <label for="photo" class="block text-sm font-medium leading-6 text-gray-900">Photo</label>
+                                    <div class="mt-2 flex items-center gap-x-3">
+                                        <img class="h-12 w-12 rounded-full text-gray-300" src="{{ asset('build/images/imageProfilDefaut.jpg') }}" alt="image de defaut pour le profil"></img>
+                                        <button type="button" class="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">Change</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="border-b border-gray-900/10 pb-12">
+                    <div class="mt-6 border-gray-100">
+                        <h2 class="text-base font-semibold leading-7 text-gray-900">Informations personnelles</h2>
+                        <p class="mt-1 text-sm leading-6 text-gray-600">Informations vous concernant. Utilisez une adresse permanente où vous pouvez recevoir du courrier.</p>
+                        <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                            {% if 'ROLE_ADMIN' in app.user.roles %}
+                                <div class="sm:col-span-3">
+                                    {{ form_label(registrationForm.prenom) }}
+                                    <div class="mt-2">
+                                        {{ form_widget(registrationForm.prenom) }}
+                                        {{ form_errors(registrationForm.prenom) }}
+                                        {{ form_help(registrationForm.prenom) }}
+                                    </div>
+                                </div>
+                                <div class="sm:col-span-3">
+                                    {{ form_label(registrationForm.nom) }}
+                                    <div class="mt-2">
+                                        {{ form_widget(registrationForm.nom)}}
+                                        {{ form_errors(registrationForm.nom) }}
+                                        {{ form_help(registrationForm.nom) }}
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="sm:col-span-3">
+                                    {{ form_label(registrationForm.prenom) }}
+                                    <div class="mt-2">
+                                        {{ form_widget(registrationForm.prenom, {
+                                            'attr':{'disabled':'disabled'}
+                                        })  }}
+                                        {{ form_errors(registrationForm.prenom) }}
+                                        {{ form_help(registrationForm.prenom) }}
+                                    </div>
+                                </div>
+                                <div class="sm:col-span-3">
+                                    {{ form_label(registrationForm.nom) }}
+                                    <div class="mt-2">
+                                        {{ form_widget(registrationForm.nom, {
+                                            'attr':{'disabled':'disabled'}
+                                        })  }}
+                                        {{ form_errors(registrationForm.nom) }}
+                                        {{ form_help(registrationForm.nom) }}
+                                    </div>
+                                </div>
+                            {% endif %}
+                            <div class="sm:col-span-4">
+                                {{ form_label(registrationForm.email) }}
+                                <div class="mt-2">
+                                    {{ form_widget(registrationForm.email) }}
+                                    {{ form_help(registrationForm.email) }}
+                                    {{ form_errors(registrationForm.email) }}
+                                </div>
+                            </div>
+                            <div class="sm:col-span-3">
+                                {{ form_label(registrationForm.telephone) }}
+                                <div class="mt-2">
+                                    {{ form_widget(registrationForm.telephone) }}
+                                    {{ form_errors(registrationForm.telephone) }}
+                                    {{ form_help(registrationForm.telephone) }}
+                                </div>
+                            </div>
+                            <div class="sm:col-span-3">
+                                {{ form_label(registrationForm.site) }}
+                                <div class="mt-2">
+                                    {% if 'ROLE_ADMIN' in app.user.roles %}
+                                        {{ form_errors(registrationForm.site) }}
+                                        {{ form_widget(registrationForm.site)}}
+                                        {{ form_help(registrationForm.site) }}
+                                    {% else %}
+                                        {{ form_label(registrationForm.site) }}
+                                        {{ form_errors(registrationForm.site) }}
+                                        {{ form_widget(registrationForm.site, {
+                                            'attr':{'disabled':'disabled'}
+                                        }) }}
+                                        {{ form_help(registrationForm.site) }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="border-b border-gray-900/10 pb-12">
+                    <div class="mt-6 border-gray-100">
+                        <h2 class="text-base font-semibold leading-7 text-gray-900">Mot de passe</h2>
+                        <p class="mt-1 text-sm leading-6 text-gray-600">Changement de mot de passe. Veuillez entrer le mot de passe actuel et ensuite le nouveau mot de passe</p>
+                        <div class="sm:col-span-3">
+                            <div class="mt-2">
+                                {{ form_widget(registrationForm.plainPassword) }}
+                                {{ form_help(registrationForm.plainPassword) }}
+                                {{ form_help(registrationForm.plainPassword) }}
+                            </div>
+                        </div>
 
-    {{ form_start(registrationForm) }}
-
-    {{ form_errors(registrationForm) }}
-
-    {{ form_label(registrationForm.nom) }}
-    {{ form_errors(registrationForm.nom) }}
-    {{ form_widget(registrationForm.nom) }}
-    {{ form_help(registrationForm.nom) }}
-
-    <br/>
-    {{ form_label(registrationForm.prenom) }}
-    {{ form_errors(registrationForm.prenom) }}
-    {{ form_widget(registrationForm.prenom) }}
-    {{ form_help(registrationForm.prenom) }}
-
-    <br/>
-    {{ form_label(registrationForm.pseudo) }}
-    {{ form_errors(registrationForm.pseudo) }}
-    {{ form_widget(registrationForm.pseudo) }}
-    {{ form_help(registrationForm.pseudo) }}
-
-    <br/>
-    {{ form_label(registrationForm.telephone) }}
-    {{ form_errors(registrationForm.telephone) }}
-    {{ form_widget(registrationForm.telephone) }}
-    {{ form_help(registrationForm.telephone) }}
-
-    <br/>
-    {{ form_label(registrationForm.email) }}
-    {{ form_errors(registrationForm.email) }}
-    {{ form_widget(registrationForm.email) }}
-    {{ form_help(registrationForm.email) }}
-
-    <br/>
-    {{ form_label(registrationForm.site) }}
-    {{ form_errors(registrationForm.site) }}
-    {{ form_widget(registrationForm.site) }}
-    {{ form_help(registrationForm.site) }}
-
-
-
-
-    <br/>
-    {{ form_label(registrationForm.plainPassword) }}
-    {{ form_errors(registrationForm.plainPassword) }}
-    {{ form_widget(registrationForm.plainPassword) }}
-    {{ form_help(registrationForm.plainPassword) }}
-
-
-    <br/>
-    {{ form_row(registrationForm.isActif) }}
-
-
-    <button type="submit" class="btn">Créer un nouvel utilisateur</button>
-    {{ form_end(registrationForm) }}
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-6">
+                <div class="sm:col-span-3">
+                    <div class="mt-6 flex items-center justify-start gap-x-6">
+                        {% if 'ROLE_ADMIN' in app.user.roles %}
+                            {{ form_row(registrationForm.isActif) }}
+                        {% else%}
+                            {{ form_row(registrationForm.isActif, {
+                                'attr':{'disabled':'disabled'}
+                            }) }}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="sm:col-span-3">
+                    <div class="mt-6 flex items-center justify-end gap-x-6">
+                        <button type="submit" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Créer</button>
+                        {{ form_end(registrationForm) }}
+                        {% if 'ROLE_ADMIN' in app.user.roles %}
+                            <a href="{{ path('user_home') }}" type="button" class="text-sm font-semibold leading-6 text-gray-900">Annuler</a>
+                        {% else%}
+                            <a href="{{ path('app_home') }}" type="button" class="text-sm font-semibold leading-6 text-gray-900">Annuler</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
