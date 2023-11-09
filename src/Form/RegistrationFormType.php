@@ -131,38 +131,6 @@ class RegistrationFormType extends AbstractType
                    return $siteRepository->createQueryBuilder("s")->addOrderBy('s.nom');
                 }
             ])
-            ->add('plainPassword', RepeatedType::class, [
-                'type' => PasswordType::class,
-                'label' => 'Mot de passe :',
-                // instead of being set onto the object directly,
-                // this is read and encoded in the controller
-                'mapped' => false,
-                'options' => [
-                    'attr' => ['autocomplete' => 'new-password'],
-                ],
-                'first_options' => [
-                    'label' => 'Choisir un mot de passe',
-                    'constraints' => [
-                        new Regex('/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).{8,}$/',
-                            'Le mot de passe doit contenir au moins 1 majuscule, 1 minuscule et 1 caractère spécial'),
-                        new NotBlank([
-                            'message' => 'Veuillez saisir un mot de passe',
-                        ]),
-                        new Length([
-                            'min' => 12,
-                            'minMessage' => 'Votre mot de passe doit contenir {{ limit }} caractères',
-                            // max length allowed by Symfony for security reasons
-                            'max' => 4096,
-                        ]),
-                    ]
-                ],
-                'second_options' => [
-                    'label' => 'Confirmer le mot de passe'
-                ],
-                'invalid_message' => 'Les mot de passe ne sont pas identiques.',
-
-            ])
-
         ;
     }
 

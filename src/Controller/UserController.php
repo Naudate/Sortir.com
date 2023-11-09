@@ -90,7 +90,7 @@ class UserController extends AbstractController
             $user->setPassword(
                 $userPasswordHasher->hashPassword(
                     $user,
-                    $form->get('plainPassword')->getData()
+                    'password'
                 )
             );
            // $user->setIsActif(true);
@@ -113,7 +113,7 @@ class UserController extends AbstractController
     #[IsGranted('ROLE_USER')]
     public function edit(User $user,Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager){
         $userConnect = $this->getUser();
-        // si utilisateur connecter cherche a consulter son profil et quil a le role user
+        // si utilisateur connectée cherche a consulter son profil et quil a le role user
         if($userConnect->getId() == $user->getId() && in_array('ROLE_USER', $this->getUser()->getRoles(), true) ||  in_array('ROLE_ADMIN', $this->getUser()->getRoles(), true)){
             $userForm = $this->createForm(UserFormType::class, $user);
 
