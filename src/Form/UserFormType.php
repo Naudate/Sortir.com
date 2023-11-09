@@ -5,25 +5,21 @@ namespace App\Form;
 use App\Entity\Site;
 use App\Entity\User;
 use App\Repository\SiteRepository;
-use Doctrine\ORM\Mapping\Entity;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\File;
-use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
 
-class RegistrationFormType extends AbstractType
+class UserFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -109,29 +105,34 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ]
             ])
-          /*  ->add('avatar', FileType::class, [
-                'label'=> 'Photo de profil',
-                'mapped' => false,
-                'required' => false,
-                'constraints' => [
-                    new File([
-                        'maxSize' => '2048k',
-                        'mimeTypes' => [
-                            'image/*',
-                        ],
-                        'mimeTypesMessage' => 'Veuillez importer un fichier de type image . ',
-                    ])
-                ],
-            ])*/
+            /*  ->add('avatar', FileType::class, [
+                  'label'=> 'Photo de profil',
+                  'mapped' => false,
+                  'required' => false,
+                  'constraints' => [
+                      new File([
+                          'maxSize' => '2048k',
+                          'mimeTypes' => [
+                              'image/*',
+                          ],
+                          'mimeTypesMessage' => 'Veuillez importer un fichier de type image . ',
+                      ])
+                  ],
+              ])*/
             ->add('site', EntityType::class,[
                 'class'=> Site::class,
                 'choice_label'=> 'nom',
                 'query_builder' => function (SiteRepository $siteRepository){
-                   return $siteRepository->createQueryBuilder("s")->addOrderBy('s.nom');
+                    return $siteRepository->createQueryBuilder("s")->addOrderBy('s.nom');
                 }
+            ])
+            ->add('isActif', CheckboxType::class, [
+                'label'=> 'Utilisateur Actif  ? ',
+                'required'=> false
             ])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
+                'required'=> false,
                 'label' => 'Mot de passe :',
                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller
@@ -144,9 +145,6 @@ class RegistrationFormType extends AbstractType
                     'constraints' => [
                         new Regex('/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).{8,}$/',
                             'Le mot de passe doit contenir au moins 1 majuscule, 1 minuscule et 1 caractère spécial'),
-                        new NotBlank([
-                            'message' => 'Veuillez saisir un mot de passe',
-                        ]),
                         new Length([
                             'min' => 12,
                             'minMessage' => 'Votre mot de passe doit contenir {{ limit }} caractères',
@@ -161,7 +159,6 @@ class RegistrationFormType extends AbstractType
                 'invalid_message' => 'Les mot de passe ne sont pas identiques.',
 
             ])
-
         ;
     }
 
