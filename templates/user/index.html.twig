@@ -3,56 +3,59 @@
 {% block title %}Hello UserController!{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+
     {% for message in app.flashes('success') %}
         <p>{{ message }}</p>
     {% endfor %}
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
 
 
     <br/>
-
-    <table>
-        <thead>
+<div class="relative overflow-x-auto container pl-5 pr-5 pt-5">
+    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
-                <th>ID</th>
-                <th>NOM</th>
-                <th>PRENOM</th>
-                <th>PSEUDO</th>
-                <th>TELEPHONE</th>
-                <th>MAIL</th>
-                <th>SITE</th>
+                <th scope="col" class="px-6 py-3">ID</th>
+                <th scope="col" class="px-6 py-3">NOM</th>
+                <th scope="col" class="px-6 py-3">PRENOM</th>
+                <th scope="col" class="px-6 py-3">PSEUDO</th>
+                <th scope="col" class="px-6 py-3">TELEPHONE</th>
+                <th scope="col" class="px-6 py-3">MAIL</th>
+                <th scope="col" class="px-6 py-3">SITE</th>
             </tr>
         </thead>
         <tbody>
         {% for user in users %}
-            <tr>
-                <td>{{ user.id }}</td>
-                <td>{{ user.nom }}</td>
-                <td>{{ user.prenom}}</td>
-                <td><a href="{{ path('user_details', {'id': user.id}) }}">{{ user.pseudo }}</a></td>
-                <td>{{ user.telephone }}</td>
-                <td>{{ user.email }}</td>
-                <td>{{ user.site.nom }}</td>
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <td class="px-6 py-4">{{ user.id }}</td>
+                <td class="px-6 py-4">{{ user.nom }}</td>
+                <td class="px-6 py-4">{{ user.prenom}}</td>
+                <td class="px-6 py-4"><a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="{{ path('user_details', {'id': user.id}) }}">{{ user.pseudo }}</a></td>
+                <td class="px-6 py-4">{{ user.telephone }}</td>
+                <td class="px-6 py-4">{{ user.email }}</td>
+                <td class="px-6 py-4">{{ user.site.nom }}</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
-
-    <section>
-        <div >
-            {% if currentPage > 1 %}
-                <a href="{{ path('user_home', {'page': currentPage - 1}) }}">Previous page</a>
-            {% endif %}
-            {% if currentPage < maxPage %}
-                <div></div>
-                <a href="{{ path('user_home', {'page' : currentPage + 1}) }}">Next page</a>
-            {% endif%}
-        </div>
-    </section>
 </div>
+
+    <div class="flex justify-end pr-4 pt-5">
+        {% if currentPage > 1 %}
+            <a href="{{ path('user_home', {'page': currentPage - 1}) }}" class="flex items-center justify-center px-4 h-10 mr-3 text-base font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                <svg class="w-3.5 h-3.5 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5H1m0 0 4 4M1 5l4-4"/>
+                </svg>
+                Previous
+            </a>
+        {% endif %}
+        {% if currentPage < maxPage %}
+            <a href="{{ path('user_home', {'page' : currentPage + 1}) }}" class="flex items-center justify-center px-4 h-10 text-base font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                Next
+                <svg class="w-3.5 h-3.5 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                </svg>
+            </a>
+        {% endif%}
+    </div>
+
 {% endblock %}
