@@ -17,9 +17,6 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class SortieType extends AbstractType
 {
-    public function __construct(private EntityManagerInterface $em)
-    {
-    }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -78,13 +75,7 @@ class SortieType extends AbstractType
                     'placeholder' => 'Description optionnelle',
                     'class' => 'tinymce'
                 )
-            ])
-            ->add('ville', TextType::class, [
-                'attr' => ['class' => 'autocomplete'],
             ]);
-
-        $builder->get('ville')
-            ->addModelTransformer(new VilleTransformer($this->em));
     }
 
     public function configureOptions(OptionsResolver $resolver): void

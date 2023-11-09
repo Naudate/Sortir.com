@@ -11,6 +11,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class VilleController extends AbstractController
 {
 
+    #[Route('/villes', name: 'gerer_villes')]
+    public function gererVilles(Request $request)
+    {
+
+    }
+
     #[Route('/villes/get', name: 'autocomplete_ville')]
     public function autocompleteVille(Request $request)
     {

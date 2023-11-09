@@ -38,9 +38,6 @@ class Sortie
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $motif = null;
 
-    #[ORM\ManyToOne(cascade: ["persist"])]
-    private ?Ville $ville = null;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -138,18 +135,6 @@ class Sortie
     public function setMotif(?string $motif): static
     {
         $this->motif = $motif;
-
-        return $this;
-    }
-
-    public function getVille(): ?Ville
-    {
-        return $this->ville;
-    }
-
-    public function setVille(?Ville $ville): static
-    {
-        $this->ville = $ville;
 
         return $this;
     }

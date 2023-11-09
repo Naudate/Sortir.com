@@ -44,64 +44,6 @@
     {{ form_widget(form.description) }}
     {{ form_help(form.description) }}
 
-    <br/>
-    {{ form_label(form.ville) }}
-    {{ form_errors(form.ville) }}
-    {{ form_widget(form.ville) }}
-    {{ form_help(form.ville) }}
-    <div class="autocomplete-loader" hidden>
-       RAF LOADER A METTRE
-    </div>
-
-
     <button type="submit" class="btn">Créer une nouvelle sortie</button>
     {{ form_end(form) }}
-{% endblock %}
-
-{% block javascripts %}
-
-
-    <!-- Inclure jQuery (si ce n'est pas déjà fait) -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <!-- Inclure le fichier JavaScript de jQuery UI Autocomplete -->
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
-        <!-- Inclure le fichier CSS de jQuery UI Autocomplete (si nécessaire) -->
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-
-
-
-
-
-    <script>
-        $(document).ready(function() {
-            var $loader = $('.autocomplete-loader');
-            $('.autocomplete').autocomplete({
-                source: function(request, response) {
-                    $loader.show(); // Affichez le loader
-                    $.ajax({
-                        url: "{{ path('autocomplete_ville') }}",
-                        dataType: 'json',
-                        data: {
-                            q: request.term
-                        },
-                        success: function(data) {
-                            var suggestions = [];
-                            data.forEach(function(item) {
-                                item.codesPostaux.forEach(function(codePostal) {
-                                    suggestions.push(codePostal+" - "+item.nom); // Ajoutez chaque code postal comme une suggestion distincte
-                                });
-                            });
-                            response(suggestions);
-                        },
-                        complete: function() {
-                            $loader.hide(); // Masquez le loader après la recherche
-                        }
-                    });
-                }
-            });
-        });
-
-    </script>
 {% endblock %}
