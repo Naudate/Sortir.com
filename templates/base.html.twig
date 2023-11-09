@@ -15,7 +15,7 @@
     </head>
     <body class="h-full">
         {% if is_granted('IS_AUTHENTICATED') %}
-            <nav class="bg-gray-100">
+            <nav class="bg-indigo-100">
                 <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
                     <div class="relative flex h-16 items-center justify-between">
                         <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
@@ -49,17 +49,19 @@
                             <div class="hidden sm:ml-6 sm:block">
                                 <div class="flex space-x-4">
                                     <a href="#" class="text-gray-800 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" aria-current="page">Accueil</a>
+                                    {% if 'ROLE_ADMIN' in app.user.roles %}
                                     <a href="#" class="text-gray-800 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Villes</a>
                                     <a href="#" class="text-gray-800 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Sites</a>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
                         <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                             <button type="button"
-                                    class="flex rounded-md bg-indigo-600 p-1 text-white
-                                    shadow-sm hover:bg-indigo-500 focus-visible:outline
+                                    class="flex rounded-md bg-amber-600 p-1 text-white
+                                    shadow-sm hover:bg-amber-500 focus-visible:outline
                                     focus-visible:outline-2 focus-visible:outline-offset-2
-                                    focus-visible:outline-indigo-600">
+                                    focus-visible:outline-amber-600">
                                 + Nouvelle Sortie
                             </button>
                             <div class="relative ml-3">
@@ -106,8 +108,17 @@
             </nav>
         {% endif %}
         {% block body %}{% endblock %}
-        <footer>
-            
+        <footer class="bg-indigo-100">
+            <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+                <p class="relative flex h-16 items-center justify-between">
+                    Informations légales -
+                    &copy; {{ "now"|date("Y")}} <strong>Sortir.com</strong> by <a href="https://www.eni-ecole.fr" rel="noopener noreferrer" target="_blank">ENI Ecole Informatique</a>
+                    &nbsp;-&nbsp;<a href="https://www.app.asso.fr/centre-information/base-de-connaissances/code-logiciels/les-contrats/contrat-de-licence-dutilisation-logiciel-libre" rel="noopener noreferrer" target="_blank">Le code source est sous licence</a>
+                    &nbsp;-&nbsp;<a href="https://www.economie.gouv.fr/apie/propriete-intellectuelle-publications/contenus-sous-licences-libres" rel="noopener noreferrer" target="_blank">Le contenu du site Web est sous licence</a>
+                    &nbsp;-&nbsp;<a href="https://www.cnil.fr/fr/reglement-europeen-protection-donnees" rel="noopener noreferrer" target="_blank">RGPD</a>
+                    &nbsp;-&nbsp;<a href="https://www.numerique.gouv.fr/publications/rgaa-accessibilite/obligations/" rel="noopener noreferrer" target="_blank">Accessibilité</a>
+                </p>
+            </div>
         </footer>
     </body>
 </html>
