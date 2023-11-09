@@ -15,7 +15,6 @@ class VilleTransformer implements DataTransformerInterface
 
     public function transform($ville)
     {
-        dump($ville);
         if (null === $ville) {
             return '';
         }
@@ -25,7 +24,6 @@ class VilleTransformer implements DataTransformerInterface
 
     public function reverseTransform($villeString)
     {
-        dump($villeString);
         if (!$villeString) {
             return null;
         }
@@ -36,7 +34,7 @@ class VilleTransformer implements DataTransformerInterface
 
         $ville = $this->entityManager
         ->getRepository(Ville::class)
-        ->findOneBy(['codePostal' => $codePostal, 'nom' => $nom]);
+        ->findOneBy(['codePostal' => $codePostal]);
 
         if (null === $ville) {
             $ville = new Ville();

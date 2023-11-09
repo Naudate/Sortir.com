@@ -38,7 +38,7 @@ class Sortie
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $motif = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(cascade: ["persist"])]
     private ?Ville $ville = null;
 
     public function getId(): ?int

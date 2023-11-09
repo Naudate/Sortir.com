@@ -28,12 +28,14 @@ class SortieController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
+            $sortie->setIsPublish(false);
+
             $this->em->persist($sortie);
             $this->em->flush();
 
             $this->addFlash("success", "Sortie crée");
 
-            return $this->redirectToRoute('user_home');
+            return $this->redirectToRoute('create_sortie');
         }
 
         return $this->render('sortie/create.html.twig', [
