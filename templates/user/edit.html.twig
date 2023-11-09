@@ -73,7 +73,9 @@
                                     {{ form_widget(userForm.nom, {
                                         'attr':{'disabled':'disabled'}
                                     })  }}
-                                    {{ form_errors(userForm.nom) }}
+                                    {{ form_errors(userForm.nom, {
+                                        'attr':{'class':'text-red-700'}
+                                    }) }}
                                     {{ form_help(userForm.nom) }}
                                 </div>
                             </div>
