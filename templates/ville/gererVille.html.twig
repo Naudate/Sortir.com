@@ -2,21 +2,121 @@
 
 {% block title %}Gestion des villes{% endblock %}
 
-{% block body %}
-    <style>
-        .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-        .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-    </style>
-    {% for message in app.flashes('success') %}
-        <p>{{ message }}</p>
-    {% endfor %}
-    <div class="example-wrapper">
-        <h1>Hello {{ controller_name }}! ✅</h1>
 
-        This friendly message is coming from:
-        <ul>
-            <li>Your controller at <code><a href="{{ '/Users/francispiq/Downloads/Projet/Sortir.com/src/Controller/UserController.php'|file_link(0) }}">src/Controller/UserController.php</a></code></li>
-            <li>Your template at <code><a href="{{ '/Users/francispiq/Downloads/Projet/Sortir.com/templates/user/index.html.twig'|file_link(0) }}">templates/user/index.html.twig</a></code></li>
-        </ul>
-    </div>
+{% block body %}
+    <h1>Créer ville</h1>
+
+    {{ form_start(form) }}
+
+    {{ form_errors(form) }}
+
+
+    {{ form_label(form.codePostal) }}
+    {{ form_errors(form.codePostal) }}
+    {{ form_widget(form.codePostal) }}
+    {{ form_help(form.codePostal) }}
+
+    <br/>
+    {{ form_label(form.nom) }}
+    {{ form_errors(form.nom) }}
+    {{ form_widget(form.nom) }}
+    {{ form_help(form.nom) }}
+
+
+    <button type="submit" class="btn">Ajouter une ville</button>
+    {{ form_end(form) }}
 {% endblock %}
+
+
+{% block javascripts %}
+
+
+    <!-- Inclure jQuery (si ce n'est pas déjà fait) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Inclure le fichier JavaScript de jQuery UI Autocomplete -->
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <!-- Inclure le fichier CSS de jQuery UI Autocomplete (si nécessaire) -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+
+    <script>
+        $(document).ready(function() {
+            var $loader = $('.autocomplete-loader');
+            $('.autocompleteNom').autocomplete({
+                source: function(request, response) {
+                    console.log("nom");
+                    $loader.show(); // Affichez le loader
+                    $.ajax({
+                        url: "{{ path('autocomplete_ville') }}",
+                        dataType: 'json',
+                        data: {
+                            q: request.term
+                        },
+                        success: function(data) {
+                            var suggestions = [];
+                            data.forEach(function(item) {
+                                item.codesPostaux.forEach(function(codePostal) {
+                                    suggestions.push(codePostal+" - "+item.nom); // Ajoutez chaque code postal comme une suggestion distincte
+                                });
+                            });
+                            response(suggestions);
+                        },
+                        complete: function() {
+                            $loader.hide(); // Masquez le loader après la recherche
+                        }
+                    });
+                },
+                select: function(event, ui) {
+                    var selectedValue = ui.item.value;
+                    var parts = selectedValue.split(" - ");
+                    var codePostal = parts[0];
+                    var nom = parts[1];
+                    // Remplissez les champs appropriés
+                    $('#ville_codePostal').val(codePostal);
+                    ui.item.value = nom;
+                }
+            });
+
+
+            $('.autocompleteCodePostal').autocomplete({
+                source: function(request, response) {
+                    console.log("code");
+                    $loader.show(); // Affichez le loader
+                    $.ajax({
+                        url: "{{ path('autocomplete_codePostal') }}",
+                        dataType: 'json',
+                        data: {
+                            q: request.term
+                        },
+                        success: function(data) {
+                            var suggestions = [];
+                            console.log(data)
+                            data.forEach(function(item) {
+                                item.codesPostaux.forEach(function(codePostal) {
+                                    suggestions.push(codePostal+" - "+item.nom); // Ajoutez chaque code postal comme une suggestion distincte
+                                });
+                            });
+                            response(suggestions);
+                        },
+                        complete: function() {
+                            $loader.hide(); // Masquez le loader après la recherche
+                        }
+                    });
+                },
+                select: function(event, ui) {
+                    var selectedValue = ui.item.value;
+                    var parts = selectedValue.split(" - ");
+                    var codePostal = parts[0];
+                    var nom = parts[1];
+                    // Remplissez les champs appropriés
+                    $('#ville_nom').val(nom);
+                    ui.item.value = codePostal;
+                }
+            });
+        });
+
+    </script>
+{% endblock %}
+

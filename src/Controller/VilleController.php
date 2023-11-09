@@ -2,6 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Ville;
+use App\Form\VilleType;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -11,23 +14,53 @@ use Symfony\Component\Routing\Annotation\Route;
 class VilleController extends AbstractController
 {
 
+    public function __construct(private EntityManagerInterface $entityManager)
+    {
+    }
+
     #[Route('/villes', name: 'gerer_villes')]
     public function gererVilles(Request $request)
     {
+        $ville = new Ville();
+        $form = $this->createForm(VilleType::class, $ville);
+        $form->handleRequest($request);
 
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $this->entityManager->persist($ville);
+            $this->entityManager->flush();
+
+            $this->addFlash("success", "Ville ajoutée");
+
+            return $this->redirectToRoute('gerer_villes');
+        }
+
+        return $this->render('ville/gererVille.html.twig', [
+            'form'=> $form->createView(),
+        ]);
     }
 
-    #[Route('/villes/get', name: 'autocomplete_ville')]
-    public function autocompleteVille(Request $request)
+    #[Route('/villes/getApi/nom', name: 'autocomplete_ville')]
+    public function autocompleteVilleNom(Request $request)
     {
         // Effectuez une requête à votre API pour récupérer les villes de France
-        $apiData = $this->getCityDataFromApi($request->query->get('q'));
+        $apiData = $this->getCityDataFromApi('nom', $request->query->get('q'));
 
         // Retournez les données sous forme de JSON
         return new JsonResponse($apiData);
     }
 
-    public function getCityDataFromApi($query)
+    #[Route('/villes/getApi/codePostal', name: 'autocomplete_codePostal')]
+    public function autocompleteVilleCodePostal(Request $request)
+    {
+        // Effectuez une requête à votre API pour récupérer les villes de France
+        $apiData = $this->getCityDataFromApi('codePostal', $request->query->get('q'));
+
+        // Retournez les données sous forme de JSON
+        return new JsonResponse($apiData);
+    }
+
+    public function getCityDataFromApi($field, $query)
     {
         // Créez un client HTTP pour effectuer une requête à l'API
         $httpClient = HttpClient::create();
@@ -35,26 +68,22 @@ class VilleController extends AbstractController
         // Définissez les paramètres de la requête
         $url = 'https://geo.api.gouv.fr/communes?';
         $parameters = [
-            'nom' => $query,
+            $field => $query,
             'format' => 'json',
             'boost' => 'population',
             'limit' => 5
         ];
 
-        dump($url);
-        dump($parameters);
-
         // Effectuez la requête GET à l'API
         $response = $httpClient->request('GET', $url, [
             'query' => $parameters,
         ]);
-        dump($response);
+
         // Vérifiez si la requête a réussi
         if ($response->getStatusCode() === 200) {
             // Convertissez la réponse JSON en tableau associatif
             $data = $response->toArray();
             // Renvoyez les données des villes
-            dump($data);
             return $data;
         } else {
             // Gérez les erreurs en conséquence (par exemple, journalisez l'erreur)
