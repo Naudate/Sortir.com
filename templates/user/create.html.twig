@@ -43,7 +43,9 @@
                         <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                             {% if 'ROLE_ADMIN' in app.user.roles %}
                                 <div class="sm:col-span-3">
-                                    {{ form_label(registrationForm.prenom) }}
+                                    {{ form_label(registrationForm.prenom, null, {
+                                        'label_attr' : { 'class': 'after:content-["*"] after:ml-0.5 after:text-red-500'}
+                                    }) }}
                                     <div class="mt-2">
                                         {{ form_widget(registrationForm.prenom) }}
                                         {{ form_errors(registrationForm.prenom) }}
@@ -51,7 +53,9 @@
                                     </div>
                                 </div>
                                 <div class="sm:col-span-3">
-                                    {{ form_label(registrationForm.nom) }}
+                                    {{ form_label(registrationForm.nom, null, {
+                                        'label_attr' : { 'class': 'after:content-["*"] after:ml-0.5 after:text-red-500'}
+                                    }) }}
                                     <div class="mt-2">
                                         {{ form_widget(registrationForm.nom)}}
                                         {{ form_errors(registrationForm.nom) }}
@@ -60,7 +64,9 @@
                                 </div>
                             {% else %}
                                 <div class="sm:col-span-3">
-                                    {{ form_label(registrationForm.prenom) }}
+                                    {{ form_label(registrationForm.prenom, null, {
+                                        'label_attr' : { 'class': 'after:content-["*"] after:ml-0.5 after:text-red-500'}
+                                    }) }}
                                     <div class="mt-2">
                                         {{ form_widget(registrationForm.prenom, {
                                             'attr':{'disabled':'disabled'}
@@ -70,7 +76,9 @@
                                     </div>
                                 </div>
                                 <div class="sm:col-span-3">
-                                    {{ form_label(registrationForm.nom) }}
+                                    {{ form_label(registrationForm.nom, null, {
+                                        'label_attr' : { 'class': 'after:content-["*"] after:ml-0.5 after:text-red-500'}
+                                    }) }}
                                     <div class="mt-2">
                                         {{ form_widget(registrationForm.nom, {
                                             'attr':{'disabled':'disabled'}
@@ -81,7 +89,9 @@
                                 </div>
                             {% endif %}
                             <div class="sm:col-span-4">
-                                {{ form_label(registrationForm.email) }}
+                                {{ form_label(registrationForm.email, null, {
+                                    'label_attr' : { 'class': 'after:content-["*"] after:ml-0.5 after:text-red-500'}
+                                }) }}
                                 <div class="mt-2">
                                     {{ form_widget(registrationForm.email) }}
                                     {{ form_help(registrationForm.email) }}
@@ -119,7 +129,7 @@
             </div>
             <div class="grid grid-cols-3 gap-x-6 gap-y-8">
                 <div class="col-end-4">
-                    <div class="mt-6 flex items-end justify-end gap-x-6">
+                    <div class="mt-6 flex items-center justify-end gap-x-6">
                         <button type="submit"
                                 class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold
                                 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline
