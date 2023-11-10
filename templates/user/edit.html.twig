@@ -119,15 +119,17 @@
                 <div class="border-b border-gray-900/10 pb-12">
                     <div class="mt-6 border-gray-100">
                         <h2 class="text-base font-semibold leading-7 text-gray-900">Mot de passe</h2>
-                        <p class="mt-1 text-sm leading-6 text-gray-600">Changement de mot de passe. Veuillez entrer le mot de passe actuel et ensuite le nouveau mot de passe</p>
+                        <p class="mt-1 text-sm leading-6 text-gray-600">Veuillez entrer le mot de passe actuel pour valider les modifications</p>
                         <div class="sm:col-span-3">
                             <div class="mt-2">
-                                {{ form_widget(userForm.plainPassword) }}
-                                {{ form_errors(userForm.plainPassword) }}
-                                {{ form_help(userForm.plainPassword) }}
+                                {{ form_widget(userForm.password) }}
+                                {{ form_errors(userForm.password) }}
+                                {{ form_help(userForm.password) }}
                             </div>
+                            {% for message in app.flashes('error') %}
+                                <p class="mt-1 text-sm leading-6 text-red-700">{{ message }}</p>
+                            {% endfor %}
                         </div>
-
                     </div>
                 </div>
             </div>
