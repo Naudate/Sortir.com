@@ -26,7 +26,7 @@ class UserController extends AbstractController
     #[IsGranted('ROLE_ADMIN')]
     public function index(UserRepository  $userRepository, int $page = 1): Response
     {
-         $users = $userRepository->findUserWithPagination($page);
+        $users = $userRepository->findUserWithPagination($page);
 
         $maxPage = ceil($userRepository->count([]) / 8);
 
@@ -70,7 +70,7 @@ class UserController extends AbstractController
 
     #[Route('/create', name: '_create')]
     #[IsGranted('ROLE_ADMIN')]
-    public function create(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, Uploader $uploader) : Response {
+    public function create(Request $request, UserRepository $userRepository, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, Uploader $uploader) : Response {
 
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
@@ -85,15 +85,18 @@ class UserController extends AbstractController
                 $pathAvatar = $uploader->upload($imageUpload,'assets/avatar/', $form->get('pseudo')->getData() );
                 $user->setPhoto($pathAvatar);
             }*/
-            // encode the plain password
+
             $user->setIsActif(true);
+            $user->setPseudo($userRepository->GeneratePseudo($user->getPrenom()));
             $user->setPassword(
                 $userPasswordHasher->hashPassword(
                     $user,
                     'password'
                 )
             );
-           // $user->setIsActif(true);
+
+            $user->setIsActif(true);
+            $user->setFirstConnection(true);
             $user->setRoles(array('ROLE_USER'));
 
             $entityManager->persist($user);

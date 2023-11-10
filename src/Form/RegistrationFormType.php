@@ -64,7 +64,7 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ]
             ])
-            ->add('pseudo', TextType::class,[
+           /* ->add('pseudo', TextType::class,[
                 'required'=> true,
                 'attr'=> array(
                     'placeholder' => 'JDupont'
@@ -81,7 +81,7 @@ class RegistrationFormType extends AbstractType
                         'maxMessage' => 'Le pseudo est trop grand',
                     ]),
                 ]
-            ])
+            ])*/
             ->add('email', EmailType::class, [
                 'required'=> true,
                 'attr'=> array(
