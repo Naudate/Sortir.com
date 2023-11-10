@@ -51,7 +51,12 @@
                                 Téléphone
                             </dt>
                             <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                                {{ user.telephone }}
+                                {% if user.telephone is null  %}
+                                    Aucun numéro de téléphone renseigné
+                                {% else %}
+                                    {{ user.telephone }}
+                                {% endif %}
+
                             </dd>
                         </div>
                         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
@@ -67,7 +72,11 @@
                                 Site
                             </dt>
                             <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                                {{ user.site.nom }}
+                                {% if user.site.nom is not defined  %}
+                                    Aucun site rattaché
+                                {% else %}
+                                    {{ user.site.nom }}
+                                {% endif %}
                             </dd>
                         </div>
                         {% if 'ROLE_ADMIN' in app.user.roles %}
