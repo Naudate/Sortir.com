@@ -130,10 +130,15 @@ class UserFormType extends AbstractType
                 'label'=> 'Utilisateur Actif  ? ',
                 'required'=> false
             ])
-            ->add('plainPassword', RepeatedType::class, [
+            ->add('password', PasswordType::class,[
+                'required'=> true,
+                'label'=> 'Mot de passe',
+                'mapped'=> true
+            ])
+           /* ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'required'=> false,
-                'label' => 'Mot de passe :',
+                'label' => 'Nouveau mot de passe :',
                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller
                 'mapped' => false,
@@ -141,7 +146,7 @@ class UserFormType extends AbstractType
                     'attr' => ['autocomplete' => 'new-password'],
                 ],
                 'first_options' => [
-                    'label' => 'Choisir un mot de passe',
+                    'label' => 'Choisir un nouveau mot de passe',
                     'constraints' => [
                         new Regex('/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).{8,}$/',
                             'Le mot de passe doit contenir au moins 1 majuscule, 1 minuscule et 1 caractère spécial'),
@@ -154,11 +159,11 @@ class UserFormType extends AbstractType
                     ]
                 ],
                 'second_options' => [
-                    'label' => 'Confirmer le mot de passe'
+                    'label' => 'Confirmer nouveau mot de passe'
                 ],
                 'invalid_message' => 'Les mot de passe ne sont pas identiques.',
 
-            ])
+            ])*/
         ;
     }
 
