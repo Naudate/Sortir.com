@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+{% block title %}Première connection{% endblock %}
+{% block body %}
+    <div class="mx-auto max-w-7xl px-4 py-24 sm:px-6 sm:py-32 lg:px-8">
+        <div class="mx-auto max-w-2xl">
+            {{ form_start(form) }}
+
+            {{ form_errors(form, {
+                'attr':{'class':'text-red-700'}
+            }) }}
+            <div class="space-y-12">
+                <div class="border-b border-gray-900/10 pb-12">
+                    <div class="mt-6 border-gray-100">
+                        <h2 class="text-base font-semibold leading-7 text-gray-900">Première connexion</h2>
+                        <p class="mt-1 text-sm leading-6 text-gray-600">Pour votre première connexion veuillez modifier votre pseudo et votre mot de passe.</p>
+                        <div>
+                            <div class="border-b border-gray-900/10 pb-12">
+                                <div class="mt-6 border-gray-100">
+                                    <h2 class="text-base font-semibold leading-7 text-gray-900">{{ form_label(form.pseudo) }}</h2>
+                                    <div class="sm:col-span-3">
+                                        <div class="mt-2">
+                                            {{ form_help(form.pseudo) }}
+                                            {{ form_errors(form.pseudo) }}
+                                            {{ form_widget(form.pseudo) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="pb-12">
+                                <div class="mt-6 border-gray-100">
+                                    <h2 class="text-base font-semibold leading-7 text-gray-900">{{ form_label(form.plainPassword) }}</h2>
+                                    <div class="sm:col-span-3">
+                                        <div class="mt-2">
+                                            {{ form_label(form.actualPassword) }}
+                                            {{ form_help(form.actualPassword) }}
+                                            {{ form_errors(form.actualPassword) }}
+                                            {{ form_widget(form.actualPassword) }}
+                                        </div>
+                                        <div class="mt-2">
+                                            {{ form_help(form.plainPassword) }}
+                                            {{ form_errors(form.plainPassword) }}
+                                            {{ form_widget(form.plainPassword) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-6">
+                <div class="sm:col-span-3">
+                    <div class="mt-6 flex items-center justify-end gap-x-6">
+                        <button type="submit" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Valider</button>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
