@@ -79,6 +79,19 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         return $paginator;
     }
 
+    public function GeneratePseudo(string $prenom){
+        $randomString = '';
+        $randomString.= substr($prenom, 0,3);
+        //suppression des espaces qui pourrait exister
+        $randomString = trim($randomString, "");
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        for ($i = 0; $i < 7; $i++) {
+            $randomString .= $characters[random_int(0, $charactersLength - 1)];
+        }
+        return $randomString;
+    }
+
 //    /**
 //     * @return User[] Returns an array of User objects
 //     */

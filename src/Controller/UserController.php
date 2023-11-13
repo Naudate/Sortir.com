@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\PasswordFormType;
 use App\Form\RegistrationFormType;
 use App\Form\UserFormType;
 use App\Helper\Uploader;
@@ -10,13 +11,12 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Config\Definition\Exception\Exception;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+
 
 #[Route('/user', name: 'user')]
 #[IsGranted('ROLE_USER')]
@@ -26,7 +26,7 @@ class UserController extends AbstractController
     #[IsGranted('ROLE_ADMIN')]
     public function index(UserRepository  $userRepository, int $page = 1): Response
     {
-         $users = $userRepository->findUserWithPagination($page);
+        $users = $userRepository->findUserWithPagination($page);
 
         $maxPage = ceil($userRepository->count([]) / 8);
 
@@ -70,7 +70,7 @@ class UserController extends AbstractController
 
     #[Route('/create', name: '_create')]
     #[IsGranted('ROLE_ADMIN')]
-    public function create(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, Uploader $uploader) : Response {
+    public function create(Request $request, UserRepository $userRepository, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, Uploader $uploader) : Response {
 
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
@@ -85,15 +85,18 @@ class UserController extends AbstractController
                 $pathAvatar = $uploader->upload($imageUpload,'assets/avatar/', $form->get('pseudo')->getData() );
                 $user->setPhoto($pathAvatar);
             }*/
-            // encode the plain password
+
             $user->setIsActif(true);
+            $user->setPseudo($userRepository->GeneratePseudo($user->getPrenom()));
             $user->setPassword(
                 $userPasswordHasher->hashPassword(
                     $user,
                     'password'
                 )
             );
-           // $user->setIsActif(true);
+
+            $user->setIsActif(true);
+            $user->setFirstConnection(true);
             $user->setRoles(array('ROLE_USER'));
 
             $entityManager->persist($user);
@@ -101,7 +104,7 @@ class UserController extends AbstractController
 
             $this->addFlash("success", "Utilisateur crée");
 
-            return $this->redirectToRoute('user_home');
+            return $this->redirectToRoute('user_details', array('id'=> $user->getId()));
         }
 
         return $this->render('user/create.html.twig', [
@@ -113,38 +116,111 @@ class UserController extends AbstractController
     #[IsGranted('ROLE_USER')]
     public function edit(User $user,Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager){
         $userConnect = $this->getUser();
+        //dd($user);
         // si utilisateur connectée cherche a consulter son profil et quil a le role user
         if($userConnect->getId() == $user->getId() && in_array('ROLE_USER', $this->getUser()->getRoles(), true) ||  in_array('ROLE_ADMIN', $this->getUser()->getRoles(), true)){
+
             $userForm = $this->createForm(UserFormType::class, $user);
 
             $userForm->handleRequest($request);
+           //dd($userPasswordHasher->isPasswordValid($user, trim($userForm->get('password')->getData())));
 
+            if($userForm->isSubmitted()){
 
-
-            if($userForm->isSubmitted() && $userForm->isValid()){
-
-                if (!empty($userForm->get('plainPassword')->getData())){
-                    $user->setPassword(
-                        $userPasswordHasher->hashPassword(
-                            $user,
-                            $userForm->get('plainPassword')->getData()
-                        )
-                    );
+                if(!$userPasswordHasher->isPasswordValid($userConnect, $userForm->get('password')->getData())){
+                    $this->addFlash("error", "Mot de passe incorrecte");
+                    return $this->redirectToRoute('user_edit',array('id'=> $user->getId()));
                 }
-                $entityManager->persist($user);
-                $entityManager->flush();
+                else{
+                     //dd($user);
+                    $entityManager->persist($user);
+                    $entityManager->flush();
 
-                $this->addFlash("success", "Votre profil a bien été modifié");
-                return $this->redirectToRoute('user_details',array('id'=> $user->getId()));
-
+                    if ($userConnect->getId() == $user->getId()){
+                        $this->addFlash("success", "Votre profil a bien été modifié");
+                    }
+                    else{
+                        $this->addFlash("success", "Le profil de l'utilisateur a bien été modifié");
+                    }
+                    return $this->redirectToRoute('user_details',array('id'=> $user->getId()));
+                }
             }
         }
         else{
             throw new Exception("Accès refusé", 403);
         }
+
         return $this->render('user/edit.html.twig', [
             'userForm'=> $userForm->createView(),
         ]);
 
+    }
+
+    #[Route('/changePassword/{id}', name: '_changePassword', requirements: ['id' => '\d+'])]
+    public function changePassword(User $user, Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, UserRepository $userRepository){
+        if ($user->getId() != $this->getUser()->getId()){
+            throw new Exception("Accès refusé, mon petit", 403);
+        }
+
+        //initialisation du formulaire
+        $passwordForm = $this->createForm(PasswordFormType::class, $user);
+        $passwordForm->handleRequest($request);
+
+        if($passwordForm->isSubmitted() && $passwordForm->isValid()){
+
+            if(!$userPasswordHasher->isPasswordValid($user, $passwordForm->get('password')->getData())){
+                $this->addFlash("error", "Ancien mot de passe incorrecte");
+                return $this->render('user/changePassword.html.twig', [
+                    'passwordForm'=> $passwordForm->createView(),
+                ]);
+            }
+           else if($userPasswordHasher->isPasswordValid($user, $passwordForm->get('plainPassword')->getData())){
+               $this->addFlash("error", "Le nouveau mot de passe ne peut pas être identique à l'ancien");
+               return $this->render('user/changePassword.html.twig', [
+                   'passwordForm'=> $passwordForm->createView(),
+               ]);
+           }
+            else{
+                $newPassword = $userPasswordHasher->hashPassword(
+                    $user,
+                    $passwordForm->get('plainPassword')->getData()
+                );
+                $user->setPassword($newPassword);
+
+                $entityManager->persist($user);
+                $entityManager->flush();
+
+                $this->addFlash("success", "Mot de passe changé avec succès");
+
+                return $this->redirectToRoute('app_home');
+            }
+        }
+
+        return $this->render('user/changePassword.html.twig', [
+            'passwordForm'=> $passwordForm->createView(),
+        ]);
+    }
+
+    #[Route('/resetPassword/{id}', name: '_resetPassword', requirements: ['id' => '\d+'])]
+    public function ResetPassword(UserRepository $userRepository, UserPasswordHasherInterface $userPasswordHasher, int $id, EntityManagerInterface $entityManager){
+        if ( in_array('ROLE_ADMIN', $this->getUser()->getRoles(), true)){
+            $user = $userRepository->find($id);
+            if(empty($user)){
+                throw new Exception("Utilisateur inconnu", 404);
+            }
+            $user->setPassword(
+                $userPasswordHasher->hashPassword(
+                    $user,
+                    'password'
+                )
+            );
+            $entityManager->persist($user);
+            $entityManager->flush();
+            $this->addFlash("success", "Mot de passe réinitialisé avec succès");
+            return $this->redirectToRoute('user_details', array('id'=> $user->getId()));
+        }
+        else{
+            throw new Exception("Accès refusé, ON SE CALME ET DEMI-TOUR !", 403);
+        }
     }
 }

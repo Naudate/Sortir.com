@@ -61,8 +61,13 @@ class AppCustomAuthenticator extends AbstractLoginFormAuthenticator
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
         $rememberMe = $request->request->get('_remember_me');
+        $user = $token->getUser();
 
-        if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
+//        if ($user){
+//            $response = new RedirectResponse($this->urlGenerator->generate('first_connection'));
+//        }
+//        else
+            if($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
             $response = new RedirectResponse($targetPath);
         }else{
             //TODO mettre home
@@ -75,6 +80,7 @@ class AppCustomAuthenticator extends AbstractLoginFormAuthenticator
             $cookie = Cookie::create('REMEMBERME', '', time() - 3600, '/');
         }
         $response->headers->setCookie($cookie);
+
         return $response;
     }
 

@@ -6,6 +6,9 @@
     <div class="mx-auto max-w-7xl px-4 py-24 sm:px-6 sm:py-32 lg:px-8">
         <div class="mx-auto max-w-2xl">
             <div>
+                {% for message in app.flashes('success') %}
+                    <p class="mt-1 text-sm leading-6 text-green-700">{{ message }}</p>
+                {% endfor %}
                 <div class="px-4 sm:px-0 grid gap-4 grid-cols-2">
                     <div>
                         <h3 class="text-base font-semibold leading-7 text-gray-900">
@@ -51,7 +54,12 @@
                                 Téléphone
                             </dt>
                             <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                                {{ user.telephone }}
+                                {% if user.telephone is null  %}
+                                    Aucun numéro de téléphone renseigné
+                                {% else %}
+                                    {{ user.telephone }}
+                                {% endif %}
+
                             </dd>
                         </div>
                         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
@@ -67,7 +75,11 @@
                                 Site
                             </dt>
                             <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                                {{ user.site.nom }}
+                                {% if user.site.nom is not defined  %}
+                                    Aucun site rattaché
+                                {% else %}
+                                    {{ user.site.nom }}
+                                {% endif %}
                             </dd>
                         </div>
                         {% if 'ROLE_ADMIN' in app.user.roles %}
@@ -105,6 +117,26 @@
                                 </svg>
                                 Retour
                             </a>
+                            {% if 'ROLE_ADMIN' in app.user.roles %}
+                                <a href="{{ path('user_resetPassword', {'id': user.id }) }}"
+                                   type="button"
+                                   class="inline-flex items-center rounded-md bg-amber-600
+                                   px-3 py-2 text-sm font-semibold text-white shadow-sm
+                                   hover:bg-gray-500 focus-visible:outline focus-visible:outline-2
+                                   focus-visible:outline-offset-2 focus-visible:outline-gray-600">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                         fill="none"
+                                         viewBox="0 0 24 24"
+                                         stroke-width="1.5"
+                                         stroke="currentColor"
+                                         class="-ml-0.5 mr-1.5 w-5 h-5">
+                                        <path stroke-linecap="round"
+                                              stroke-linejoin="round"
+                                              d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
+                                    </svg>
+                                    Réinitialiser mot de passe
+                                </a>
+                            {% endif %}
                         </div>
                     </dl>
                 </div>
