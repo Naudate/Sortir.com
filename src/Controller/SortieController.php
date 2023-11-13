@@ -100,10 +100,10 @@ class SortieController extends AbstractController
         $nbrParticipant = $sortie->getParticipant()->count();
         date_default_timezone_set('Europe/Paris');
         $dateActuelle = new \DateTime;
-        dd($sortie);
+        //dd($sortie);
 
         if ($sortie->getNombreMaxParticipant()> $nbrParticipant
-                && $sortie->getEtat() == Etat::EN_COURS
+                && $sortie->getEtat() == Etat::OUVERT
                 && $sortie->isIsPublish()
                 &&  $dateActuelle < $sortie->getDateLimiteInscription()){
             //ajout de l'utilisateur connectée à la liste
@@ -112,7 +112,7 @@ class SortieController extends AbstractController
             // persist des données
             $entityManager->persist($sortie);
             $entityManager->flush();
-            dd($sortie);
+            //dd($sortie);
 
             if($sortie->getNombreMaxParticipant() == $sortie->getParticipant()->count()){
                 $sortie->setEtat(Etat::CLOTURE);
@@ -127,7 +127,7 @@ class SortieController extends AbstractController
             $this->addFlash("error", "Le nombre d'inscription est atteint");
 
         }
-        else if ($sortie->getEtat() != Etat::EN_COURS){
+        else if ($sortie->getEtat() != Etat::OUVERT){
             $this->addFlash("error", "Il n'est pas possible de s'inscrire à cette sortie");
         }
         else if ($dateActuelle < $sortie->getDateLimiteInscription()){
@@ -139,23 +139,45 @@ class SortieController extends AbstractController
         return $this->redirectToRoute('app_home');
     }
 
-    #[Route('/unRegister', name: '_unregister', requirements: ['idSortie' => '\d+','idUser' => '\d+' ])]
-    public function seDesister (int $idSortie, int $idUser, EntityManagerInterface $entityManager, SortieRepository $sortieRepository, UserRepository $userRepository){
+    #[Route('/unRegister/{id}', name: '_unregister', requirements: ['id' => '\d+'])]
+    public function seDesister (int $id, EntityManagerInterface $entityManager, SortieRepository $sortieRepository, UserRepository $userRepository){
         //récupération de l"utilisateur connecté
-        $userConnect =  $userRepository->find($idUser);
+        $userConnect =  $this->getUser();
 
         // récupération de la sortie
-        $sortie = $sortieRepository->find($idSortie);
+        $sortie = $sortieRepository->find($id);
 
         date_default_timezone_set('Europe/Paris');
         $dateActuelle = new \DateTime;
 
+
+
         //vérification que la date limite pour se désinscrire est valide
-        if($sortie->getDateLimiteInscription() > $dateActuelle){
-            //récupération de l"utilisateur dans la liste et suppression
-            $participants  =  $sortie->getParticipant();
-            $participants->removeElement($userConnect);
-            dd($participants);
+        if($sortie->getEtat() == Etat::OUVERT
+            && $sortie->isIsPublish()
+            &&  $dateActuelle < $sortie->getDateLimiteInscription()){
+
+            if ($sortie->getParticipant()->contains($userConnect)){
+                // suppression de l'utilisateur
+                $sortie->removeParticipant($userConnect);
+
+                // si létat de la sortie etait cloturé, il faut faire passé en ouvert
+                if ($sortie->getEtat() == Etat::CLOTURE){
+                    $sortie->setEtat(Etat::OUVERT);
+                }
+
+                $entityManager->persist($sortie);
+                $entityManager->flush();
+
+                $this->addFlash("success", "Votre désinscription à bien été pris en compte");
+
+            }
+            else{
+                $this->addFlash("error", "Petit malin, eh non, tu n'a jamais fait parti des participants");
+            }
+
+            return $this->redirectToRoute('app_home');
+
         }
     }
 
