@@ -27,5 +27,3 @@ npm-debug.log
 yarn-error.log
 yarn.lock
 ###< symfony/webpack-encore-bundle ###
-public/build/app.css
-public/build/app.css
