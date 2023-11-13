@@ -8,6 +8,7 @@ use App\Enum\Etat;
 use App\Form\LieuFormType;
 use App\Form\SortieType;
 use App\Repository\SortieRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
@@ -89,16 +90,17 @@ class SortieController extends AbstractController
             'errorLieu' => $errorLieu
         ]);}
 
-    #[Route('/register', name: '_register', requirements: ['id' => '\d+'])]
-    public function inscription(int $id, EntityManagerInterface $entityManager, SortieRepository $sortieRepository){
+
+    #[Route('/register/{id}', name: '_register', requirements: ['id' => '\d+'])]
+    public function inscription(Sortie $sortie, int $id,EntityManagerInterface $entityManager, SortieRepository $sortieRepository, UserRepository $userRepository){
         //récupération de l'utilisateur connectée
         $userConnect =  $this->getUser();
 
         // récupération de la sortie
-        $sortie = $sortieRepository->find($id);
         $nbrParticipant = $sortie->getParticipant()->count();
         date_default_timezone_set('Europe/Paris');
         $dateActuelle = new \DateTime;
+        dd($sortie);
 
         if ($sortie->getNombreMaxParticipant()> $nbrParticipant
                 && $sortie->getEtat() == Etat::EN_COURS
@@ -110,6 +112,13 @@ class SortieController extends AbstractController
             // persist des données
             $entityManager->persist($sortie);
             $entityManager->flush();
+            dd($sortie);
+
+            if($sortie->getNombreMaxParticipant() == $sortie->getParticipant()->count()){
+                $sortie->setEtat(Etat::CLOTURE);
+                $entityManager->persist($sortie);
+                $entityManager->flush();
+            }
 
             //ajout d'un message de succès
             $this->addFlash("success", "Votre inscription à bien été pris en compte");
@@ -128,6 +137,26 @@ class SortieController extends AbstractController
             $this->addFlash("error", "Impossible de prendre en compte votre candidature");
         }
         return $this->redirectToRoute('app_home');
+    }
+
+    #[Route('/unRegister', name: '_unregister', requirements: ['idSortie' => '\d+','idUser' => '\d+' ])]
+    public function seDesister (int $idSortie, int $idUser, EntityManagerInterface $entityManager, SortieRepository $sortieRepository, UserRepository $userRepository){
+        //récupération de l"utilisateur connecté
+        $userConnect =  $userRepository->find($idUser);
+
+        // récupération de la sortie
+        $sortie = $sortieRepository->find($idSortie);
+
+        date_default_timezone_set('Europe/Paris');
+        $dateActuelle = new \DateTime;
+
+        //vérification que la date limite pour se désinscrire est valide
+        if($sortie->getDateLimiteInscription() > $dateActuelle){
+            //récupération de l"utilisateur dans la liste et suppression
+            $participants  =  $sortie->getParticipant();
+            $participants->removeElement($userConnect);
+            dd($participants);
+        }
     }
 
 
