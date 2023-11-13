@@ -167,4 +167,29 @@
             });
         });
     </script>
+    <script>
+        $(document).ready(function() {
+            if({{ errorLieu }} == true){
+                $('#lieuModal').show();
+                $('#closeModal').show();
+                $('#openModal').hide();
+            }
+            // Écoutez le clic sur le bouton "Ajouter un lieu"
+            $('#openModal').click(function() {
+                console.log("open modal")
+                // Affichez la modal
+                $('#lieuModal').show();
+                $('#closeModal').show();
+                $('#openModal').hide();
+            });
+
+            $('#closeModal').click(function() {
+                console.log("close modal")
+                // Affichez la modal
+                $('#lieuModal').hide();
+                $('#openModal').show();
+                $('#closeModal').hide();
+            });
+        });
+    </script>
 {% endblock %}
