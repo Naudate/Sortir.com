@@ -70,6 +70,7 @@ class Sortie
 
     #[ORM\ManyToOne(inversedBy: 'sorties')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotBlank]
     private ?Site $site = null;
 
     public function __construct()
@@ -186,6 +187,8 @@ class Sortie
     public function setLieu(?Lieu $lieu): static
     {
         $this->lieu = $lieu;
+
+        return $this;
     }
       
     public function getOrganisateur(): ?User

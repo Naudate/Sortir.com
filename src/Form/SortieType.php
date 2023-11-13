@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Lieu;
+use App\Entity\Site;
 use App\Entity\Sortie;
 use App\Entity\Ville;
 use App\Repository\LieuRepository;
@@ -73,8 +74,17 @@ class SortieType extends AbstractType
                     'class' => 'tinymce'
                 )
             ])
+            ->add('site', EntityType::class, [
+                'class' => Site::class,
+                'choice_label' => function ($site) {
+                    return $site->getNom();
+                },
+                'placeholder' => 'Sélectionnez un site',
+                'mapped' => true,
+                'required' => true,
+            ])
             ->add('ville', EntityType::class, [
-                'class' => Ville::class, // Remplacez Ville par le nom de votre entité Ville
+                'class' => Ville::class,
                 'choice_label' => function ($ville) {
                     return $ville->getCodePostal() . ' - ' . $ville->getNom();
                 },
