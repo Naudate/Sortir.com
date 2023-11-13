@@ -38,7 +38,7 @@ class SortieType extends AbstractType
                 'widget' => 'single_text',
                 'required' => true,
                 'attr' => [
-                    'class' => 'datetimepicker',
+                    'class' => 'datetimepicker mt-1 w-full',
                     'min' => (new DateTime())->format('Y-m-d H:i')
                 ]
             ])
@@ -47,20 +47,21 @@ class SortieType extends AbstractType
                 'widget' => 'single_text',
                 'required' => true,
                 'attr' => [
-                    'class' => 'datetimepicker',
+                    'class' => 'datetimepicker mt-1 w-full',
                     'min' => (new DateTime())->format('Y-m-d H:i')
                 ]
             ])
             ->add('dateLimiteInscription', DateTimeType::class, [
-                'label' => 'Date limite pour l`\'inscription',
+                'label' => 'Date limite pour l\'inscription',
                 'widget' => 'single_text',
                 'required' => true,
                 'attr' => [
-                    'class' => 'datetimepicker',
+                    'class' => 'datetimepicker mt-1 w-full',
                     'min' => (new DateTime())->format('Y-m-d H:i')
                 ]
             ])
             ->add('nombreMaxParticipant', IntegerType::class, [
+                'label' => 'Nombre maximum de participants',
                 'required' => true,
                 'attr' => [
                     'min' => 1,
@@ -71,7 +72,7 @@ class SortieType extends AbstractType
                 'required' => false,
                 'attr'=> array(
                     'placeholder' => 'Description optionnelle',
-                    'class' => 'tinymce'
+                    'class' => 'tinymce mt-1 w-full'
                 )
             ])
             ->add('site', EntityType::class, [
@@ -79,7 +80,7 @@ class SortieType extends AbstractType
                 'choice_label' => function ($site) {
                     return $site->getNom();
                 },
-                'placeholder' => 'Sélectionnez un site',
+                'placeholder' => 'Sélectionner un site',
                 'mapped' => true,
                 'required' => true,
             ])
@@ -88,7 +89,7 @@ class SortieType extends AbstractType
                 'choice_label' => function ($ville) {
                     return $ville->getCodePostal() . ' - ' . $ville->getNom();
                 },
-                'placeholder' => 'Sélectionnez une ville',
+                'placeholder' => 'Sélectionner une ville',
                 'mapped' => false,
                 'required' => true,
             ])
@@ -103,13 +104,15 @@ class SortieType extends AbstractType
             ->add('enregistrer', SubmitType::class, [
                 'label' => 'Enregistrer',
                 'attr' => [
-                    'name' => 'enregistrer'
+                    'name' => 'enregistrer',
+                    'class' => 'rounded-md bg-amber-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-amber-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600',
                 ]
             ])
             ->add('publier', SubmitType::class, [
                 'label' => 'Publier',
                 'attr' => [
-                    'name' => 'publier'
+                    'name' => 'publier',
+                    'class' => 'rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600',
                 ]
             ]);
     }

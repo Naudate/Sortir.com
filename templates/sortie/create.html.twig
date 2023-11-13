@@ -3,89 +3,133 @@
 {% block title %}Create Sortie{% endblock %}
 
 {% block body %}
+<div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-12 lg:px-8">
+    <div class="mx-auto max-w-2xl">
+        {{ form_start(form) }}
 
-    {% for message in app.flashes('success') %}
-        <p class="mt-1 text-sm leading-6 text-green-700">{{ message }}</p>
-    {% endfor %}
+        {{ form_errors(form) }}
+        <div class="space-y-12">
+            <div class="border-b border-gray-900/10 pb-12">
+                <h2 class="text-base font-semibold leading-7 text-gray-900">
+                    Création d'une sortie
+                </h2>
+                <p class="mt-1 text-sm leading-6 text-gray-600">
+                    Espace pour la création d'une sortie.
+                </p>
+                <div class="mt-6 border-gray-100">
+                    {{ form_label(form.nom, null, {
+                        'label_attr' : { 'class': 'after:content-["*"] after:ml-0.5
+                             after:text-red-500 text-gray-800'}
+                    }) }}
+                    {{ form_errors(form.nom) }}
+                    {{ form_widget(form.nom) }}
+                    {{ form_help(form.nom) }}
+                </div>
+                <div class="grid md:grid-cols-3 gap-x-3">
+                    <div class="mt-6 border-gray-100">
+                        {{ form_label(form.dateHeureDebut, null, {
+                            'label_attr' : { 'class': 'after:content-["*"] after:ml-0.5
+                             after:text-red-500 text-gray-800'}
+                        }) }}
+                        {{ form_widget(form.dateHeureDebut) }}
+                        {{ form_help(form.dateHeureDebut) }}
+                        {{ form_errors(form.dateHeureDebut) }}
+                    </div>
+                    <div class="mt-6 border-gray-100">
+                        {{ form_label(form.dateHeureFin, null, {
+                            'label_attr' : { 'class': 'after:content-["*"] after:ml-0.5
+                             after:text-red-500 text-gray-800'}
+                        }) }}
+                        {{ form_widget(form.dateHeureFin) }}
+                        {{ form_help(form.dateHeureFin) }}
+                        {{ form_errors(form.dateHeureFin) }}
+                    </div>
+                    <div class="mt-6 border-gray-100">
+                        {{ form_label(form.dateLimiteInscription, null, {
+                            'label_attr' : { 'class': 'after:content-["*"] after:ml-0.5
+                             after:text-red-500 text-gray-800'}
+                        }) }}
+                        {{ form_widget(form.dateLimiteInscription) }}
+                        {{ form_help(form.dateLimiteInscription) }}
+                        {{ form_errors(form.dateLimiteInscription) }}
+                    </div>
+                </div>
+                <div class="mt-6 border-gray-100">
+                    {{ form_label(form.nombreMaxParticipant, null, {
+                        'label_attr' : { 'class': 'after:content-["*"] after:ml-0.5
+                             after:text-red-500 text-gray-800'}
+                    }) }}
+                    {{ form_widget(form.nombreMaxParticipant) }}
+                    {{ form_help(form.nombreMaxParticipant) }}
+                    {{ form_errors(form.nombreMaxParticipant) }}
+                </div>
+            </div>
+            <div class="border-b border-gray-900/10 pb-12">
+                <h2 class="text-base font-semibold leading-7 text-gray-900">
+                    Description de la sortie
+                </h2>
+                <p class="mt-1 text-sm leading-6 text-gray-600">
+                    Ajoutez une description de la sortie.
+                </p>
+                <div class="mt-6 border-gray-100">
+                    {{ form_label(form.description) }}
+                    {{ form_widget(form.description) }}
+                    {{ form_help(form.description) }}
+                    {{ form_errors(form.description) }}
+                </div>
+            </div>
+            <div class="border-b border-gray-900/10 pb-12">
+                <h2 class="text-base font-semibold leading-7 text-gray-900">
+                    Informations sur le lieu et le site
+                </h2>
+                <p class="mt-1 text-sm leading-6 text-gray-600">
+                    Ajoutez le lieu et la ville de la sortie ainsi que le site concerné.
+                </p>
+                <div class="mt-6 border-gray-100">
+                    {{ form_label(form.site, null, {
+                        'label_attr' : { 'class': 'after:content-["*"] after:ml-0.5
+                             after:text-red-500 text-gray-800'}
+                    }) }}
+                    {{ form_widget(form.site) }}
+                    {{ form_help(form.site) }}
+                    {{ form_errors(form.site) }}
+                </div>
+                <div class="mt-6 border-gray-100">
+                    {{ form_label(form.ville, null, {
+                        'label_attr' : { 'class': 'after:content-["*"] after:ml-0.5
+                             after:text-red-500 text-gray-800'}
+                    }) }}
+                    {{ form_widget(form.ville) }}
+                    {{ form_help(form.ville) }}
+                    {{ form_errors(form.ville) }}
+                </div>
+                <div class="mt-6 border-gray-100">
+                    {{ form_label(form.lieu, null, {
+                        'label_attr' : { 'class': 'after:content-["*"] after:ml-0.5
+                             after:text-red-500 text-gray-800'}
+                    }) }}
+                    {{ form_widget(form.lieu) }}
+                    {{ form_help(form.lieu) }}
+                    {{ form_errors(form.lieu) }}
+                </div>
+            </div>
+            <div class="grid grid-cols-3 gap-x-6 gap-y-6">
+                <div class="col-end-4">
+                    <div class="flex items-center justify-end gap-x-6">
+                        {{ form_row(form.enregistrer) }}
+                        {{ form_row(form.publier) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-    <h1>Créer sortie</h1>
 
-    {{ form_start(form) }}
 
-    {{ form_errors(form) }}
 
-    {{ form_label(form.nom) }}
-    {{ form_errors(form.nom) }}
-    {{ form_widget(form.nom) }}
-    {{ form_help(form.nom) }}
-
-    <br/>
-    {{ form_label(form.dateHeureDebut) }}
-    {{ form_errors(form.dateHeureDebut) }}
-    {{ form_widget(form.dateHeureDebut) }}
-    {{ form_help(form.dateHeureDebut) }}
-
-    <br/>
-    {{ form_label(form.dateHeureFin) }}
-    {{ form_errors(form.dateHeureFin) }}
-    {{ form_widget(form.dateHeureFin) }}
-    {{ form_help(form.dateHeureFin) }}
-
-    <br/>
-    {{ form_label(form.dateLimiteInscription) }}
-    {{ form_errors(form.dateLimiteInscription) }}
-    {{ form_widget(form.dateLimiteInscription) }}
-    {{ form_help(form.dateLimiteInscription) }}
-
-    <br/>
-    {{ form_label(form.nombreMaxParticipant) }}
-    {{ form_errors(form.nombreMaxParticipant) }}
-    {{ form_widget(form.nombreMaxParticipant) }}
-    {{ form_help(form.nombreMaxParticipant) }}
-
-    <br/>
-    {{ form_label(form.description) }}
-    {{ form_errors(form.description) }}
-    {{ form_widget(form.description) }}
-    {{ form_help(form.description) }}
-
-    <br/>
-    {{ form_label(form.site) }}
-    {{ form_errors(form.site) }}
-    {{ form_widget(form.site) }}
-    {{ form_help(form.site) }}
-
-    <br/>
-    {{ form_label(form.ville) }}
-    {{ form_errors(form.ville) }}
-    {{ form_widget(form.ville) }}
-    {{ form_help(form.ville) }}
-
-    <br/>
-    {{ form_label(form.lieu) }}
-    {{ form_errors(form.lieu) }}
-    {{ form_widget(form.lieu) }}
-    {{ form_help(form.lieu) }}
-
-    <button type="button" class="btn" id="openModal">Ajouter un lieu</button>
-
-    {{ form_row(form.enregistrer) }}
-    {{ form_row(form.publier) }}
 
     {{ form_end(form) }}
-
-
-    <div id="lieuModal" style="display: none; border: solid black 2px; padding: 10px; margin: 10px">
-        <div >
-            {{ include('lieu/modal/addLieu.html.twig', {
-                modalTitle: 'Add a new Lieu',
-            }) }}
-        </div>
-        <button type="button" class="btn" id="closeModal" hidden>Annuler</button>
-    </div>
-
-
-
 {% endblock %}
 
 {% block javascripts %}
@@ -119,33 +163,6 @@
 
                     }
                 });
-            });
-        });
-    </script>
-
-    <!-- Ajoutez le script pour gérer l'ouverture de la modal -->
-    <script>
-        $(document).ready(function() {
-            if({{ errorLieu }} == true){
-                $('#lieuModal').show();
-                $('#closeModal').show();
-                $('#openModal').hide();
-            }
-                // Écoutez le clic sur le bouton "Ajouter un lieu"
-            $('#openModal').click(function() {
-                console.log("open modal")
-                // Affichez la modal
-                $('#lieuModal').show();
-                $('#closeModal').show();
-                $('#openModal').hide();
-            });
-
-            $('#closeModal').click(function() {
-                console.log("close modal")
-                // Affichez la modal
-                $('#lieuModal').hide();
-                $('#openModal').show();
-                $('#closeModal').hide();
             });
         });
     </script>
