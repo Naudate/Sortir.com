@@ -33,7 +33,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column]
     #[Assert\Length(
-        min: 5,
+        min: 12,
         max: 4096,
         minMessage: 'Votre mot de passe doit contenir 12 caractères'
     )]

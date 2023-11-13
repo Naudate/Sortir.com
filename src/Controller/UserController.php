@@ -11,14 +11,10 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Config\Definition\Exception\Exception;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 
@@ -120,67 +116,34 @@ class UserController extends AbstractController
     #[IsGranted('ROLE_USER')]
     public function edit(User $user,Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager){
         $userConnect = $this->getUser();
-
+        //dd($user);
         // si utilisateur connectée cherche a consulter son profil et quil a le role user
         if($userConnect->getId() == $user->getId() && in_array('ROLE_USER', $this->getUser()->getRoles(), true) ||  in_array('ROLE_ADMIN', $this->getUser()->getRoles(), true)){
-            $userupdate = $user;
 
-            $userForm = $this->createForm(UserFormType::class, $userupdate);
-
-            $userFormUpdate = $request->request->all('user_form');
-            // si userFormUpdate <6
-         /*   if (!empty($userFormUpdate) &&count($userFormUpdate)<6){
-                $propertyAccessor = PropertyAccess::createPropertyAccessorBuilder()
-                    ->enableExceptionOnInvalidIndex()
-                    ->getPropertyAccessor();
-
-                $userupdate->setPseudo($propertyAccessor->getValue($userFormUpdate, '[pseudo]'));
-                $userupdate->setEmail($propertyAccessor->getValue($userFormUpdate, '[email]'));
-                $userupdate->setTelephone($propertyAccessor->getValue($userFormUpdate, '[telephone]'));
-                $userupdate->setPassword($propertyAccessor->getValue($userFormUpdate, '[password]'));
-
-                $arrayUser = array('nom'=> $userupdate->getNom(),
-                    'prenom'=> $userupdate->getPrenom(),
-                    'pseudo'=> $userupdate->getPseudo(),
-                    'telephone'=> $userupdate->getTelephone(),
-                    'photo'=> $userupdate->getPhoto(),
-                    'email'=> $userupdate->getEmail(),
-                    'is_actif'=> $userupdate->isIsActif(),
-                    'site'=> $userupdate->getSite(),
-                    'password'=> $userupdate->getPassword(),
-                    '_token'=> $propertyAccessor->getValue($userFormUpdate, '[_token]'));
-                $request->request->set('user_form', $arrayUser);
-            }
-*/
+            $userForm = $this->createForm(UserFormType::class, $user);
 
             $userForm->handleRequest($request);
-            //dd($userForm);
+           //dd($userPasswordHasher->isPasswordValid($user, trim($userForm->get('password')->getData())));
 
-            if($userForm->isSubmitted() && $userForm->isValid()){
-                //dd($request);
-                /*$user->setPassword(
-                    $userPasswordHasher->hashPassword(
-                        $user,
-                        $userForm->get('password')->getData()
-                    )
-                );*/
+            if($userForm->isSubmitted()){
+
                 if(!$userPasswordHasher->isPasswordValid($userConnect, $userForm->get('password')->getData())){
                     $this->addFlash("error", "Mot de passe incorrecte");
-                    return $this->render('user/edit.html.twig', [
-                        'userForm'=> $userForm->createView(),
-                    ]);
-                }
-                $entityManager->persist($user);
-                $entityManager->flush();
-
-                if ($userConnect->getId() == $user->getId()){
-                    $this->addFlash("success", "Votre profil a bien été modifié");
+                    return $this->redirectToRoute('user_edit',array('id'=> $user->getId()));
                 }
                 else{
-                    $this->addFlash("success", "Le profil de l'utilisateur a bien été modifié");
-                }
-                return $this->redirectToRoute('user_details',array('id'=> $user->getId()));
+                     //dd($user);
+                    $entityManager->persist($user);
+                    $entityManager->flush();
 
+                    if ($userConnect->getId() == $user->getId()){
+                        $this->addFlash("success", "Votre profil a bien été modifié");
+                    }
+                    else{
+                        $this->addFlash("success", "Le profil de l'utilisateur a bien été modifié");
+                    }
+                    return $this->redirectToRoute('user_details',array('id'=> $user->getId()));
+                }
             }
         }
         else{
