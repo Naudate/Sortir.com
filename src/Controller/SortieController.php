@@ -12,8 +12,9 @@ use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-
+#[IsGranted('ROLE_USER')]
 class SortieController extends AbstractController
 {
 
@@ -88,6 +89,34 @@ class SortieController extends AbstractController
        dump($sorties);
        return $this->render('home/index.html.twig', ["sorties" => $sorties]);
    }
+    #[Route('/sortie/register', name: 'register_sortie', requirements: ['id' => '\d+'])]
+   public function inscription(int $id, EntityManagerInterface $entityManager, SortieRepository $sortieRepository){
+        //récupération de l'utilisateur connectée
+        $userConnect =  $this->getUser();
+
+        // récupération de la sortie
+        $sortie = $sortieRepository->find($id);
+        $nbrParticipant = $sortie->getParticipant()->count();
+
+        if ($sortie->getNombreMaxParticipant()> $nbrParticipant){
+            //ajout de l'utilisateur connectée à la liste
+            $sortie->addParticipant($userConnect);
+
+            // persist des données
+            $entityManager->persist($sortie);
+            $entityManager->flush();
+
+            //ajout d'un message de succès
+            $this->addFlash("success", "Votre inscription à bien été pris en compte");
+        }
+        else{
+            $this->addFlash("error", "Le nombre d'inscription est atteint");
+
+        }
+
+
+
+    }
 
 
 }
