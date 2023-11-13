@@ -18,7 +18,7 @@ class VilleType extends AbstractType
             ->add('codePostal', TextType::class, [
                 'required'=> true,
                 'attr' => [
-                    'class' => 'autocompleteCodePostal'
+                    'class' => 'autocompleteCodePostal mt-1 w-full'
                 ],
                 'constraints'=>[
                     new NotBlank([
@@ -35,7 +35,7 @@ class VilleType extends AbstractType
             ->add('nom', TextType::class, [
                 'required'=> true,
                 'attr' => [
-                    'class' => 'autocompleteNom'
+                    'class' => 'autocompleteNom mt-1 w-full'
                 ],
                 'constraints'=>[
                     new NotBlank([

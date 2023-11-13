@@ -29,6 +29,7 @@ class PasswordFormType extends AbstractType
                  'mapped' => false,
                  'options' => [
                      'attr' => ['autocomplete' => 'new-password'],
+                     'label_attr' => [ 'class' => 'after:content-["*"] after:ml-0.5 after:text-red-500 text-gray-800' ]
                  ],
                  'first_options' => [
                      'label' => 'Choisir un nouveau mot de passe',
