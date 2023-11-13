@@ -2,11 +2,13 @@
 
 namespace App\Entity;
 
+use App\Enum\Etat;
 use App\Repository\SortieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: SortieRepository::class)]
 class Sortie
@@ -46,6 +48,15 @@ class Sortie
 
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'inscriptions')]
     private Collection $participant;
+
+    #[ORM\Column(length: 100)]
+    #[ORM\Check(Etat::class)]
+    #[ORM\Assert\Choice(Etat::class)]
+    private ?string $etat = null;
+
+    #[ORM\ManyToOne(inversedBy: 'sorties')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Site $site = null;
 
     public function __construct()
     {
@@ -185,6 +196,30 @@ class Sortie
     public function removeParticipant(User $participant): static
     {
         $this->participant->removeElement($participant);
+
+        return $this;
+    }
+
+    public function getEtat(): ?string
+    {
+        return $this->etat;
+    }
+
+    public function setEtat(string $etat): static
+    {
+        $this->etat = $etat;
+
+        return $this;
+    }
+
+    public function getSite(): ?Site
+    {
+        return $this->site;
+    }
+
+    public function setSite(?Site $site): static
+    {
+        $this->site = $site;
 
         return $this;
     }
