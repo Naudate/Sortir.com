@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Sortie;
+use App\Enum\Etat;
 use App\Form\SortieType;
 use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -50,11 +51,15 @@ class SortieController extends AbstractController
 
             if($form->getClickedButton() && 'publier' === $form->getClickedButton()->getName()){
                 $sortie->setIsPublish(true);
+                $sortie->setEtat(Etat::OUVERT);
             }else{
                 $sortie->setIsPublish(false);
+                $sortie->setEtat(Etat::EN_CREATION);
             }
 
             if ($form->getErrors(true)->count() == 0) {
+
+                $sortie->setOrganisateur($this->getUser());
                 $this->em->persist($sortie);
                 $this->em->flush();
                 $this->addFlash("success", "Sortie crée");
