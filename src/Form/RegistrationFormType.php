@@ -64,24 +64,6 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ]
             ])
-           /* ->add('pseudo', TextType::class,[
-                'required'=> true,
-                'attr'=> array(
-                    'placeholder' => 'JDupont'
-                ),
-                'label'=> 'Pseudo',
-                'constraints'=>[
-                    new NotBlank([
-                        'message' => 'Pseudo invalide',
-                    ]),
-                    new Length([
-                        'min' => 5,
-                        'minMessage' => 'Le pseudo pas assez long',
-                        'max' => 255,
-                        'maxMessage' => 'Le pseudo est trop grand',
-                    ]),
-                ]
-            ])*/
             ->add('email', EmailType::class, [
                 'required'=> true,
                 'attr'=> array(
@@ -110,20 +92,6 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ]
             ])
-          /*  ->add('avatar', FileType::class, [
-                'label'=> 'Photo de profil',
-                'mapped' => false,
-                'required' => false,
-                'constraints' => [
-                    new File([
-                        'maxSize' => '2048k',
-                        'mimeTypes' => [
-                            'image/*',
-                        ],
-                        'mimeTypesMessage' => 'Veuillez importer un fichier de type image . ',
-                    ])
-                ],
-            ])*/
             ->add('site', EntityType::class,[
                 'class'=> Site::class,
                 'choice_label'=> 'nom',
