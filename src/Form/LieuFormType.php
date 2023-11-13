@@ -72,7 +72,9 @@ class LieuFormType extends AbstractType
             ->add('ville', EntityType::class,[
                 'class'=> Ville::class,
                 'label'=> 'Ville ',
-                'choice_label'=> 'nom',
+                'choice_label' => function ($ville) {
+                    return $ville->getCodePostal() . ' - ' . $ville->getNom();
+                },
                 'query_builder' => function (VilleRepository $villeRepository){
                     return $villeRepository->createQueryBuilder("v")->addOrderBy('v.nom');
                 }

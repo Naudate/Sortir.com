@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Lieu;
 use App\Entity\Sortie;
 use App\Enum\Etat;
+use App\Form\LieuFormType;
 use App\Form\SortieType;
 use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -28,8 +30,21 @@ class SortieController extends AbstractController
     public function create(Request $request): Response
     {
         $sortie = new Sortie();
+        $lieu = new Lieu();
         $form = $this->createForm(SortieType::class, $sortie);
+        $formLieu = $this->createForm(LieuFormType::class, $lieu);
         $form->handleRequest($request);
+        $formLieu->handleRequest($request);
+
+        $errorLieu = false;
+
+        if ($formLieu->isSubmitted() && $formLieu->isValid()) {
+            $this->em->persist($lieu);
+            $this->em->flush();
+            $this->addFlash("success", "Lieu créé");
+        }else {
+            $errorLieu = true;
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
 
@@ -70,6 +85,8 @@ class SortieController extends AbstractController
 
         return $this->render('sortie/create.html.twig', [
             'form'=> $form->createView(),
+            'lieuForm'=> $formLieu->createView(),
+            'errorLieu' => $errorLieu
         ]);}
 
     #[Route('/register', name: '_register', requirements: ['id' => '\d+'])]

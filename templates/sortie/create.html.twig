@@ -3,6 +3,11 @@
 {% block title %}Create Sortie{% endblock %}
 
 {% block body %}
+
+    {% for message in app.flashes('success') %}
+        <p class="mt-1 text-sm leading-6 text-green-700">{{ message }}</p>
+    {% endfor %}
+
     <h1>Créer sortie</h1>
 
     {{ form_start(form) }}
@@ -62,10 +67,25 @@
     {{ form_widget(form.lieu) }}
     {{ form_help(form.lieu) }}
 
+    <button type="button" class="btn" id="openModal">Ajouter un lieu</button>
+
     {{ form_row(form.enregistrer) }}
     {{ form_row(form.publier) }}
 
     {{ form_end(form) }}
+
+
+    <div id="lieuModal" style="display: none; border: solid black 2px; padding: 10px; margin: 10px">
+        <div >
+            {{ include('lieu/modal/addLieu.html.twig', {
+                modalTitle: 'Add a new Lieu',
+            }) }}
+        </div>
+        <button type="button" class="btn" id="closeModal" hidden>Annuler</button>
+    </div>
+
+
+
 {% endblock %}
 
 {% block javascripts %}
@@ -99,6 +119,33 @@
 
                     }
                 });
+            });
+        });
+    </script>
+
+    <!-- Ajoutez le script pour gérer l'ouverture de la modal -->
+    <script>
+        $(document).ready(function() {
+            if({{ errorLieu }} == true){
+                $('#lieuModal').show();
+                $('#closeModal').show();
+                $('#openModal').hide();
+            }
+                // Écoutez le clic sur le bouton "Ajouter un lieu"
+            $('#openModal').click(function() {
+                console.log("open modal")
+                // Affichez la modal
+                $('#lieuModal').show();
+                $('#closeModal').show();
+                $('#openModal').hide();
+            });
+
+            $('#closeModal').click(function() {
+                console.log("close modal")
+                // Affichez la modal
+                $('#lieuModal').hide();
+                $('#openModal').show();
+                $('#closeModal').hide();
             });
         });
     </script>
