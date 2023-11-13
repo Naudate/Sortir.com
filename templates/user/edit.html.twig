@@ -1,14 +1,10 @@
 {% extends 'base.html.twig' %}
 {% block title %}Profil{% endblock %}
 {% block body %}
-<<<<<<< HEAD
     <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
         {% for message in app.flashes('success') %}
             <p class="mt-1 text-sm leading-6 text-green-700">{{ message }}</p>
         {% endfor %}
-=======
-    <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-12 lg:px-8">
->>>>>>> 2baf2c4 (change)
         <div class="mx-auto max-w-2xl">
             {{ form_start(userForm) }}
 
