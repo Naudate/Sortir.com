@@ -2,12 +2,17 @@
 
 namespace App\Form;
 
+use App\Entity\Lieu;
 use App\Entity\Sortie;
-use App\Form\DataTransformer\VilleTransformer;
+use App\Entity\Ville;
+use App\Repository\LieuRepository;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -25,18 +30,7 @@ class SortieType extends AbstractType
                 'required'=> true,
                 'attr'=> array(
                     'placeholder' => 'Nom de la sortie'
-                ),
-                'constraints'=>[
-                    new NotBlank([
-                        'message' => 'Nom invalide',
-                    ]),
-                    new Length([
-                        'min' => 2,
-                        'minMessage' => 'Le nom doit faire plus de 2 caractères',
-                        'max' => 255,
-                        'maxMessage' => 'Le nom doit faire moins de 255 caractères',
-                    ]),
-                ]
+                )
             ])
             ->add('dateHeureDebut', DateTimeType::class, [
                 'label' => 'Date de début de la sortie',
@@ -44,6 +38,7 @@ class SortieType extends AbstractType
                 'required' => true,
                 'attr' => [
                     'class' => 'datetimepicker',
+                    'min' => (new DateTime())->format('Y-m-d H:i')
                 ]
             ])
             ->add('dateHeureFin',DateTimeType::class, [
@@ -52,6 +47,7 @@ class SortieType extends AbstractType
                 'required' => true,
                 'attr' => [
                     'class' => 'datetimepicker',
+                    'min' => (new DateTime())->format('Y-m-d H:i')
                 ]
             ])
             ->add('dateLimiteInscription', DateTimeType::class, [
@@ -60,6 +56,7 @@ class SortieType extends AbstractType
                 'required' => true,
                 'attr' => [
                     'class' => 'datetimepicker',
+                    'min' => (new DateTime())->format('Y-m-d H:i')
                 ]
             ])
             ->add('nombreMaxParticipant', IntegerType::class, [
@@ -75,6 +72,35 @@ class SortieType extends AbstractType
                     'placeholder' => 'Description optionnelle',
                     'class' => 'tinymce'
                 )
+            ])
+            ->add('ville', EntityType::class, [
+                'class' => Ville::class, // Remplacez Ville par le nom de votre entité Ville
+                'choice_label' => function ($ville) {
+                    return $ville->getCodePostal() . ' - ' . $ville->getNom();
+                },
+                'placeholder' => 'Sélectionnez une ville',
+                'mapped' => false,
+                'required' => true,
+            ])
+            ->add('lieu', EntityType::class, [
+                'class' => Lieu::class, // Remplacez Lieu par le nom de votre entité Lieu
+                'placeholder' => 'Sélectionnez d\'abord une ville',
+                'choice_label' => function ($lieu) {
+                    return $lieu->getNom() . ' - ' . $lieu->getRue();
+                },
+                'required' => true,
+            ])
+            ->add('enregistrer', SubmitType::class, [
+                'label' => 'Enregistrer',
+                'attr' => [
+                    'name' => 'enregistrer'
+                ]
+            ])
+            ->add('publier', SubmitType::class, [
+                'label' => 'Publier',
+                'attr' => [
+                    'name' => 'publier'
+                ]
             ]);
     }
 

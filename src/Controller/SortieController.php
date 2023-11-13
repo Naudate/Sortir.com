@@ -7,6 +7,7 @@ use App\Form\SortieType;
 use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,14 +30,35 @@ class SortieController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $sortie->setIsPublish(false);
+            if($sortie->getDateHeureDebut() < new \DateTime()){
+                $form->get('dateHeureDebut')->addError(new FormError('La date de fin ne peut pas être antérieure à la date du jour.'));
+            }
 
-            $this->em->persist($sortie);
-            $this->em->flush();
+            if($sortie->getDateHeureDebut() < new \DateTime()){
+                $form->get('dateLimiteInscription')->addError(new FormError('La date limite d\'inscription ne peut pas être antérieure à la date du jour.'));
+            }
 
-            $this->addFlash("success", "Sortie crée");
+            if($sortie->getDateHeureFin() < $sortie->getDateHeureDebut()){
+                $form->get('dateHeureFin')->addError(new FormError('La date de fin ne peut pas être antérieure à la date de début.'));
+            }
 
-            return $this->redirectToRoute('create_sortie');
+            if($sortie->getDateLimiteInscription() > $sortie->getDateHeureDebut()){
+                $form->get('dateLimiteInscription')->addError(new FormError('La date limite d\'inscription ne peut pas être supérieure à la date de début.'));
+            }
+
+            if($form->getClickedButton() && 'publier' === $form->getClickedButton()->getName()){
+                $sortie->setIsPublish(true);
+            }else{
+                $sortie->setIsPublish(false);
+            }
+
+            if ($form->getErrors(true)->count() == 0) {
+                $this->em->persist($sortie);
+                $this->em->flush();
+                $this->addFlash("success", "Sortie crée");
+
+                return $this->redirectToRoute('create_sortie');
+            }
         }
 
         return $this->render('sortie/create.html.twig', [

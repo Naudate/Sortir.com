@@ -44,6 +44,56 @@
     {{ form_widget(form.description) }}
     {{ form_help(form.description) }}
 
-    <button type="submit" class="btn">Créer une nouvelle sortie</button>
+    <br/>
+    {{ form_label(form.ville) }}
+    {{ form_errors(form.ville) }}
+    {{ form_widget(form.ville) }}
+    {{ form_help(form.ville) }}
+
+    <br/>
+    {{ form_label(form.lieu) }}
+    {{ form_errors(form.lieu) }}
+    {{ form_widget(form.lieu) }}
+    {{ form_help(form.lieu) }}
+
+    {{ form_row(form.enregistrer) }}
+    {{ form_row(form.publier) }}
+
     {{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+
+    {{ parent() }}
+
+    <script>
+        // Attendez que le document soit prêt
+        $(document).ready(function() {
+            // Écoutez les changements de la ville
+            $('#{{ form.ville.vars.id }}').change(function() {
+                // Récupérez la valeur de la ville sélectionnée
+                var selectedVille = $(this).val();
+
+                // Faites une requête AJAX pour récupérer les lieux associés à la ville
+                $.ajax({
+                    url: "{{ path('lieu_getByVille') }}",
+                    type: 'POST',
+                    data: { ville: selectedVille },
+                    success: function(response) {
+                        //rendre le champ non disabled
+                        $('#{{ form.lieu.vars.id }}').empty(); // Effacez les options existantes
+                        if (response.length === 0){
+                            $('#{{ form.lieu.vars.id }}').append('<option> Cette ville n\'a pas de lieu</option>');
+                        }else{
+                            // Mettez à jour les options du champ "lieu" avec les données de la réponse JSON
+                            $.each(response, function(index, lieu) {
+                                $('#{{ form.lieu.vars.id }}').append('<option value="' + lieu.id + '">' + lieu.nom +' - '+ lieu.rue + '</option>');
+                            });
+                        }
+
+                    }
+                });
+            });
+        });
+    </script>
 {% endblock %}
