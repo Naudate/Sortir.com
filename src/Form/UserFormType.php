@@ -141,7 +141,7 @@ class UserFormType extends AbstractType
                 }
             ])
             ->add('isActif', CheckboxType::class, [
-                'label'=> 'Utilisateur Actif  ? ',
+                'label'=> 'Utilisateur Actif',
                 'required'=> false
             ])
             ->add('password', PasswordType::class,[

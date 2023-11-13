@@ -12,6 +12,9 @@
             <div class="space-y-12">
                 <div class="border-b border-gray-900/10 pb-12">
                     <div class="mt-6 border-gray-100">
+                        {% for message in app.flashes('success') %}
+                            <p class="my-1 text-sm leading-6 text-green-700">{{ message }}</p>
+                        {% endfor %}
                         <h2 class="text-base font-semibold leading-7 text-gray-900">Profil</h2>
                         <p class="mt-1 text-sm leading-6 text-gray-600">Ces informations seront affichées publiquement, alors faites attention à ce que vous partagez.</p>
                         <div>
@@ -137,8 +140,8 @@
                 </div>
             </div>
             <div class="grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-6">
-                <div class="sm:col-span-3">
-                    <div class="mt-6 flex items-center justify-start gap-x-6">
+                <div class="sm:col-span-2">
+                    <div class="mt-6 flex items-center justify-start gap-x-3">
                         {% if 'ROLE_ADMIN' in app.user.roles %}
                             {{ form_row(userForm.isActif) }}
                         {% else%}
@@ -148,10 +151,54 @@
                         {% endif %}
                     </div>
                 </div>
-                <div class="sm:col-span-3">
-                    <div class="mt-6 flex items-center justify-end gap-x-6">
-                       <!-- <button type="submit" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Modifier</button>
-                       -->
+                <div class="sm:col-span-2">
+                    <div class="mt-6 flex items-center justify-center gap-x-3">
+                        {% if 'ROLE_ADMIN' in app.user.roles %}
+                            <a href="{{ path('user_resetPassword', {'id': userId }) }}"
+                               type="button"
+                               title="Réinitialiser le mot de passe"
+                               class="inline-flex items-center rounded-md bg-amber-600
+                                   px-3 py-2 text-sm font-semibold text-white shadow-sm
+                                   hover:bg-gray-500 focus-visible:outline focus-visible:outline-2
+                                   focus-visible:outline-offset-2 focus-visible:outline-gray-600">
+                               <svg xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke-width="1.5"
+                                    stroke="currentColor"
+                                    class="w-5 h-5">
+                                   <path stroke-linecap="round"
+                                         stroke-linejoin="round"
+                                         d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                               </svg>
+                                Mot de passe
+                            </a>
+                        {% endif %}
+                        {% if not 'ROLE_ADMIN' in app.user.roles %}
+                            <a href="{{ path('user_changePassword', {'id': userId }) }}"
+                               type="button"
+                               title="Changer le mot de passe"
+                               class="inline-flex items-center rounded-md bg-amber-600
+                                   px-3 py-2 text-sm font-semibold text-white shadow-sm
+                                   hover:bg-gray-500 focus-visible:outline focus-visible:outline-2
+                                   focus-visible:outline-offset-2 focus-visible:outline-gray-600">
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                     fill="none"
+                                     viewBox="0 0 24 24"
+                                     stroke-width="1.5"
+                                     stroke="currentColor"
+                                     class="w-5 h-5">
+                                    <path stroke-linecap="round"
+                                          stroke-linejoin="round"
+                                          d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                                </svg>
+                                Mot de passe
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="sm:col-span-2">
+                    <div class="mt-6 flex items-center justify-end gap-x-3">
                         {{ form_widget(userForm.Modifier) }}
                         {{ form_end(userForm) }}
                         {% if 'ROLE_ADMIN' in app.user.roles %}

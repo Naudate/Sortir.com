@@ -77,7 +77,7 @@ class RegistrationFormType extends AbstractType
                 ]
 
             ])
-            ->add('telephone', NumberType::class,[
+            ->add('telephone', TextType::class,[
                 'label'=> 'Téléphone',
                 'required' => false,
                 'attr'=> array(

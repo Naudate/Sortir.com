@@ -11,8 +11,8 @@
 
     <br/>
 <div class="relative overflow-x-auto container pl-5 pr-5 pt-5">
-    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+    <table class="w-full text-sm text-left text-gray-500">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
             <tr>
                 <th scope="col" class="px-6 py-3">ID</th>
                 <th scope="col" class="px-6 py-3">NOM</th>
@@ -25,7 +25,7 @@
         </thead>
         <tbody>
         {% for user in users %}
-            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+            <tr class="bg-white border-b">
                 <td class="px-6 py-4">{{ user.id }}</td>
                 <td class="px-6 py-4">{{ user.nom }}</td>
                 <td class="px-6 py-4">{{ user.prenom}}</td>

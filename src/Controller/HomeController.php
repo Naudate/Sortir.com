@@ -35,12 +35,15 @@ class HomeController extends AbstractController
                 return $sortie->getDateHeureDebut() < new \DateTime();
             });
         }
+        date_default_timezone_set('Europe/Paris');
+        $dateActuelle = new \DateTime;
         return $this->render('home/index.html.twig', [
 
             "sorties" => $sorties,
             "dateDebut" => $dateDebut,
             "dateFin" => $dateFin,
             "organisateurOnly" => $organisateurOnly,
+            "dateActuelle"=>$dateActuelle
         ]);
     }
 }

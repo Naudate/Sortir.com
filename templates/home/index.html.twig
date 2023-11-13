@@ -27,7 +27,7 @@
         <button type="submit">Filtrer</button>
     </form>
         <table>
-                <tr>
+        <tr>
                     <td>Nom</td>
                     <td>Date début</td>
                     <td>Date fin</td>
@@ -52,9 +52,18 @@
                         <input type="checkbox" disabled>
                     {% endif %} </td>
                 <td> {{sortie.organisateur.nom}}  {{sortie.organisateur.prenom}} </td>
-                <td> A FAIRE Actions </td>
+                <td>
+                    {% if sortie.getDateLimiteInscription > dateActuelle %}
+                        {% if app.user in sortie.participant %}
+                            <a href="{{ path('sortie_register', {'id' : sortie.id}) }}">Se désister</a>
+                        {% else %}
+                            <a href="{{ path('sortie_register', {'id' : sortie.id}) }}">S'inscrire</a>
+                        {% endif %}
+                    {% endif %}
+                </td>
             </tr>
             {% endfor %}
         </table>
+
 
 {% endblock %}

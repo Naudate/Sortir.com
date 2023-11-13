@@ -38,7 +38,7 @@ class FirstConnectionFormType extends AbstractType
             ])
             ->add('actualPassword', PasswordType::class, [
                 'required'=> false,
-                'label' => 'Mot de passe actuel:',
+                'label' => 'Mot de passe actuel',
                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller
                 'mapped' => false
@@ -46,12 +46,13 @@ class FirstConnectionFormType extends AbstractType
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'required'=> false,
-                'label' => 'Nouveau mot de passe :',
+                'label' => 'Nouveau mot de passe',
                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller
                 'mapped' => false,
                 'options' => [
                     'attr' => ['autocomplete' => 'new-password'],
+                    'label_attr' => [ 'class' => 'after:content-["*"] after:ml-0.5 after:text-red-500 text-gray-800' ]
                 ],
                 'first_options' => [
                     'label' => 'Choisir un mot de passe',
