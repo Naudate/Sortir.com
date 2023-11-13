@@ -20,7 +20,33 @@ class SortieRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Sortie::class);
     }
-
+    public function findBetweenDates($dateDebut, $dateFin, $searchInput,$organisateurOnly,$user)
+    {
+        $qb = $this->createQueryBuilder('s');
+        // Ajoutez des conditions pour la recherche par nom
+        if ($searchInput) {
+            $qb->andWhere('s.nom LIKE :searchInput')
+                ->setParameter('searchInput', '%' . $searchInput . '%');
+        }
+        if ($dateDebut) {
+            $qb->andWhere('s.dateHeureDebut >= :dateDebut')
+                ->setParameter('dateDebut', $dateDebut);
+        }
+        if ($dateFin) {
+            if ($qb->getDQLPart('where')) {
+                $qb->andWhere('s.dateHeureFin <= :dateFin')
+                    ->setParameter('dateFin', $dateFin . ' 23:59:59');
+            } else {
+                $qb->where('s.dateHeureFin <= :dateFin')
+                    ->setParameter('dateFin', $dateFin . ' 23:59:59');
+            }
+        }
+        if ($organisateurOnly && $user) {
+            $qb->andWhere('s.organisateur = :user')
+                ->setParameter('user', $user);
+        }
+        return $qb->getQuery()->getResult();
+    }
 //    /**
 //     * @return Sortie[] Returns an array of Sortie objects
 //     */
