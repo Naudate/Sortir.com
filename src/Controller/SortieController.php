@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted('ROLE_USER')]
-#[Route('/sortie/', name: 'sortie')]
+#[Route('/sortie', name: 'sortie')]
 class SortieController extends AbstractController
 {
 
@@ -64,7 +64,7 @@ class SortieController extends AbstractController
                 $this->em->flush();
                 $this->addFlash("success", "Sortie crée");
 
-                return $this->redirectToRoute('create_sortie');
+                return $this->redirectToRoute('sortie_create');
             }
         }
 
@@ -73,7 +73,7 @@ class SortieController extends AbstractController
         ]);}
 
     #[Route('/register', name: '_register', requirements: ['id' => '\d+'])]
-   public function inscription(int $id, EntityManagerInterface $entityManager, SortieRepository $sortieRepository){
+    public function inscription(int $id, EntityManagerInterface $entityManager, SortieRepository $sortieRepository){
         //récupération de l'utilisateur connectée
         $userConnect =  $this->getUser();
 
@@ -81,7 +81,7 @@ class SortieController extends AbstractController
         $sortie = $sortieRepository->find($id);
         $nbrParticipant = $sortie->getParticipant()->count();
 
-        if ($sortie->getNombreMaxParticipant()> $nbrParticipant){
+        if ($sortie->getNombreMaxParticipant()> $nbrParticipant && $sortie->getEtat() == Etat::EN_COURS && $sortie->isIsPublish()){
             //ajout de l'utilisateur connectée à la liste
             $sortie->addParticipant($userConnect);
 
@@ -92,13 +92,17 @@ class SortieController extends AbstractController
             //ajout d'un message de succès
             $this->addFlash("success", "Votre inscription à bien été pris en compte");
         }
-        else{
+        else if ($sortie->getNombreMaxParticipant()== $nbrParticipant){
             $this->addFlash("error", "Le nombre d'inscription est atteint");
 
         }
-
-
-
+        else if ($sortie->getEtat() != Etat::EN_COURS){
+            $this->addFlash("error", "Il n'est pas possible de s'inscrire à cette sortie");
+        }
+        else{
+            $this->addFlash("error", "Impossible de prendre en compte votre candidature");
+        }
+        return $this->redirectToRoute('app_home');
     }
 
 
