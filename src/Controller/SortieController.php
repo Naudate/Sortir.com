@@ -67,15 +67,6 @@ class SortieController extends AbstractController
             'form'=> $form->createView(),
         ]);}
 
-    #[Route('/', name: 'app_home')]
-   public function displayAll(
-       EntityManagerInterface $entityManager,
-       SortieRepository $sortieRepository)
-   {
-       $sorties = $sortieRepository->findAll();
-       dump($sorties);
-       return $this->render('home/index.html.twig', ["sorties" => $sorties]);
-   }
     #[Route('/register', name: '_register', requirements: ['id' => '\d+'])]
    public function inscription(int $id, EntityManagerInterface $entityManager, SortieRepository $sortieRepository){
         //récupération de l'utilisateur connectée

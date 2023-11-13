@@ -26,7 +26,7 @@
                 <td>{{sortie.dateHeureFin |date("d/m/Y H:i")}}</td>
                 <td>{{sortie.dateLimiteInscription |date("d/m/Y")}}</td>
                 <td>{{sortie.participant |length}} / {{sortie.nombreMaxParticipant}} </td>
-                <td> A FAIRE ETAT </td>
+                <td> {{sortie.etat}} </td>
                 <td> {% if app.user in sortie.participant %}
                         <input type="checkbox" checked disabled>
                     {% else %}
