@@ -186,6 +186,7 @@ class Sortie
     public function setLieu(?Lieu $lieu): static
     {
         $this->lieu = $lieu;
+    }
       
     public function getOrganisateur(): ?User
     {
