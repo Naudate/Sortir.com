@@ -15,6 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted('ROLE_USER')]
+#[Route('/sortie/', name: 'sortie')]
 class SortieController extends AbstractController
 {
 
@@ -22,7 +23,7 @@ class SortieController extends AbstractController
     {
     }
 
-    #[Route('/sortie/create', name: 'create_sortie')]
+    #[Route('/create', name: '_create')]
     public function create(Request $request): Response
     {
         $sortie = new Sortie();
@@ -65,8 +66,8 @@ class SortieController extends AbstractController
         return $this->render('sortie/create.html.twig', [
             'form'=> $form->createView(),
         ]);}
-    
-    #[Route('/sortie/register', name: 'register_sortie', requirements: ['id' => '\d+'])]
+
+    #[Route('/register', name: '_register', requirements: ['id' => '\d+'])]
    public function inscription(int $id, EntityManagerInterface $entityManager, SortieRepository $sortieRepository){
         //récupération de l'utilisateur connectée
         $userConnect =  $this->getUser();
