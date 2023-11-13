@@ -27,13 +27,16 @@ use Symfony\Component\Validator\Constraints\Regex;
 class UserFormType extends AbstractType
 {
     private $tokenStorage;
+    private $siteRepository;
 
-    public function __construct(TokenStorageInterface $tokenStorage)
+    public function __construct(TokenStorageInterface $tokenStorage, SiteRepository $siteRepository)
     {
         $this->tokenStorage = $tokenStorage;
+        $this->siteRepository = $siteRepository;
     }
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+
         $builder
             ->add('nom', TextType::class, [
                 'required'=> true,
