@@ -80,8 +80,13 @@ class SortieController extends AbstractController
         // récupération de la sortie
         $sortie = $sortieRepository->find($id);
         $nbrParticipant = $sortie->getParticipant()->count();
+        date_default_timezone_set('Europe/Paris');
+        $dateActuelle = new \DateTime;
 
-        if ($sortie->getNombreMaxParticipant()> $nbrParticipant && $sortie->getEtat() == Etat::EN_COURS && $sortie->isIsPublish()){
+        if ($sortie->getNombreMaxParticipant()> $nbrParticipant
+                && $sortie->getEtat() == Etat::EN_COURS
+                && $sortie->isIsPublish()
+                &&  $dateActuelle < $sortie->getDateLimiteInscription()){
             //ajout de l'utilisateur connectée à la liste
             $sortie->addParticipant($userConnect);
 
@@ -98,6 +103,9 @@ class SortieController extends AbstractController
         }
         else if ($sortie->getEtat() != Etat::EN_COURS){
             $this->addFlash("error", "Il n'est pas possible de s'inscrire à cette sortie");
+        }
+        else if ($dateActuelle < $sortie->getDateLimiteInscription()){
+            $this->addFlash("error", "Il est trop tard pour s'inscrire");
         }
         else{
             $this->addFlash("error", "Impossible de prendre en compte votre candidature");
