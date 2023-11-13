@@ -152,7 +152,7 @@ class UserController extends AbstractController
 
         return $this->render('user/edit.html.twig', [
             'userForm'=> $userForm->createView(),
-            'userId'=> $userupdate->getId()
+            'userId'=> $user->getId()
         ]);
 
     }
@@ -218,7 +218,7 @@ class UserController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
             $this->addFlash("success", "Mot de passe réinitialisé avec succès");
-            return $this->redirectToRoute('user_details', array('id'=> $user->getId()));
+            return $this->redirectToRoute('user_edit', array('id'=> $user->getId()));
         }
         else{
             throw new Exception("Accès refusé, ON SE CALME ET DEMI-TOUR !", 403);
