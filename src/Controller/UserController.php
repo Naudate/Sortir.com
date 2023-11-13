@@ -76,18 +76,16 @@ class UserController extends AbstractController
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if($form->isSubmitted()){
 
-            // upload de l'image
-           // $imageUpload = $form->get('avatar')->getData();
             //dd($imageUpload);
           /*  if(!empty($imageUpload) && $imageUpload instanceof UploadedFile){
                 $pathAvatar = $uploader->upload($imageUpload,'assets/avatar/', $form->get('pseudo')->getData() );
                 $user->setPhoto($pathAvatar);
             }*/
 
-            $user->setIsActif(true);
             $user->setPseudo($userRepository->GeneratePseudo($user->getPrenom()));
+
             $user->setPassword(
                 $userPasswordHasher->hashPassword(
                     $user,
@@ -155,6 +153,25 @@ class UserController extends AbstractController
             'idUser'=> $user->getId()
         ]);
 
+    }
+
+    #[Route('/changePassword/{id}', name: '_changePassword', requirements: ['id' => '\d+'])]
+
+    public function disableUser(User $user, int $id, EntityManagerInterface $entityManager, UserRepository $userRepository){
+        if ( in_array('ROLE_ADMIN', $this->getUser()->getRoles(), true)){
+            $user = $userRepository->find($id);
+            if(empty($user)){
+                throw new Exception("Utilisateur inconnu", 404);
+            }
+            $user->setIsActif(false);
+            $entityManager->persist($user);
+            $entityManager->flush();
+            $this->addFlash("success", "Utilisateur désactivé avec succès");
+            return $this->redirectToRoute('user_edit', array('id'=> $user->getId()));
+        }
+        else{
+            throw new Exception("Accès refusé, ON SE CALME ET DEMI-TOUR !", 403);
+        }
     }
 
     #[Route('/changePassword/{id}', name: '_changePassword', requirements: ['id' => '\d+'])]
