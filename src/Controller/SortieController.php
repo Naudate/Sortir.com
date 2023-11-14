@@ -101,10 +101,18 @@ class SortieController extends AbstractController
 
 
     #[Route('/register/{id}', name: '_register', requirements: ['id' => '\d+'])]
-    public function inscription(Sortie $sortie, int $id, EntityManagerInterface $entityManager, SortieRepository $sortieRepository, UserRepository $userRepository)
+    public function inscription(int $id, EntityManagerInterface $entityManager, SortieRepository $sortieRepository, UserRepository $userRepository)
     {
         //récupération de l'utilisateur connectée
         $userConnect = $this->getUser();
+        $sortie = $sortieRepository->find($id);
+
+        if(empty($sortie)){
+            throw new Exception("Sortie inconnu", 404);
+        }
+        if(in_array('ROLE_ADMIN', $this->getUser()->getRoles(), true)){
+            throw new Exception("Tu sais, je commence à croire que tu veux casser mon programme !", 403);
+        }
 
         // récupération de la sortie
         $nbrParticipant = $sortie->getParticipant()->count();
@@ -154,6 +162,14 @@ class SortieController extends AbstractController
 
         // récupération de la sortie
         $sortie = $sortieRepository->find($id);
+
+        // vérification que la sortie existe
+        if(empty($sortie)){
+            throw new Exception("Sortie inconnu", 404);
+        }
+        if(in_array('ROLE_ADMIN', $this->getUser()->getRoles(), true)){
+            throw new Exception("Tu sais, je commence à croire que tu veux casser mon programme !", 403);
+        }
 
         date_default_timezone_set('Europe/Paris');
         $dateActuelle = new \DateTime;
@@ -242,6 +258,10 @@ class SortieController extends AbstractController
             throw new Exception("Sortie inconnu, petit malin. Je suis invulnérable !", 404);
         }
 
+        // si l'utilisateur à le role admin
+        if(in_array('ROLE_ADMIN', $this->getUser()->getRoles(), true)){
+            throw new Exception("Du balai, les fraudeurs n'ont pas leur place ici", 403);
+        }
         // si l"utilisateur connecteé est l'organisateur de la sortie
         if ($sortie->getOrganisateur() == $userConnectee && $sortie->getEtat() == Etat::EN_CREATION ){
 

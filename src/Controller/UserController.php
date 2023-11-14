@@ -92,6 +92,7 @@ class UserController extends AbstractController
                     'password'
                 )
             );
+            $user->setIsChangePassword(false);
 
             $user->setIsActif(true);
             $user->setFirstConnection(true);
@@ -130,7 +131,9 @@ class UserController extends AbstractController
                     return $this->redirectToRoute('user_edit',array('id'=> $user->getId()));
                 }
                 else{
-                     //dd($user);
+                    $user->setIsChangePassword(false);
+
+                    //dd($user);
                     $entityManager->persist($user);
                     $entityManager->flush();
 
@@ -155,7 +158,6 @@ class UserController extends AbstractController
 
     }
 
-    #[Route('/changePassword/{id}', name: '_changePassword', requirements: ['id' => '\d+'])]
 
     public function disableUser(User $user, int $id, EntityManagerInterface $entityManager, UserRepository $userRepository){
         if ( in_array('ROLE_ADMIN', $this->getUser()->getRoles(), true)){

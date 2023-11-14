@@ -238,7 +238,8 @@
                                         {% endif %}
                                         <br>
 
-                                        {% if app.user in sortie.participant and app.user != sortie.organisateur and sortie.etat == 'Ouvert'
+                                        {% if app.user in sortie.participant and 'ROLE_ADMIN' not in app.user.roles
+                                                and app.user != sortie.organisateur and sortie.etat == 'Ouvert'
                                                 or sortie.etat == 'Clôturée' %}
                                                 <a href="{{ path('sortie_unregister', {'id' : sortie.id}) }}"
                                                    class="text-sm font-semibold text-red-600 underline underline-offset-2
@@ -246,8 +247,9 @@
                                                     Se désister
                                                 </a>
                                             {% endif %}
-                                            {% if app.user not in sortie.participant and app.user != sortie.organisateur and sortie.etat == 'Ouvert'
-                                                or sortie.etat == 'Clôturée' %}
+                                            {% if app.user not in sortie.participant and 'ROLE_ADMIN' not in app.user.roles
+                                                and app.user != sortie.organisateur and sortie.etat == 'Ouvert'
+                                                or sortie.etat == 'Clôturée'  %}
                                                 <a href="{{ path('sortie_register', {'id' : sortie.id}) }}"
                                                    class="text-sm font-semibold text-indigo-600 underline underline-offset-2
                                            outline-indigo-600 hover:outline-indigo-500 hover:text-indigo-500">
@@ -255,7 +257,7 @@
                                                 </a>
                                             {% endif %}
                                         {% endif %}
-                                    {% if sortie.etat =='En création' %}
+                                    {% if sortie.etat =='En création' and 'ROLE_ADMIN' not in app.user.roles %}
                                         <a href="{{ path('sortie_publish', {'id' : sortie.id}) }}"
                                            class="text-sm font-semibold text-blue-600 underline underline-offset-2
                                            outline-blue-600 hover:outline-blue-600 hover:text-indigo-500">
