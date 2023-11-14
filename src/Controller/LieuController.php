@@ -73,7 +73,7 @@ class LieuController extends AbstractController
     {
         $ville = $request->request->get('ville');
 
-        $lieux = $this->lieuRepository->findBy(['ville' => $ville]);
+        $lieux = $this->lieuRepository->findBy(['ville' => $ville] , ['nom' => 'ASC']);
         $lieuxArray = [];
         foreach ($lieux as $lieu) {
             $lieuxArray[] = [

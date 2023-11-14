@@ -40,6 +40,7 @@ class SortieController extends AbstractController
         $formLieu->handleRequest($request);
 
         $errorLieu = false;
+        $submitFormSortie = false;
 
         if ($formLieu->isSubmitted() && $formLieu->isValid()) {
             $this->em->persist($lieu);
@@ -52,6 +53,8 @@ class SortieController extends AbstractController
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $submitFormSortie = true;
 
             if ($sortie->getDateHeureDebut() < new \DateTime()) {
                 $form->get('dateHeureDebut')->addError(new FormError('La date de fin ne peut pas être antérieure à la date du jour.'));
@@ -91,7 +94,8 @@ class SortieController extends AbstractController
         return $this->render('sortie/create.html.twig', [
             'form' => $form->createView(),
             'lieuForm' => $formLieu->createView(),
-            'errorLieu' => $errorLieu
+            'errorLieu' => $errorLieu,
+            'submitFormSortie' => $submitFormSortie
         ]);
     }
 

@@ -150,10 +150,20 @@
     <script>
         // Attendez que le document soit prêt
         $(document).ready(function () {
+            var submitFormSortie = {{ submitFormSortie ? 'true' : 'false' }}
+            if(!submitFormSortie){
+                console.log("test ok")
+                $('#{{ form.lieu.vars.id }}').empty(); // Effacez les options existantes
+                $('#{{ form.lieu.vars.id }}').append('<option>Veuillez choisir une ville</option>');
+            }else{
+                loadLieuByVille();
+            }
             // Écoutez les changements de la ville
-            $('#{{ form.ville.vars.id }}').change(function () {
+            $('#{{ form.ville.vars.id }}').change(loadLieuByVille);
+
+            function loadLieuByVille () {
                 // Récupérez la valeur de la ville sélectionnée
-                var selectedVille = $(this).val();
+                var selectedVille = $('#{{ form.ville.vars.id }}').val();
 
                 // Faites une requête AJAX pour récupérer les lieux associés à la ville
                 $.ajax({
@@ -174,7 +184,8 @@
 
                     }
                 });
-            });
+
+            }
         });
     </script>
     <script>
