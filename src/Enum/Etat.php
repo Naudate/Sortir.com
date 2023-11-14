@@ -6,7 +6,8 @@ class Etat
 {
     const EN_CREATION = 'En création';
     const EN_COURS = 'En cours';
-    const TERMINE = 'Terminé';
-    const CLOTURE = 'Clôturé';
+    const ANULLE = 'Annulée';
+    const TERMINE = 'Terminée';
+    const CLOTURE = 'Clôturée';
     const OUVERT = 'Ouvert';
 }

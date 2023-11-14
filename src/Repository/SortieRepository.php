@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Sortie;
+use App\Enum\Etat;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -20,7 +21,14 @@ class SortieRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Sortie::class);
     }
-    public function findBetweenDates($dateDebut, $dateFin, $searchInput,$organisateurOnly,$user)
+    public function findBetweenDates(
+        $dateDebut,
+        $dateFin,
+        $searchInput,
+        $organisateurOnly,
+        $user,
+        $selectedSite,
+    )
     {
         $qb = $this->createQueryBuilder('s');
         // Ajoutez des conditions pour la recherche par nom
@@ -45,8 +53,20 @@ class SortieRepository extends ServiceEntityRepository
             $qb->andWhere('s.organisateur = :user')
                 ->setParameter('user', $user);
         }
+
+        if ($selectedSite) {
+            $qb->andWhere('s.site = :site')
+                ->setParameter('site', $selectedSite);
+        }
+
+        $qb->andWhere('s.etat != :etat')
+            ->setParameter('etat', Etat::EN_CREATION);
+
+
         return $qb->getQuery()->getResult();
+
     }
+
 //    /**
 //     * @return Sortie[] Returns an array of Sortie objects
 //     */
