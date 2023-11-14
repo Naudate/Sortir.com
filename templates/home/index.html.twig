@@ -238,7 +238,7 @@
                                         {% endif %}
                                         <br>
 
-                                        {% if app.user in sortie.participant and sortie.etat == 'Ouvert'
+                                        {% if app.user in sortie.participant and app.user != sortie.organisateur and sortie.etat == 'Ouvert'
                                                 or sortie.etat == 'Clôturée' %}
                                                 <a href="{{ path('sortie_unregister', {'id' : sortie.id}) }}"
                                                    class="text-sm font-semibold text-red-600 underline underline-offset-2
@@ -246,7 +246,7 @@
                                                     Se désister
                                                 </a>
                                             {% endif %}
-                                            {% if app.user not in sortie.participant and sortie.etat == 'Ouvert'
+                                            {% if app.user not in sortie.participant and app.user != sortie.organisateur and sortie.etat == 'Ouvert'
                                                 or sortie.etat == 'Clôturée' %}
                                                 <a href="{{ path('sortie_register', {'id' : sortie.id}) }}"
                                                    class="text-sm font-semibold text-indigo-600 underline underline-offset-2
