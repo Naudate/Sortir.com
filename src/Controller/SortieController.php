@@ -43,32 +43,34 @@ class SortieController extends AbstractController
             $this->em->persist($lieu);
             $this->em->flush();
             $this->addFlash("success", "Lieu créé");
-        }else {
+        }
+
+        if ($formLieu->isSubmitted() && !$formLieu->isValid()) {
             $errorLieu = true;
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            if($sortie->getDateHeureDebut() < new \DateTime()){
+            if ($sortie->getDateHeureDebut() < new \DateTime()) {
                 $form->get('dateHeureDebut')->addError(new FormError('La date de fin ne peut pas être antérieure à la date du jour.'));
             }
 
-            if($sortie->getDateHeureDebut() < new \DateTime()){
+            if ($sortie->getDateHeureDebut() < new \DateTime()) {
                 $form->get('dateLimiteInscription')->addError(new FormError('La date limite d\'inscription ne peut pas être antérieure à la date du jour.'));
             }
 
-            if($sortie->getDateHeureFin() < $sortie->getDateHeureDebut()){
+            if ($sortie->getDateHeureFin() < $sortie->getDateHeureDebut()) {
                 $form->get('dateHeureFin')->addError(new FormError('La date de fin ne peut pas être antérieure à la date de début.'));
             }
 
-            if($sortie->getDateLimiteInscription() > $sortie->getDateHeureDebut()){
+            if ($sortie->getDateLimiteInscription() > $sortie->getDateHeureDebut()) {
                 $form->get('dateLimiteInscription')->addError(new FormError('La date limite d\'inscription ne peut pas être supérieure à la date de début.'));
             }
 
-            if($form->getClickedButton() && 'publier' === $form->getClickedButton()->getName()){
+            if ($form->getClickedButton() && 'publier' === $form->getClickedButton()->getName()) {
                 $sortie->setIsPublish(true);
                 $sortie->setEtat(Etat::OUVERT);
-            }else{
+            } else {
                 $sortie->setIsPublish(false);
                 $sortie->setEtat(Etat::EN_CREATION);
             }
@@ -85,16 +87,18 @@ class SortieController extends AbstractController
         }
 
         return $this->render('sortie/create.html.twig', [
-            'form'=> $form->createView(),
-            'lieuForm'=> $formLieu->createView(),
+            'form' => $form->createView(),
+            'lieuForm' => $formLieu->createView(),
             'errorLieu' => $errorLieu
-        ]);}
+        ]);
+    }
 
 
     #[Route('/register/{id}', name: '_register', requirements: ['id' => '\d+'])]
-    public function inscription(Sortie $sortie, int $id,EntityManagerInterface $entityManager, SortieRepository $sortieRepository, UserRepository $userRepository){
+    public function inscription(Sortie $sortie, int $id, EntityManagerInterface $entityManager, SortieRepository $sortieRepository, UserRepository $userRepository)
+    {
         //récupération de l'utilisateur connectée
-        $userConnect =  $this->getUser();
+        $userConnect = $this->getUser();
 
         // récupération de la sortie
         $nbrParticipant = $sortie->getParticipant()->count();
@@ -102,10 +106,10 @@ class SortieController extends AbstractController
         $dateActuelle = new \DateTime;
         //dd($sortie);
 
-        if ($sortie->getNombreMaxParticipant()> $nbrParticipant
-                && $sortie->getEtat() == Etat::OUVERT
-                && $sortie->isIsPublish()
-                &&  $dateActuelle < $sortie->getDateLimiteInscription()){
+        if ($sortie->getNombreMaxParticipant() > $nbrParticipant
+            && $sortie->getEtat() == Etat::OUVERT
+            && $sortie->isIsPublish()
+            && $dateActuelle < $sortie->getDateLimiteInscription()) {
             //ajout de l'utilisateur connectée à la liste
             $sortie->addParticipant($userConnect);
 
@@ -114,7 +118,7 @@ class SortieController extends AbstractController
             $entityManager->flush();
             //dd($sortie);
 
-            if($sortie->getNombreMaxParticipant() == $sortie->getParticipant()->count()){
+            if ($sortie->getNombreMaxParticipant() == $sortie->getParticipant()->count()) {
                 $sortie->setEtat(Etat::CLOTURE);
                 $entityManager->persist($sortie);
                 $entityManager->flush();
@@ -122,27 +126,24 @@ class SortieController extends AbstractController
 
             //ajout d'un message de succès
             $this->addFlash("success", "Votre inscription à bien été pris en compte");
-        }
-        else if ($sortie->getNombreMaxParticipant()== $nbrParticipant){
+        } else if ($sortie->getNombreMaxParticipant() == $nbrParticipant) {
             $this->addFlash("error", "Le nombre d'inscription est atteint");
 
-        }
-        else if ($sortie->getEtat() != Etat::OUVERT){
+        } else if ($sortie->getEtat() != Etat::OUVERT) {
             $this->addFlash("error", "Il n'est pas possible de s'inscrire à cette sortie");
-        }
-        else if ($dateActuelle < $sortie->getDateLimiteInscription()){
+        } else if ($dateActuelle < $sortie->getDateLimiteInscription()) {
             $this->addFlash("error", "Il est trop tard pour s'inscrire");
-        }
-        else{
+        } else {
             $this->addFlash("error", "Impossible de prendre en compte votre candidature");
         }
         return $this->redirectToRoute('app_home');
     }
 
     #[Route('/unRegister/{id}', name: '_unregister', requirements: ['id' => '\d+'])]
-    public function seDesister (int $id, EntityManagerInterface $entityManager, SortieRepository $sortieRepository, UserRepository $userRepository){
+    public function seDesister(int $id, EntityManagerInterface $entityManager, SortieRepository $sortieRepository, UserRepository $userRepository)
+    {
         //récupération de l"utilisateur connecté
-        $userConnect =  $this->getUser();
+        $userConnect = $this->getUser();
 
         // récupération de la sortie
         $sortie = $sortieRepository->find($id);
@@ -151,18 +152,17 @@ class SortieController extends AbstractController
         $dateActuelle = new \DateTime;
 
 
-
         //vérification que la date limite pour se désinscrire est valide
-        if($sortie->getEtat() == Etat::OUVERT
+        if ($sortie->getEtat() == Etat::OUVERT
             && $sortie->isIsPublish()
-            &&  $dateActuelle < $sortie->getDateLimiteInscription()){
+            && $dateActuelle < $sortie->getDateLimiteInscription()) {
 
-            if ($sortie->getParticipant()->contains($userConnect)){
+            if ($sortie->getParticipant()->contains($userConnect)) {
                 // suppression de l'utilisateur
                 $sortie->removeParticipant($userConnect);
 
                 // si létat de la sortie etait cloturé, il faut faire passé en ouvert
-                if ($sortie->getEtat() == Etat::CLOTURE){
+                if ($sortie->getEtat() == Etat::CLOTURE) {
                     $sortie->setEtat(Etat::OUVERT);
                 }
 
@@ -171,8 +171,7 @@ class SortieController extends AbstractController
 
                 $this->addFlash("success", "Votre désinscription à bien été pris en compte");
 
-            }
-            else{
+            } else {
                 $this->addFlash("error", "Petit malin, eh non, tu n'a jamais fait parti des participants");
             }
 
