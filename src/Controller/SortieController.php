@@ -8,6 +8,7 @@ use App\Enum\Etat;
 use App\Form\LieuFormType;
 use App\Form\SortieType;
 use App\Repository\SortieRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
@@ -89,19 +90,20 @@ class SortieController extends AbstractController
             'errorLieu' => $errorLieu
         ]);}
 
-    #[Route('/register', name: '_register', requirements: ['id' => '\d+'])]
-    public function inscription(int $id, EntityManagerInterface $entityManager, SortieRepository $sortieRepository){
+
+    #[Route('/register/{id}', name: '_register', requirements: ['id' => '\d+'])]
+    public function inscription(Sortie $sortie, int $id,EntityManagerInterface $entityManager, SortieRepository $sortieRepository, UserRepository $userRepository){
         //récupération de l'utilisateur connectée
         $userConnect =  $this->getUser();
 
         // récupération de la sortie
-        $sortie = $sortieRepository->find($id);
         $nbrParticipant = $sortie->getParticipant()->count();
         date_default_timezone_set('Europe/Paris');
         $dateActuelle = new \DateTime;
+        //dd($sortie);
 
         if ($sortie->getNombreMaxParticipant()> $nbrParticipant
-                && $sortie->getEtat() == Etat::EN_COURS
+                && $sortie->getEtat() == Etat::OUVERT
                 && $sortie->isIsPublish()
                 &&  $dateActuelle < $sortie->getDateLimiteInscription()){
             //ajout de l'utilisateur connectée à la liste
@@ -110,6 +112,13 @@ class SortieController extends AbstractController
             // persist des données
             $entityManager->persist($sortie);
             $entityManager->flush();
+            //dd($sortie);
+
+            if($sortie->getNombreMaxParticipant() == $sortie->getParticipant()->count()){
+                $sortie->setEtat(Etat::CLOTURE);
+                $entityManager->persist($sortie);
+                $entityManager->flush();
+            }
 
             //ajout d'un message de succès
             $this->addFlash("success", "Votre inscription à bien été pris en compte");
@@ -118,7 +127,7 @@ class SortieController extends AbstractController
             $this->addFlash("error", "Le nombre d'inscription est atteint");
 
         }
-        else if ($sortie->getEtat() != Etat::EN_COURS){
+        else if ($sortie->getEtat() != Etat::OUVERT){
             $this->addFlash("error", "Il n'est pas possible de s'inscrire à cette sortie");
         }
         else if ($dateActuelle < $sortie->getDateLimiteInscription()){
@@ -128,6 +137,48 @@ class SortieController extends AbstractController
             $this->addFlash("error", "Impossible de prendre en compte votre candidature");
         }
         return $this->redirectToRoute('app_home');
+    }
+
+    #[Route('/unRegister/{id}', name: '_unregister', requirements: ['id' => '\d+'])]
+    public function seDesister (int $id, EntityManagerInterface $entityManager, SortieRepository $sortieRepository, UserRepository $userRepository){
+        //récupération de l"utilisateur connecté
+        $userConnect =  $this->getUser();
+
+        // récupération de la sortie
+        $sortie = $sortieRepository->find($id);
+
+        date_default_timezone_set('Europe/Paris');
+        $dateActuelle = new \DateTime;
+
+
+
+        //vérification que la date limite pour se désinscrire est valide
+        if($sortie->getEtat() == Etat::OUVERT
+            && $sortie->isIsPublish()
+            &&  $dateActuelle < $sortie->getDateLimiteInscription()){
+
+            if ($sortie->getParticipant()->contains($userConnect)){
+                // suppression de l'utilisateur
+                $sortie->removeParticipant($userConnect);
+
+                // si létat de la sortie etait cloturé, il faut faire passé en ouvert
+                if ($sortie->getEtat() == Etat::CLOTURE){
+                    $sortie->setEtat(Etat::OUVERT);
+                }
+
+                $entityManager->persist($sortie);
+                $entityManager->flush();
+
+                $this->addFlash("success", "Votre désinscription à bien été pris en compte");
+
+            }
+            else{
+                $this->addFlash("error", "Petit malin, eh non, tu n'a jamais fait parti des participants");
+            }
+
+            return $this->redirectToRoute('app_home');
+
+        }
     }
 
 

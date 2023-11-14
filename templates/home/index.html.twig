@@ -7,6 +7,14 @@
     .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
     .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
 </style>
+    {% for message in app.flashes('error') %}
+        <p class="mt-1 text-sm leading-6 text-red-700">{{ message }}</p>
+    {% endfor %}
+
+    {% for message in app.flashes('success') %}
+        <p class="mt-1 text-sm leading-6 text-green-700">{{ message }}</p>
+    {% endfor %}
+
     <form method="get" action="{{ path('app_home') }}">
         <label for="site">Choisir un site :</label>
         <select id="site" name="site">
@@ -59,9 +67,9 @@
                     {% endif %} </td>
                 <td> {{sortie.organisateur.nom}}  {{sortie.organisateur.prenom}} </td>
                 <td>
-                    {% if sortie.getDateLimiteInscription > dateActuelle %}
+                    {% if sortie.getDateLimiteInscription > dateActuelle and sortie.etat ==  'Ouvert'%}
                         {% if app.user in sortie.participant %}
-                            <a href="{{ path('sortie_register', {'id' : sortie.id}) }}">Se désister</a>
+                            <a href="{{ path('sortie_unregister', {'id' : sortie.id}) }}">Se désister</a>
                         {% else %}
                             <a href="{{ path('sortie_register', {'id' : sortie.id}) }}">S'inscrire</a>
                         {% endif %}
