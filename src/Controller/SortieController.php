@@ -30,8 +30,12 @@ class SortieController extends AbstractController
     }
 
     #[Route('/create', name: '_create')]
+    #[IsGranted('ROLE_USER')]
     public function create(Request $request): Response
     {
+        if(in_array('ROLE_ADMIN', $this->getUser()->getRoles(), true)){
+            throw new Exception("Accès refusé", 403);
+        }
         $sortie = new Sortie();
         $lieu = new Lieu();
         $form = $this->createForm(SortieType::class, $sortie);

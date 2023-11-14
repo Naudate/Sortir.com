@@ -118,6 +118,15 @@
                         {{ form_errors(form.lieu) }}
                         <button type="button" class="btn" id="openModal">Ajouter un lieu</button>
                     </div>
+                    <div class="mt-6 border-gray-100">
+                                <p>Rue : <span id="rueChoose"></span></p>
+
+                    </div>
+                    <div class="mt-6 border-gray-100">
+
+                        <p>Code Postal : <span id="codePostalChoose"></span></p>
+                            </div>
+
                 </div>
                 <div class="grid grid-cols-3 gap-x-6 gap-y-6">
                     <div class="col-end-4">
@@ -152,7 +161,6 @@
         $(document).ready(function () {
             var submitFormSortie = {{ submitFormSortie ? 'true' : 'false' }}
             if(!submitFormSortie){
-                console.log("test ok")
                 $('#{{ form.lieu.vars.id }}').empty(); // Effacez les options existantes
                 $('#{{ form.lieu.vars.id }}').append('<option>Veuillez choisir une ville</option>');
             }else{
@@ -160,6 +168,7 @@
             }
             // Écoutez les changements de la ville
             $('#{{ form.ville.vars.id }}').change(loadLieuByVille);
+            $('#{{ form.lieu.vars.id }}').change(loadLieuById);
 
             function loadLieuByVille () {
                 // Récupérez la valeur de la ville sélectionnée
@@ -171,21 +180,38 @@
                     type: 'POST',
                     data: {ville: selectedVille},
                     success: function (response) {
-                        //rendre le champ non disabled
                         $('#{{ form.lieu.vars.id }}').empty(); // Effacez les options existantes
                         if (response.length === 0) {
                             $('#{{ form.lieu.vars.id }}').append('<option> Cette ville n\'a pas de lieu</option>');
                         } else {
                             // Mettez à jour les options du champ "lieu" avec les données de la réponse JSON
                             $.each(response, function (index, lieu) {
-                                $('#{{ form.lieu.vars.id }}').append('<option value="' + lieu.id + '">' + lieu.nom + ' - ' + lieu.rue + '</option>');
+                                $('#{{ form.lieu.vars.id }}').append('<option value="' + lieu.id + '">' + lieu.nom + '</option>');
                             });
+                            loadLieuById();
                         }
 
                     }
                 });
+            }
+
+            function loadLieuById () {
+                // Récupérez la valeur de la ville sélectionnée
+                var selectedLieu = $('#{{ form.lieu.vars.id }}').val();
+
+                // Faites une requête AJAX pour récupérer les lieux associés à la ville
+                $.ajax({
+                    url: "{{ path('lieu_getByLieu') }}",
+                    type: 'POST',
+                    data: {lieu: selectedLieu},
+                    success: function (response) {
+                        document.getElementById("rueChoose").innerText=response[0].rue;
+                        document.getElementById("codePostalChoose").innerText=response[0].ville.codePostal;
+                    }
+                });
 
             }
+
         });
     </script>
     <script>
