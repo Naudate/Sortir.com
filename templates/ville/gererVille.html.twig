@@ -4,52 +4,114 @@
 
 
 {% block body %}
-<div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-12 lg:px-8">
-    <div class="mx-auto max-w-2xl">
-        <div class="space-y-6">
-            <div class="border-b border-gray-900/10 pb-6">
-                {{ form_start(form) }}
+    <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-12 lg:px-8">
+        <div class="mx-auto max-w-2xl">
+            {% for message in app.flashes('success') %}
+                <p class="mt-1 text-sm leading-6 text-green-700">{{ message }}</p>
+            {% endfor %}
 
-                {{ form_errors(form) }}
-                <h2 class="text-base font-semibold leading-7 text-gray-900">
-                    Création d'une ville
-                </h2>
-                <p class="mt-1 text-sm leading-6 text-gray-600">
-                    Espace pour la création d'une ville.
-                </p>
-                <div class="mt-6 border-gray-100">
-                    {{ form_label(form.codePostal, null, {
-                        'label_attr' : { 'class': 'after:content-["*"] after:ml-0.5
+            {% for message in app.flashes('error') %}
+                <p class="mt-1 text-sm leading-6 text-red-700">{{ message }}</p>
+            {% endfor %}
+            <div class="space-y-6">
+                <div class="border-b border-gray-900/10 pb-6">
+                    {{ form_start(form) }}
+
+                    {{ form_errors(form) }}
+                    <h2 class="text-base font-semibold leading-7 text-gray-900">
+                        Création d'une ville
+                    </h2>
+                    <p class="mt-1 text-sm leading-6 text-gray-600">
+                        Espace pour la création d'une ville.
+                    </p>
+                    <div class="mt-6 border-gray-100" style="position: relative">
+                        {{ form_label(form.codePostal, null, {
+                            'label_attr' : { 'class': 'after:content-["*"] after:ml-0.5
                              after:text-red-500 text-gray-800'}
-                    }) }}
-                    {{ form_errors(form.codePostal) }}
-                    {{ form_widget(form.codePostal) }}
-                    {{ form_help(form.codePostal) }}
-                </div>
-                <div class="mt-6 border-gray-100">
-                    {{ form_label(form.nom, null, {
-                        'label_attr' : { 'class': 'after:content-["*"] after:ml-0.5
+                        }) }}
+                        <button type="button"
+                                class="inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm shadow rounded-md text-white bg-indigo-500 hover:bg-indigo-400 transition ease-in-out duration-150 cursor-not-allowed autocomplete-loader-codePostal"
+                                disabled="" style="display: none;">
+                            <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                 viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                        stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor"
+                                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                        </button>
+                        {{ form_errors(form.codePostal) }}
+                        {{ form_widget(form.codePostal) }}
+                        {{ form_help(form.codePostal) }}
+
+                    </div>
+                    <div class="mt-6 border-gray-100">
+                        {{ form_label(form.nom, null, {
+                            'label_attr' : { 'class': 'after:content-["*"] after:ml-0.5
                              after:text-red-500 text-gray-800'}
-                    }) }}
-                    {{ form_errors(form.nom) }}
-                    {{ form_widget(form.nom) }}
-                    {{ form_help(form.nom) }}
+                        }) }}
+                        <button type="button"
+                                class="inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm shadow rounded-md text-white bg-indigo-500 hover:bg-indigo-400 transition ease-in-out duration-150 cursor-not-allowed autocomplete-loader-nom"
+                                disabled="" style="display: none;">
+                            <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                 viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                        stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor"
+                                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                        </button>
+                        {{ form_errors(form.nom) }}
+                        {{ form_widget(form.nom) }}
+                        {{ form_help(form.nom) }}
+
+
+                    </div>
                 </div>
-            </div>
-            <div class="gap-y-8">
-                <div class="flex mt-6 justify-end">
-                    <button type="submit" class="rounded-md bg-indigo-600 px-3 py-2
+                <div class="gap-y-8">
+                    <div class="flex mt-6 justify-end">
+                        <button type="submit" class="rounded-md bg-indigo-600 px-3 py-2
                     text-sm font-semibold text-white shadow-sm hover:bg-indigo-500
                     focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2
                     focus-visible:outline-indigo-600">
-                        Créer
-                    </button>
+                            Créer
+                        </button>
+                    </div>
                 </div>
+                {{ form_end(form) }}
             </div>
-            {{ form_end(form) }}
         </div>
     </div>
-</div>
+
+    <div class="mx-auto max-w-full px-4 pb-6 sm:px-6 sm:pb-12 lg:px-8">
+        <div class="mx-auto max-w-full">
+            <div class="space-y-6">
+                <div class="relative overflow-x-auto shadow-md border-solid border-2 rounded-md border-gray-200">
+
+                    <table class="w-full">
+                        <thead class="text-md text-gray-700 uppercase bg-amber-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3">Code Postal</th>
+                            <th scope="col" class="px-6 py-3">Nom de la ville</th>
+                        </tr>
+                        </thead>
+                        <tbody class="text-sm text-gray-900">
+                        {% for ville in villes %}
+                            <tr>
+                                <td class="px-6 py-4 text-center">
+                                    {{ ville.codePostal }}
+                                </td>
+                                <td class="px-6 py-4 text-center">
+                                    {{ ville.nom }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 
@@ -59,45 +121,38 @@
 
 {% block javascripts %}
 
-
-    <!-- Inclure jQuery (si ce n'est pas déjà fait) -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <!-- Inclure le fichier JavaScript de jQuery UI Autocomplete -->
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
-    <!-- Inclure le fichier CSS de jQuery UI Autocomplete (si nécessaire) -->
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-
+    {{ parent() }}
 
     <script>
-        $(document).ready(function() {
-            var $loader = $('.autocomplete-loader');
+        $(document).ready(function () {
+            var $loaderCodePostal = $('.autocomplete-loader-codePostal');
+            var $loaderNom = $('.autocomplete-loader-nom');
             $('.autocompleteNom').autocomplete({
-                source: function(request, response) {
+                delay: 700,
+                source: function (request, response) {
                     console.log("nom");
-                    $loader.show(); // Affichez le loader
+                    $loaderNom.show(); // Affichez le loader
                     $.ajax({
                         url: "{{ path('autocomplete_ville') }}",
                         dataType: 'json',
                         data: {
                             q: request.term
                         },
-                        success: function(data) {
+                        success: function (data) {
                             var suggestions = [];
-                            data.forEach(function(item) {
-                                item.codesPostaux.forEach(function(codePostal) {
-                                    suggestions.push(codePostal+" - "+item.nom); // Ajoutez chaque code postal comme une suggestion distincte
+                            data.forEach(function (item) {
+                                item.codesPostaux.forEach(function (codePostal) {
+                                    suggestions.push(codePostal + " - " + item.nom); // Ajoutez chaque code postal comme une suggestion distincte
                                 });
                             });
                             response(suggestions);
                         },
-                        complete: function() {
-                            $loader.hide(); // Masquez le loader après la recherche
+                        complete: function () {
+                            $loaderNom.hide(); // Masquez le loader après la recherche
                         }
                     });
                 },
-                select: function(event, ui) {
+                select: function (event, ui) {
                     var selectedValue = ui.item.value;
                     var parts = selectedValue.split(" - ");
                     var codePostal = parts[0];
@@ -110,31 +165,32 @@
 
 
             $('.autocompleteCodePostal').autocomplete({
-                source: function(request, response) {
+                delay: 700,
+                source: function (request, response) {
                     console.log("code");
-                    $loader.show(); // Affichez le loader
+                    $loaderCodePostal.show(); // Affichez le loader
                     $.ajax({
                         url: "{{ path('autocomplete_codePostal') }}",
                         dataType: 'json',
                         data: {
                             q: request.term
                         },
-                        success: function(data) {
+                        success: function (data) {
                             var suggestions = [];
                             console.log(data)
-                            data.forEach(function(item) {
-                                item.codesPostaux.forEach(function(codePostal) {
-                                    suggestions.push(codePostal+" - "+item.nom); // Ajoutez chaque code postal comme une suggestion distincte
+                            data.forEach(function (item) {
+                                item.codesPostaux.forEach(function (codePostal) {
+                                    suggestions.push(codePostal + " - " + item.nom); // Ajoutez chaque code postal comme une suggestion distincte
                                 });
                             });
                             response(suggestions);
                         },
-                        complete: function() {
-                            $loader.hide(); // Masquez le loader après la recherche
+                        complete: function () {
+                            $loaderCodePostal.hide(); // Masquez le loader après la recherche
                         }
                     });
                 },
-                select: function(event, ui) {
+                select: function (event, ui) {
                     var selectedValue = ui.item.value;
                     var parts = selectedValue.split(" - ");
                     var codePostal = parts[0];

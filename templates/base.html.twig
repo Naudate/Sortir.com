@@ -10,6 +10,9 @@
 
         {% block javascripts %}
             <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <!-- Inclure le fichier CSS de jQuery UI Autocomplete -->
+            <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+            <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
             {{ encore_entry_script_tags('app') }}
         {% endblock %}
     </head>
