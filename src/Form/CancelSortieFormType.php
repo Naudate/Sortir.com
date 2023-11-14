@@ -41,7 +41,9 @@ class CancelSortieFormType extends AbstractType
                     ])
                 ]
             ])
-            ->add('submit', SubmitType::class)
+            ->add('submit', SubmitType::class,[
+                'label'=> 'Valider'
+            ])
             //->addEventListener(FormEvents::PRE_SUBMIT, [$this, 'onPreSubmit']);
 
         ;
