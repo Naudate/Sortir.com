@@ -35,6 +35,11 @@
         <input type="checkbox" id="organisateur" name="organisateur">
         <label for="voirSortiesPassees">Voir les sorties passées :</label>
         <input type="checkbox" id="voirSortiesPassees" name="voirSortiesPassees" {% if app.request.get('voirSortiesPassees') %}checked{% endif %}>
+        <label for="registered">Voir les sorties auxquelles je suis inscrit :</label>
+        <input type="checkbox" id="registered" name="registered" {% if registered %}checked{% endif %}>
+
+        <label for="unregistered">Voir les sorties auxquelles je ne suis pas inscrit :</label>
+        <input type="checkbox" id="unregistered" name="unregistered" {% if unregistered %}checked{% endif %}>
 
 
 

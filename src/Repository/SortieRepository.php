@@ -21,7 +21,14 @@ class SortieRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Sortie::class);
     }
-    public function findBetweenDates($dateDebut, $dateFin, $searchInput,$organisateurOnly,$user,$selectedSite)
+    public function findBetweenDates(
+        $dateDebut,
+        $dateFin,
+        $searchInput,
+        $organisateurOnly,
+        $user,
+        $selectedSite,
+    )
     {
         $qb = $this->createQueryBuilder('s');
         // Ajoutez des conditions pour la recherche par nom
@@ -51,6 +58,7 @@ class SortieRepository extends ServiceEntityRepository
             $qb->andWhere('s.site = :site')
                 ->setParameter('site', $selectedSite);
         }
+
         $qb->andWhere('s.etat != :etat')
             ->setParameter('etat', Etat::EN_CREATION);
 
