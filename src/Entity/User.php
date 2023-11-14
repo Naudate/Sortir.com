@@ -76,6 +76,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: Sortie::class, mappedBy: 'participant')]
     private Collection $inscriptions;
 
+    #[ORM\Column]
+    private ?bool $isChangePassword = null;
+
     public function __construct()
     {
         $this->sorties = new ArrayCollection();
@@ -301,6 +304,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         if ($this->inscriptions->removeElement($inscription)) {
             $inscription->removeParticipant($this);
         }
+
+        return $this;
+    }
+
+    public function isIsChangePassword(): ?bool
+    {
+        return $this->isChangePassword;
+    }
+
+    public function setIsChangePassword(bool $isChangePassword): static
+    {
+        $this->isChangePassword = $isChangePassword;
 
         return $this;
     }

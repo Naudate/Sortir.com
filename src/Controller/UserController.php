@@ -175,7 +175,9 @@ class UserController extends AbstractController
     }
 
     #[Route('/changePassword/{id}', name: '_changePassword', requirements: ['id' => '\d+'])]
-    public function changePassword(User $user, Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, UserRepository $userRepository){
+    public function changePassword(int $id, Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, UserRepository $userRepository){
+
+        $user = $userRepository->find($id);
         if ($user->getId() != $this->getUser()->getId()){
             throw new Exception("Accès refusé, mon petit", 403);
         }
@@ -204,7 +206,7 @@ class UserController extends AbstractController
                     $passwordForm->get('plainPassword')->getData()
                 );
                 $user->setPassword($newPassword);
-
+                $user->setIsChangePassword(false);
                 $entityManager->persist($user);
                 $entityManager->flush();
 
@@ -232,7 +234,7 @@ class UserController extends AbstractController
                     'password'
                 )
             );
-            $user->setFirstConnection(true);
+            $user->setIsChangePassword(true);
             $entityManager->persist($user);
             $entityManager->flush();
             $this->addFlash("success", "Mot de passe réinitialisé avec succès");
