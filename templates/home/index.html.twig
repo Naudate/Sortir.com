@@ -161,6 +161,9 @@
     <div class="mx-auto max-w-full px-4 pb-6 sm:px-6 sm:pb-12 lg:px-8">
         <div class="mx-auto max-w-full">
             <div class="space-y-6">
+                {% if not sorties %}
+                <p class="flex items-center justify-center text-red-700 font-bold">Aucune sortie ici !!!</p>
+                {% else %}
                 <div class="relative overflow-x-auto shadow-md border-solid border-2 rounded-md border-gray-200">
                     <table class="w-full">
                         <thead class="text-md text-gray-700 uppercase bg-amber-50">
@@ -259,7 +262,9 @@
                         </tbody>
                     </table>
                 </div>
+                {% endif %}
             </div>
         </div>
     </div>
+
 {% endblock %}
