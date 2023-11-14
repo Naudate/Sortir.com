@@ -84,7 +84,7 @@ class SortieController extends AbstractController
                 $this->em->flush();
                 $this->addFlash("success", "Sortie crée");
 
-                return $this->redirectToRoute('sortie_create');
+                return $this->redirectToRoute('app_home');
             }
         }
 
