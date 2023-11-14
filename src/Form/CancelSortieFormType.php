@@ -26,7 +26,7 @@ class CancelSortieFormType extends AbstractType
             ->add('motif', TextareaType::class,[
                 'label'=> 'Motif :',
                 'attr'=> array(
-                    'placeholder'=> 'indiquer un motif d\'annulation de la sortie'
+                    'placeholder'=> 'Indiquer un motif d\'annulation de la sortie'
                 ),
                 'required'=> true,
                 'constraints'=> [
@@ -35,7 +35,7 @@ class CancelSortieFormType extends AbstractType
                     ]),
                     new Length([
                         'min' => 7,
-                        'minMessage' => 'Veuillez saisir un motif valide',
+                        'minMessage' => 'Le motif doit faire au moins {{ limit }} caractères',
                         'max' => 255,
                         'maxMessage' => 'Vous avez dépassé la taille autorisé pour ajouter un motif',
                     ])
