@@ -153,7 +153,7 @@
                 </div>
                 <div class="sm:col-span-2">
                     <div class="mt-6 flex items-center justify-center gap-x-3">
-                        {% if 'ROLE_ADMIN' in app.user.roles %}
+                        {% if 'ROLE_ADMIN' in app.user.roles and userId != app.user.id%}
                             <a href="{{ path('user_resetPassword', {'id': userId }) }}"
                                type="button"
                                title="Réinitialiser le mot de passe"

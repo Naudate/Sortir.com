@@ -3,6 +3,11 @@
 {% block body %}
     <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-12 lg:px-8">
         <div class="mx-auto max-w-4xl">
+
+            {% for message in app.flashes('success') %}
+                <p class="mt-1 text-sm leading-6 text-green-700">{{ message }}</p>
+            {% endfor %}
+
             <div class="space-y-6">
                 <div class="border-solid border-2 rounded-md border-gray-200 shadow-lg">
                     <form method="get" action="{{ path('app_home') }}">
@@ -221,9 +226,9 @@
                                     {{ sortie.organisateur.nom }}  {{ sortie.organisateur.prenom }}
                                 </td>
                                 <td class="px-6 py-4 text-center">
-                                    {% if sortie.getDateLimiteInscription > dateActuelle %}
+                                    {% if sortie.getDateLimiteInscription > dateActuelle and sortie.etat != 'Annulée' %}
 
-                                        {% if app.user == sortie.organisateur %}
+                                        {% if (app.user == sortie.organisateur or 'ROLE_ADMIN' in app.user.roles) and sortie.etat != 'Annulée' %}
                                             <a href="{{ path('sortie_cancel', {'id' : sortie.id}) }}"
                                                class="text-sm font-semibold text-red-600 underline underline-offset-2
                                            outline-red-600 hover:outline-red-500 hover:text-red-500">
