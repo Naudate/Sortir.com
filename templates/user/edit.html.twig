@@ -174,7 +174,7 @@
                                 Mot de passe
                             </a>
                         {% endif %}
-                        {% if not 'ROLE_ADMIN' in app.user.roles %}
+                        {% if app.user.id == userId %}
                             <a href="{{ path('user_changePassword', {'id': userId }) }}"
                                type="button"
                                title="Changer le mot de passe"
