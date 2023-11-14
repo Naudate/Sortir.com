@@ -72,10 +72,11 @@
                     {% endif %} </td>
                 <td> {{sortie.organisateur.nom}}  {{sortie.organisateur.prenom}} </td>
                 <td>
-                    {% if sortie.getDateLimiteInscription > dateActuelle and sortie.etat ==  'Ouvert'%}
+                    {% if sortie.getDateLimiteInscription >= dateActuelle %}
                         {% if app.user in sortie.participant %}
                             <a href="{{ path('sortie_unregister', {'id' : sortie.id}) }}">Se désister</a>
-                        {% else %}
+                        {% endif %}
+                        {%  if sortie.etat == 'Ouvert' and app.user not in sortie.participant %}
                             <a href="{{ path('sortie_register', {'id' : sortie.id}) }}">S'inscrire</a>
                         {% endif %}
                     {% endif %}
