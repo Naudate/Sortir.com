@@ -24,7 +24,7 @@ class CancelSortieFormType extends AbstractType
     {
         $builder
             ->add('motif', TextareaType::class,[
-                'label'=> 'Motif :',
+                'label'=> 'Motif',
                 'attr'=> array(
                     'placeholder'=> 'Indiquer un motif d\'annulation de la sortie'
                 ),

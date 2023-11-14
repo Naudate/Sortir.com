@@ -3,49 +3,81 @@
 {% block title %}Create Sortie{% endblock %}
 
 {% block body %}
-    <div>
-       <label>Nom : </label>
-        <p>{{ sortie.nom }}</p>
+    <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-12 lg:px-8">
+        <div class="mx-auto max-w-2xl">
+            <div class="space-y-12">
+                <div class="border-b border-gray-900/10 pb-6">
+                    <div class="mt-6 border-gray-100">
+                        <h2 class="text-base font-semibold leading-7 text-gray-900">Annuler la sortie {{ sortie.nom }} </h2>
+                        <p class="mt-1 text-sm leading-6 text-gray-600">Un motif est obligatoire pour annuler une sortie.</p>
+
+                    </div>
+                    <div class="mt-6 border-t border-gray-100">
+                        <dl class="divide-y divide-gray-100">
+                            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                                <dt class="text-sm font-medium leading-6 text-gray-900">
+                                    Nom de la sortie
+                                </dt>
+                                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                                    {{ sortie.nom }}
+                                </dd>
+                            </div>
+                            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                                <dt class="text-sm font-medium leading-6 text-gray-900">
+                                    Date de début
+                                </dt>
+                                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                                    {{ sortie.dateHeureDebut|date("d/m/Y H:i")  }}
+                                </dd>
+                            </div>
+                            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                                <dt class="text-sm font-medium leading-6 text-gray-900 grid sm:row-span-3 items-center">
+                                    Site
+                                </dt>
+                                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                                    {{ sortie.Lieu.nom  }}
+                                </dd>
+                                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                                    {{ sortie.Lieu.rue  }}
+                                </dd>
+                                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                                    {{ sortie.Lieu.Ville.codePostal}} {{ sortie.Lieu.Ville.nom  }}
+                                </dd>
+                            </div>
+                            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                                <dt class="text-sm font-medium leading-6 text-gray-900 flex items-center">
+                                    {{ form_start(cancelSortieForm) }}
+                                    {{ form_label(cancelSortieForm.motif,null , {
+                                        'label_attr':{'class':'text-sm font-medium leading-6 text-gray-900'}
+                                    }) }}
+                                </dt>
+                                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                                    {{ form_widget(cancelSortieForm.motif) }}
+                                    {{ form_errors(cancelSortieForm.motif) }}
+                                    {{ form_help(cancelSortieForm.motif) }}
+                                </dd>
+
+                            </div>
+                            <div class="px-4 py-6 sm:px-0">
+                                <div class="grid grid-cols-3">
+                                    <div class="col-end-4">
+                                        <div class="flex items-center justify-end gap-x-6">
+                                            {{ form_widget(cancelSortieForm.submit, {
+                                                'attr':{'class':'rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold
+                                                                    text-white shadow-sm hover:bg-indigo-500 focus-visible:outline
+                                                                    focus-visible:outline-2 focus-visible:outline-offset-2
+                                                                     focus-visible:outline-indigo-600'}
+                                            }) }}
+                                            {{ form_end(cancelSortieForm) }}
+                                            <a href="{{ path('app_home') }}">Annuler</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <br/>
-
-    <div>
-        <label>Date de début de la sortie : </label>
-        <p>{{ sortie.dateHeureDebut|date("d/m/Y H:i")  }}</p>
-    </div>
-    <br/>
-
-    <div>
-        <label>Site </label>
-        <p>{{ sortie.site.nom  }}</p>
-    </div>
-    <br/>
-
-    <div>
-        <label>Lieu </label>
-        <p>{{ sortie.Lieu.nom  }}</p>
-        <p>{{ sortie.Lieu.rue  }}</p>
-        <p>{{ sortie.Lieu.Ville.codePostal}} {{ sortie.Lieu.Ville.nom  }}</p>
-
-    </div>
-    <br/>
-
-
-    {{ form_start(cancelSortieForm) }}
-
-    <div>
-        {{ form_label(cancelSortieForm.motif) }}
-        {{ form_widget(cancelSortieForm.motif) }}
-        {{ form_errors(cancelSortieForm.motif) }}
-        {{ form_help(cancelSortieForm.motif) }}
-    </div>
-
-    <br/>
-    {{ form_widget(cancelSortieForm.submit) }}
-
-
-    {{ form_end(cancelSortieForm) }}
-    <a href="{{ path('app_home') }}">Annuler</a>
-
 {% endblock %}
