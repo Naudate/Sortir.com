@@ -232,6 +232,7 @@ class UserController extends AbstractController
                     'password'
                 )
             );
+            $user->setFirstConnection(true);
             $entityManager->persist($user);
             $entityManager->flush();
             $this->addFlash("success", "Mot de passe réinitialisé avec succès");
