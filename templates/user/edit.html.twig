@@ -67,7 +67,10 @@
                                 {{ form_label(userForm.prenom) }}
                                 <div class="mt-2">
                                     {{ form_widget(userForm.prenom, {
-                                        'attr':{'disabled':'disabled'}
+                                        'attr':{
+                                            'disabled':'disabled',
+                                            'class': 'mt-1 w-full cursor-not-allowed bg-gray-50'
+                                        }
                                     })  }}
                                     {{ form_errors(userForm.prenom) }}
                                     {{ form_help(userForm.prenom) }}
