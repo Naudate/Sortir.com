@@ -87,4 +87,30 @@ class LieuController extends AbstractController
 
         return new JsonResponse($lieuxArray);
     }
+
+    #[Route('/getByLieu', name: '_getByLieu', methods: "POST")]
+    public function getByLieu(Request $request)
+    {
+        $lieu = $request->request->get('lieu');
+
+        $lieux = $this->lieuRepository->findBy(['id' => $lieu]);
+        $lieuxArray = [];
+        foreach ($lieux as $lieu) {
+            $lieuxArray[] = [
+                'id' => $lieu->getId(),
+                'nom' => $lieu->getNom(),
+                'rue' => $lieu->getRue(),
+                'latitude' => $lieu->getLatitude(),
+                'longitude' => $lieu->getLongitude(),
+                'ville' => [
+                    'id' => $lieu->getVille()->getId(),
+                    'codePostal' => $lieu->getVille()->getCodePostal(),
+                    'nom' => $lieu->getVille()->getNom(),
+            ]
+            ];
+        }
+
+        return new JsonResponse($lieuxArray);
+    }
+
 }
