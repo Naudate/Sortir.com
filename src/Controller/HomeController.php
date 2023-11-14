@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\SiteRepository;
 use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,8 +17,10 @@ class HomeController extends AbstractController
     public function index(
         Request $request,
         EntityManagerInterface $entityManager,
-        SortieRepository $sortieRepository)
+        SortieRepository $sortieRepository,
+        SiteRepository $siteRepository)
     {
+        $sites = $siteRepository->findAll();
         /*$sorties = $sortieRepository->findAll();
         dump($sorties);
         return $this->render('home/index.html.twig', ["sorties" => $sorties]);*/
@@ -27,9 +30,12 @@ class HomeController extends AbstractController
         $dateFin = $request->query->get('dateFin');
         $organisateurOnly = $request->query->get('organisateur');
         $voirSortiesPassees = $request->query->get('voirSortiesPassees');
+        $selectedSite = $request->query->get('site');
 
         // Filtrer les sorties en fonction des dates
-        $sorties = $sortieRepository->findBetweenDates($dateDebut, $dateFin, $searchInput, $organisateurOnly, $this->getUser());
+        $sorties = $sortieRepository->findBetweenDates($dateDebut, $dateFin, $searchInput, $organisateurOnly, $this->getUser(),$selectedSite );
+        // Filtrer les sorties en création
+
         if ($voirSortiesPassees) {
             $sorties = array_filter($sorties, function ($sortie) {
                 return $sortie->getDateHeureDebut() < new \DateTime();
@@ -43,7 +49,8 @@ class HomeController extends AbstractController
             "dateDebut" => $dateDebut,
             "dateFin" => $dateFin,
             "organisateurOnly" => $organisateurOnly,
-            "dateActuelle"=>$dateActuelle
+            "dateActuelle"=>$dateActuelle,
+            "sites" => $sites,  // Passer la liste des sites au template
         ]);
     }
 }

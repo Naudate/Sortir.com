@@ -8,7 +8,13 @@
     .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
 </style>
     <form method="get" action="{{ path('app_home') }}">
-
+        <label for="site">Choisir un site :</label>
+        <select id="site" name="site">
+            <option value="">Tous les sites</option>
+            {% for site in sites %}
+                <option value="{{ site.id }}" {% if app.request.get('site') == site.id %}selected{% endif %}>{{ site.nom }}</option>
+            {% endfor %}
+        </select>
         <label for="nom">Rechercher par nom :</label>
         <input type="text" id="nom" name="nom" value="{{ app.request.get('nom') }}">
 
