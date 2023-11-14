@@ -5,12 +5,14 @@ namespace App\Controller;
 use App\Entity\Lieu;
 use App\Entity\Sortie;
 use App\Enum\Etat;
+use App\Form\CancelSortieFormType;
 use App\Form\LieuFormType;
 use App\Form\SortieType;
 use App\Repository\SortieRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpFoundation\Request;
@@ -103,9 +105,9 @@ class SortieController extends AbstractController
         //dd($sortie);
 
         if ($sortie->getNombreMaxParticipant()> $nbrParticipant
-                && $sortie->getEtat() == Etat::OUVERT
+                && $sortie->getEtat() == Etat::OUVERT || $sortie->getEtat() == Etat::CLOTURE
                 && $sortie->isIsPublish()
-                &&  $dateActuelle < $sortie->getDateLimiteInscription()){
+                &&  $dateActuelle <= $sortie->getDateLimiteInscription()){
             //ajout de l'utilisateur connectée à la liste
             $sortie->addParticipant($userConnect);
 
@@ -130,7 +132,7 @@ class SortieController extends AbstractController
         else if ($sortie->getEtat() != Etat::OUVERT){
             $this->addFlash("error", "Il n'est pas possible de s'inscrire à cette sortie");
         }
-        else if ($dateActuelle < $sortie->getDateLimiteInscription()){
+        else if ($dateActuelle > $sortie->getDateLimiteInscription()){
             $this->addFlash("error", "Il est trop tard pour s'inscrire");
         }
         else{
@@ -140,7 +142,7 @@ class SortieController extends AbstractController
     }
 
     #[Route('/unRegister/{id}', name: '_unregister', requirements: ['id' => '\d+'])]
-    public function seDesister (int $id, EntityManagerInterface $entityManager, SortieRepository $sortieRepository, UserRepository $userRepository){
+    public function seDesister (int $id, EntityManagerInterface $entityManager, SortieRepository $sortieRepository){
         //récupération de l"utilisateur connecté
         $userConnect =  $this->getUser();
 
@@ -149,8 +151,6 @@ class SortieController extends AbstractController
 
         date_default_timezone_set('Europe/Paris');
         $dateActuelle = new \DateTime;
-
-
 
         //vérification que la date limite pour se désinscrire est valide
         if($sortie->getEtat() == Etat::OUVERT
@@ -179,6 +179,38 @@ class SortieController extends AbstractController
             return $this->redirectToRoute('app_home');
 
         }
+    }
+
+
+    #[Route('/cancel/{id}', name: '_cancel', requirements: ['id' => '\d+'])]
+    public function annuler (int $id, Sortie $sortie, Request $request, EntityManagerInterface $entityManager, SortieRepository $sortieRepository){
+
+        //récupération de l'utilisateur connectée
+        $userConnect =  $this->getUser();
+        $form = $this->createForm(CancelSortieFormType::class, $sortie);
+        $form->handleRequest($request);
+
+        // vérification que la sortie existe
+        if(empty($sortie)){
+            throw new Exception("Sortie inconnu", 404);
+        }
+        // sinon si l'utilisateur connecté est celui qui a origanisé la sortie ou si il est administrateur
+        else if ($sortie->getOrganisateur()== $userConnect
+                || in_array('ROLE_ADMIN', $this->getUser()->getRoles(), true)){
+            if ($form->isSubmitted()){
+                // persist des données
+                $entityManager->persist($sortie);
+                $entityManager->flush();
+            }
+
+        }
+        else {
+            throw new Exception("Ne joue pas avec mes nerfs mon petit !",403);
+        }
+
+        return $this->render('sortie/cancel.html.twig', [
+            'cancelSortieForm'=> $form->createView(),
+        ]);
     }
 
 
