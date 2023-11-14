@@ -61,7 +61,8 @@ class SortieRepository extends ServiceEntityRepository
 
         $qb->andWhere('s.etat != :etat OR (s.etat = :etat AND s.organisateur = :user)')
             ->setParameter('etat', Etat::EN_CREATION)
-            ->setParameter('user', $user);
+            ->setParameter('user', $user)
+            ->orderBy('s.dateLimiteInscription', 'ASC');
 
         return $qb->getQuery()->getResult();
 

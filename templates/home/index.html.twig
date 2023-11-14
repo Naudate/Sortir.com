@@ -28,21 +28,22 @@
                                 </div>
                             </div>
                             <div>
-                                <label for="site"
-                                       class="block text-sm font-medium leading-6 text-gray-900">
+                                <label for="site" class="block text-sm font-medium leading-6 text-gray-900">
                                     Choisir un site
                                 </label>
                                 <div class="mt-2">
                                     <select id="site"
                                             name="site"
                                             class="w-full rounded-md border-0 py-1.5 text-gray-900
-                                       shadow-sm ring-1 ring-inset ring-gray-300
-                                       placeholder:text-gray-400 focus:ring-2 focus:ring-inset
-                                       focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                            shadow-sm ring-1 ring-inset ring-gray-300
+                                             placeholder:text-gray-400 focus:ring-2 focus:ring-inset
+                                             focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                         <option value="">Tous les sites</option>
                                         {% for site in sites %}
                                             <option value="{{ site.id }}"
-                                                    {% if app.request.get('site') == site.id %}selected{% endif %}>
+                                                    {% if app.request.get('site') == site.id or (app.user.site is defined and app.user.site.id == site.id) %}
+                                            selected
+                                                    {% endif %}>
                                                 {{ site.nom }}
                                             </option>
                                         {% endfor %}
@@ -160,6 +161,9 @@
     <div class="mx-auto max-w-full px-4 pb-6 sm:px-6 sm:pb-12 lg:px-8">
         <div class="mx-auto max-w-full">
             <div class="space-y-6">
+                {% if not sorties %}
+                <p class="flex items-center justify-center text-red-700 font-bold">Aucune sortie ici !!!</p>
+                {% else %}
                 <div class="relative overflow-x-auto shadow-md border-solid border-2 rounded-md border-gray-200">
                     <table class="w-full">
                         <thead class="text-md text-gray-700 uppercase bg-amber-50">
@@ -270,7 +274,9 @@
                         </tbody>
                     </table>
                 </div>
+                {% endif %}
             </div>
         </div>
     </div>
+
 {% endblock %}
