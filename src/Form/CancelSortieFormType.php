@@ -24,7 +24,7 @@ class CancelSortieFormType extends AbstractType
     {
         $builder
             ->add('motif', TextareaType::class,[
-                'label'=> 'Motif :',
+                'label'=> 'Motif',
                 'attr'=> array(
                     'placeholder'=> 'Indiquer un motif d\'annulation de la sortie'
                 ),
@@ -41,7 +41,9 @@ class CancelSortieFormType extends AbstractType
                     ])
                 ]
             ])
-            ->add('submit', SubmitType::class)
+            ->add('submit', SubmitType::class,[
+                'label'=> 'Valider'
+            ])
             //->addEventListener(FormEvents::PRE_SUBMIT, [$this, 'onPreSubmit']);
 
         ;

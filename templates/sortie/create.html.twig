@@ -124,21 +124,23 @@
                         <div class="flex items-center justify-end gap-x-6">
                             {{ form_row(form.enregistrer) }}
                             {{ form_row(form.publier) }}
+                            {{ form_end(form) }}
                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pt-12">
+                <div id="lieuModal" style="display: none;" class="border border-2 border-solid border-gray-400 rounded-md">
+                    <div>
+                        {{ include('lieu/modal/addLieu.html.twig', {
+                            modalTitle: 'Add a new Lieu',
+                        }) }}
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    {{ form_end(form) }}
-    <div id="lieuModal" style="display: none; border: solid black 2px; padding: 10px; margin: 10px">
-        <div>
-            {{ include('lieu/modal/addLieu.html.twig', {
-                modalTitle: 'Add a new Lieu',
-            }) }}
-        </div>
-        <button type="button" class="btn" id="closeModal" hidden>Annuler</button>
-    </div>
+
 {% endblock %}
 
 {% block javascripts %}
