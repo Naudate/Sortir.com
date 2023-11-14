@@ -74,7 +74,7 @@
                                        class="text-gray-800 hover:bg-gray-700
                                        hover:text-white rounded-md px-3 py-2
                                        text-sm font-medium">
-                                        Participants
+                                        Utilisateurs
                                     </a>
                                     <a href="{{ path('gerer_villes') }}"
                                        class="text-gray-800 hover:bg-gray-700
@@ -82,7 +82,10 @@
                                    text-sm font-medium">
                                         Villes
                                     </a>
+                                    {% endif %}
+                                    {% if 'ROLE_USER' in app.user.roles %}
                                     <a href="{{ path('lieu_home') }}"
+
                                        class="text-gray-800 hover:bg-gray-700
                                hover:text-white rounded-md px-3 py-2
                                text-sm font-medium">
