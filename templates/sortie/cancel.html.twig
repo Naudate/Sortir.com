@@ -3,8 +3,49 @@
 {% block title %}Create Sortie{% endblock %}
 
 {% block body %}
+    <div>
+       <label>Nom : </label>
+        <p>{{ sortie.nom }}</p>
+    </div>
+
+    <br/>
+
+    <div>
+        <label>Date de début de la sortie : </label>
+        <p>{{ sortie.dateHeureDebut|date("d/m/Y H:i")  }}</p>
+    </div>
+    <br/>
+
+    <div>
+        <label>Site </label>
+        <p>{{ sortie.site.nom  }}</p>
+    </div>
+    <br/>
+
+    <div>
+        <label>Lieu </label>
+        <p>{{ sortie.Lieu.nom  }}</p>
+        <p>{{ sortie.Lieu.rue  }}</p>
+        <p>{{ sortie.Lieu.Ville.codePostal}} {{ sortie.Lieu.Ville.nom  }}</p>
+
+    </div>
+    <br/>
+
+
     {{ form_start(cancelSortieForm) }}
 
+    <div>
+        {{ form_label(cancelSortieForm.motif) }}
+        {{ form_widget(cancelSortieForm.motif) }}
+        {{ form_errors(cancelSortieForm.motif) }}
+        {{ form_help(cancelSortieForm.motif) }}
+    </div>
+
+    <br/>
+    {{ form_widget(cancelSortieForm.submit) }}
+
+
     {{ form_end(cancelSortieForm) }}
+    <a href="{{ path('app_home') }}">Annuler</a>
 
 {% endblock %}
