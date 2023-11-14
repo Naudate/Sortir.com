@@ -59,9 +59,9 @@ class SortieRepository extends ServiceEntityRepository
                 ->setParameter('site', $selectedSite);
         }
 
-        $qb->andWhere('s.etat != :etat')
-            ->setParameter('etat', Etat::EN_CREATION);
-
+        $qb->andWhere('s.etat != :etat OR (s.etat = :etat AND s.organisateur = :user)')
+            ->setParameter('etat', Etat::EN_CREATION)
+            ->setParameter('user', $user);
 
         return $qb->getQuery()->getResult();
 
