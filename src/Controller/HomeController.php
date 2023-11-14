@@ -14,6 +14,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class HomeController extends AbstractController
 {
+    #[IsGranted('ROLE_USER')]
     #[Route('/', name: 'app_home')]
     public function index(
         Request $request,
