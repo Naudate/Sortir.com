@@ -143,7 +143,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="sm:col-span-3 flex items-end justify-center">
+                            <div class="sm:col-span-3 flex items-center justify-center">
                                 <button type="submit"
                                         class="rounded-md bg-indigo-600 px-3 py-2 sm:w-1/3 w-full
                                     text-sm font-semibold text-white shadow-sm hover:bg-indigo-500
@@ -230,24 +230,28 @@
                                     {{ sortie.organisateur.nom }}  {{ sortie.organisateur.prenom }}
                                 </td>
                                 <td class="px-6 py-4 text-center">
-                                    {% if sortie.getDateLimiteInscription > dateActuelle and sortie.etat != 'Annulée' %}
+                                    {% if sortie.getDateLimiteInscription >= dateActuelle and sortie.etat != 'Annulée' %}
 
-                                        {% if (app.user == sortie.organisateur or 'ROLE_ADMIN' in app.user.roles) and sortie.etat != 'Annulée' %}
+                                        {% if (app.user == sortie.organisateur or 'ROLE_ADMIN' in app.user.roles) and sortie.etat == 'Ouvert'
+                                            or sortie.etat == 'Clôturée'%}
                                             <a href="{{ path('sortie_cancel', {'id' : sortie.id}) }}"
-                                               class="text-sm font-semibold text-red-600 underline underline-offset-2
-                                           outline-red-600 hover:outline-red-500 hover:text-red-500">
+                                               class="text-sm font-semibold text-amber-600 underline underline-offset-2
+                                           outline-amber-600 hover:outline-amber-500 hover:text-amber-500">
                                                 Annuler
                                             </a>
-                                        {% else %}
+                                        {% endif %}
+                                        <br>
 
-
-                                            {% if app.user in sortie.participant %}
-                                                <a href="{{ path('sortie_register', {'id' : sortie.id}) }}"
+                                        {% if app.user in sortie.participant and app.user != sortie.organisateur and sortie.etat == 'Ouvert'
+                                                or sortie.etat == 'Clôturée' %}
+                                                <a href="{{ path('sortie_unregister', {'id' : sortie.id}) }}"
                                                    class="text-sm font-semibold text-red-600 underline underline-offset-2
                                            outline-red-600 hover:outline-red-500 hover:text-red-500">
                                                     Se désister
                                                 </a>
-                                            {% else %}
+                                            {% endif %}
+                                            {% if app.user not in sortie.participant and app.user != sortie.organisateur and sortie.etat == 'Ouvert'
+                                                or sortie.etat == 'Clôturée' %}
                                                 <a href="{{ path('sortie_register', {'id' : sortie.id}) }}"
                                                    class="text-sm font-semibold text-indigo-600 underline underline-offset-2
                                            outline-indigo-600 hover:outline-indigo-500 hover:text-indigo-500">
@@ -255,6 +259,12 @@
                                                 </a>
                                             {% endif %}
                                         {% endif %}
+                                    {% if sortie.etat =='En création' %}
+                                        <a href="{{ path('sortie_publish', {'id' : sortie.id}) }}"
+                                           class="text-sm font-semibold text-blue-600 underline underline-offset-2
+                                           outline-blue-600 hover:outline-blue-600 hover:text-indigo-500">
+                                            Publier
+                                        </a>
                                     {% endif %}
                                 </td>
                             </tr>

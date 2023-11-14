@@ -124,21 +124,23 @@
                         <div class="flex items-center justify-end gap-x-6">
                             {{ form_row(form.enregistrer) }}
                             {{ form_row(form.publier) }}
+                            {{ form_end(form) }}
                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pt-12">
+                <div id="lieuModal" style="display: none;" class="border border-2 border-solid border-gray-400 rounded-md">
+                    <div class="m-3">
+                        {{ include('lieu/modal/addLieu.html.twig', {
+                            modalTitle: 'Add a new Lieu',
+                        }) }}
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    {{ form_end(form) }}
-    <div id="lieuModal" style="display: none; border: solid black 2px; padding: 10px; margin: 10px">
-        <div>
-            {{ include('lieu/modal/addLieu.html.twig', {
-                modalTitle: 'Add a new Lieu',
-            }) }}
-        </div>
-        <button type="button" class="btn" id="closeModal" hidden>Annuler</button>
-    </div>
+
 {% endblock %}
 
 {% block javascripts %}
@@ -148,10 +150,20 @@
     <script>
         // Attendez que le document soit prêt
         $(document).ready(function () {
+            var submitFormSortie = {{ submitFormSortie ? 'true' : 'false' }}
+            if(!submitFormSortie){
+                console.log("test ok")
+                $('#{{ form.lieu.vars.id }}').empty(); // Effacez les options existantes
+                $('#{{ form.lieu.vars.id }}').append('<option>Veuillez choisir une ville</option>');
+            }else{
+                loadLieuByVille();
+            }
             // Écoutez les changements de la ville
-            $('#{{ form.ville.vars.id }}').change(function () {
+            $('#{{ form.ville.vars.id }}').change(loadLieuByVille);
+
+            function loadLieuByVille () {
                 // Récupérez la valeur de la ville sélectionnée
-                var selectedVille = $(this).val();
+                var selectedVille = $('#{{ form.ville.vars.id }}').val();
 
                 // Faites une requête AJAX pour récupérer les lieux associés à la ville
                 $.ajax({
@@ -172,7 +184,8 @@
 
                     }
                 });
-            });
+
+            }
         });
     </script>
     <script>

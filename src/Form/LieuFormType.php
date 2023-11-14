@@ -71,7 +71,7 @@ class LieuFormType extends AbstractType
             ])
             ->add('ville', EntityType::class,[
                 'class'=> Ville::class,
-                'label'=> 'Ville ',
+                'label'=> 'Ville',
                 'choice_label' => function ($ville) {
                     return $ville->getCodePostal() . ' - ' . $ville->getNom();
                 },

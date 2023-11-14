@@ -40,6 +40,7 @@ class SortieController extends AbstractController
         $formLieu->handleRequest($request);
 
         $errorLieu = false;
+        $submitFormSortie = false;
 
         if ($formLieu->isSubmitted() && $formLieu->isValid()) {
             $this->em->persist($lieu);
@@ -52,6 +53,8 @@ class SortieController extends AbstractController
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $submitFormSortie = true;
 
             if ($sortie->getDateHeureDebut() < new \DateTime()) {
                 $form->get('dateHeureDebut')->addError(new FormError('La date de fin ne peut pas être antérieure à la date du jour.'));
@@ -91,7 +94,8 @@ class SortieController extends AbstractController
         return $this->render('sortie/create.html.twig', [
             'form' => $form->createView(),
             'lieuForm' => $formLieu->createView(),
-            'errorLieu' => $errorLieu
+            'errorLieu' => $errorLieu,
+            'submitFormSortie' => $submitFormSortie
         ]);
     }
 
@@ -224,4 +228,34 @@ class SortieController extends AbstractController
     }
 
 
+    #[Route('/publish/{id}', name: '_publish', requirements: ['id' => '\d+'])]
+    public function publish (int $id, Request $request, EntityManagerInterface $entityManager, SortieRepository $sortieRepository){
+
+        //récupération de l'utilisateur connecté
+        $userConnectee = $this->getUser();
+
+        // récuperation de la sortie
+        $sortie = $sortieRepository->find($id);
+
+        // vérification de la sortie
+        if(empty($sortie)){
+            throw new Exception("Sortie inconnu, petit malin. Je suis invulnérable !", 404);
+        }
+
+        // si l"utilisateur connecteé est l'organisateur de la sortie
+        if ($sortie->getOrganisateur() == $userConnectee && $sortie->getEtat() == Etat::EN_CREATION ){
+
+            // changement de l'état de la sortie
+            $sortie->setEtat(Etat::OUVERT);
+
+            //persist des données
+            $entityManager->persist($sortie);
+            $entityManager->flush();
+            $this->addFlash("success", "La sortie a été publié avec succès");
+            return $this->redirectToRoute('app_home');
+        }
+        else {
+            throw new Exception("Qu'est-ce que tu n'as pas compris dans NOOOOOOONNNNN!",403);
+        }
+    }
 }

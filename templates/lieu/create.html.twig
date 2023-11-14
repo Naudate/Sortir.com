@@ -1,51 +1,24 @@
 {% extends 'base.html.twig' %}
-
 {% block title %}créer un lieu{% endblock %}
 
 {% block body %}
-    <style>
-        .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-        .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-    </style>
+<div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-12 lg:px-8">
+    <div class="mx-auto max-w-2xl">
 
-    <div class="example-wrapper">
-        <h1>Création lieu </h1>
-
-        {{ form_start(lieuForm) }}
-
-        {{ form_label(lieuForm.nom) }}
-        {{ form_errors(lieuForm.nom) }}
-        {{ form_widget(lieuForm.nom) }}
-        {{ form_help(lieuForm.nom) }}
-
-        <br>
-        {{ form_label(lieuForm.rue) }}
-        {{ form_errors(lieuForm.rue) }}
-        {{ form_widget(lieuForm.rue) }}
-        {{ form_help(lieuForm.rue) }}
-
-        <br>
-        {{ form_label(lieuForm.ville) }}
-        {{ form_errors(lieuForm.ville) }}
-        {{ form_widget(lieuForm.ville) }}
-        {{ form_help(lieuForm.ville) }}
-
-        <br>
-        {{ form_label(lieuForm.latitude) }}
-        {{ form_errors(lieuForm.latitude) }}
-        {{ form_widget(lieuForm.latitude) }}
-        {{ form_help(lieuForm.latitude) }}
-
-        <br>
-        {{ form_label(lieuForm.longitude) }}
-        {{ form_errors(lieuForm.longitude) }}
-        {{ form_widget(lieuForm.longitude) }}
-        {{ form_help(lieuForm.longitude) }}
-
-        {{ form_label(lieuForm) }}
-        {{ form_errors(lieuForm) }}
-        {{ form_widget(lieuForm) }}
-
-        {{ form_end(lieuForm) }}
+        {% for message in app.flashes('success') %}
+            <p class="mt-1 text-sm leading-6 text-green-700">{{ message }}</p>
+        {% endfor %}
+        <div class="space-y-12">
+            <div class="border-b border-gray-900/10 pb-12">
+                <h2 class="text-base font-semibold leading-7 text-gray-900">
+                    Création d'un lieu
+                </h2>
+                <p class="mt-1 text-sm leading-6 text-gray-600">
+                    Espace pour la création d'un lieu.
+                </p>
+                {% include 'lieu/modal/addLieu.html.twig' %}
+            </div>
+        </div>
     </div>
+</div>
 {% endblock %}
