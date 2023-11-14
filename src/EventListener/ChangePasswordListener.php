@@ -29,7 +29,7 @@ class ChangePasswordListener implements EventSubscriberInterface
         $user = $this->security->getUser();
         if ($user) {
 
-            if (in_array('ROLE_ADMIN',$user->getRoles())){
+            if (!$user->isIsChangePassword()){
                 return;
             }
 

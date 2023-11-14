@@ -73,11 +73,23 @@ class UserController extends AbstractController
     public function create(Request $request, UserRepository $userRepository, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, Uploader $uploader) : Response {
 
         $user = new User();
+
+
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
         if($form->isSubmitted()){
 
+            // vérification que le nouvel utilisateur n'existe pas en base de données
+            $userExist=  $userRepository->findByEmailOrUsername($user->getEmail());
+            if(!empty($userExist)){
+
+                $this->addFlash("error", "Un utilisateur existe déjà avec cette adresse mail");
+
+                return $this->render('user/create.html.twig', [
+                    'registrationForm'=> $form->createView(),
+                ]);
+            }
             //dd($imageUpload);
           /*  if(!empty($imageUpload) && $imageUpload instanceof UploadedFile){
                 $pathAvatar = $uploader->upload($imageUpload,'assets/avatar/', $form->get('pseudo')->getData() );
@@ -97,6 +109,12 @@ class UserController extends AbstractController
             $user->setIsActif(true);
             $user->setFirstConnection(true);
             $user->setRoles(array('ROLE_USER'));
+            //dd($user);
+
+            if ($user->getSite() == null)
+            {
+                $user->setSite(null);
+            }
 
             $entityManager->persist($user);
             $entityManager->flush();
@@ -113,10 +131,17 @@ class UserController extends AbstractController
 
     #[Route('/edit/{id}', name: '_edit', requirements: ['id' => '\d+'])]
     #[IsGranted('ROLE_USER')]
-    public function edit(User $user,Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager){
+    public function edit(int $id,Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, UserRepository $userRepository){
         $userConnect = $this->getUser();
-        //dd($user);
+
+        $user= $userRepository->find($id);
+
+        if(empty($user)){
+            throw new Exception("Hélas, l'utilisateur recherché n'est plus de ce monde", Response::HTTP_NOT_FOUND);
+        }
+
         // si utilisateur connectée cherche a consulter son profil et quil a le role user
+
         if($userConnect->getId() == $user->getId() && in_array('ROLE_USER', $this->getUser()->getRoles(), true) ||  in_array('ROLE_ADMIN', $this->getUser()->getRoles(), true)){
 
             $userForm = $this->createForm(UserFormType::class, $user);
@@ -133,7 +158,10 @@ class UserController extends AbstractController
                 else{
                     $user->setIsChangePassword(false);
 
-                    //dd($user);
+                    if ($user->getSite() == null){
+                        $user->setSite(null);
+                    }
+                    //dd($userForm);
                     $entityManager->persist($user);
                     $entityManager->flush();
 
@@ -180,6 +208,10 @@ class UserController extends AbstractController
     public function changePassword(int $id, Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, UserRepository $userRepository){
 
         $user = $userRepository->find($id);
+
+        if(empty($user)){
+            throw new Exception("Utilisateur inconnu", 404);
+        }
         if ($user->getId() != $this->getUser()->getId()){
             throw new Exception("Accès refusé, mon petit", 403);
         }

@@ -8,6 +8,7 @@ use App\Repository\SiteRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -133,13 +134,24 @@ class UserFormType extends AbstractType
                       ])
                   ],
               ])*/
-            ->add('site', EntityType::class,[
+           /* ->add('site', EntityType::class,[
                 'class'=> Site::class,
                 'choice_label'=> 'nom',
                 'query_builder' => function (SiteRepository $siteRepository){
                     return $siteRepository->createQueryBuilder("s")->addOrderBy('s.nom');
                 }
+            ])*/
+            ->add('site', ChoiceType::class,[
+                //'class'=> Site::class,
+                'choice_label'=> 'nom',
+                'required'=> false,
+                /*'query_builder' => function (SiteRepository $siteRepository){
+                   return $siteRepository->createQueryBuilder("s")->addOrderBy('s.nom');
+                },*/
+                'choices' => $this->getSiteChoices(), // Appel à la méthode pour obtenir les choix
+                'placeholder' => 'Sélectionner un site', // Texte affiché pour la valeur par défaut
             ])
+
             ->add('isActif', CheckboxType::class, [
                 'label'=> 'Utilisateur Actif',
                 'required'=> false
@@ -161,7 +173,19 @@ class UserFormType extends AbstractType
 
 
     }
+    private function getSiteChoices()
+    {
+        $sites = $this->siteRepository->findBy([], ['nom' => 'ASC']); // Récupération de tous les sites, triés par nom si nécessaire
 
+        $choices = [];
+
+        // Ajoutez les sites existants à la liste
+        foreach ($sites as $site) {
+            $choices[$site->getNom()] = $site;
+        }
+
+        return $choices;
+    }
     public function onPreSubmit(FormEvent $event)
     {
         $data = $event->getData();
