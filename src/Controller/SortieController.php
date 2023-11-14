@@ -184,26 +184,34 @@ class SortieController extends AbstractController
 
 
     #[Route('/cancel/{id}', name: '_cancel', requirements: ['id' => '\d+'])]
-    public function annuler (int $id, Sortie $sortie, Request $request, EntityManagerInterface $entityManager, SortieRepository $sortieRepository){
+    public function annuler (int $id, Request $request, EntityManagerInterface $entityManager, SortieRepository $sortieRepository){
 
+        $sortie = $sortieRepository->find($id);
         //récupération de l'utilisateur connectée
         $userConnect =  $this->getUser();
         $form = $this->createForm(CancelSortieFormType::class, $sortie);
         $form->handleRequest($request);
+       //dd($form->isValid());
 
         // vérification que la sortie existe
         if(empty($sortie)){
             throw new Exception("Sortie inconnu", 404);
         }
+        else if ($sortie->getEtat() == Etat::ANNULLE){
+            throw new Exception("Ne joue pas avec mes nerfs mon petit !", 403);
+        }
         // sinon si l'utilisateur connecté est celui qui a origanisé la sortie ou si il est administrateur
         else if ($sortie->getOrganisateur()== $userConnect
                 || in_array('ROLE_ADMIN', $this->getUser()->getRoles(), true)){
-            if ($form->isSubmitted()){
+            if ($form->isSubmitted() && $form->isValid()){
+                $sortie->setMotif($form->get('motif')->getData());
+                $sortie->setEtat(Etat::ANNULLE);
                 // persist des données
                 $entityManager->persist($sortie);
                 $entityManager->flush();
+                $this->addFlash("success", "La sortie a été annulé avec succès");
+                return $this->redirectToRoute('app_home');
             }
-
         }
         else {
             throw new Exception("Ne joue pas avec mes nerfs mon petit !",403);
@@ -211,6 +219,7 @@ class SortieController extends AbstractController
 
         return $this->render('sortie/cancel.html.twig', [
             'cancelSortieForm'=> $form->createView(),
+            'sortie'=> $sortie
         ]);
     }
 
