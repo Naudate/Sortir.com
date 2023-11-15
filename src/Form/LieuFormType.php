@@ -59,14 +59,14 @@ class LieuFormType extends AbstractType
             ->add('latitude',TextType::class,[
                 'required'=> false,
                 'attr'=> array(
-                    'placeholder' => '-4634789'
+                    'placeholder' => '-45.3642'
                 ),
                 'label'=> 'Latitude',
             ])
             ->add('longitude',TextType::class,[
                 'required'=> false,
                 'attr'=> array(
-                    'placeholder' => '+983489'
+                    'placeholder' => '+36.2555'
                 ),
                 'label'=> 'Longitude',
             ])
@@ -79,8 +79,7 @@ class LieuFormType extends AbstractType
                 'query_builder' => function (VilleRepository $villeRepository){
                     return $villeRepository->createQueryBuilder("v")->addOrderBy('v.nom');
                 }
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
