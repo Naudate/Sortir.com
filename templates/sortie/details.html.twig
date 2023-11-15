@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détail de la sortie{% endblock %}
+
+{% block body %}
+<div>
+
+    {{ sortie.nom }}
+    {{ sortie.dateHeureDebut |date("d/m/Y H:i")}}
+    {{ sortie.dateHeureFin |date("d/m/Y H:i")}}
+
+{#    DUREE#}
+    {{ date_diff(sortie.dateHeureDebut|date("Y-m-d H:i:s"), sortie.dateHeureFin|date("Y-m-d H:i:s")) }}
+
+
+    {{ sortie.dateLimiteInscription |date("d/m/Y H:i")}}
+    {{ sortie.nombreMaxParticipant }}
+    {{ sortie.description }}
+    {{ sortie.lieu.ville.nom }}
+    {{ sortie.lieu.nom }}
+    {{ sortie.lieu.rue }}
+    {{ sortie.lieu.ville.codePostal }}
+    {{ sortie.lieu.latitude }}
+    {{ sortie.lieu.longitude }}
+
+    {% for participant in sortie.participant %}
+        {{ participant.pseudo }}
+        {{ participant.nom }}
+    {% endfor %}
+
+    <button>Retour (mettre route home)</button>
+
+</div>
+{% endblock %}
