@@ -158,6 +158,9 @@
             </div>
         </div>
     </div>
+    <div class="pagination">
+        {{ knp_pagination_render(pagination) }}
+    </div>
     <div class="mx-auto max-w-full px-4 pb-6 sm:px-6 sm:pb-12 lg:px-8">
         <div class="mx-auto max-w-full">
             <div class="space-y-6">
@@ -180,7 +183,7 @@
                         </tr>
                         </thead>
                         <tbody class="text-sm text-gray-900">
-                        {% for sortie in sorties %}
+                        {% for sortie in pagination %}
                             <tr>
                                 <td class="px-6 py-4 text-center">
                                     {{ sortie.nom }}
