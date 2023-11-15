@@ -28,6 +28,7 @@ class SortieRepository extends ServiceEntityRepository
         $organisateurOnly,
         $user,
         $selectedSite,
+        $selectedState,
     )
     {
         $qb = $this->createQueryBuilder('s');
@@ -57,6 +58,10 @@ class SortieRepository extends ServiceEntityRepository
         if ($selectedSite) {
             $qb->andWhere('s.site = :site')
                 ->setParameter('site', $selectedSite);
+        }
+        if($selectedState){
+            $qb->andWhere('s.etat = :selectedState')
+                ->setParameter('selectedState', $selectedState);
         }
 
         $qb->andWhere('s.etat != :etat OR (s.etat = :etat AND s.organisateur = :user)')

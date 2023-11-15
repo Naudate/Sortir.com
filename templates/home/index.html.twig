@@ -145,7 +145,29 @@
                                 </div>
                             </div>
                             {% endif %}
-
+                            {% if 'ROLE_ADMIN' in app.user.roles %}
+                            <div class="mt-2">
+                                <label for="etat" class="block text-sm font-medium leading-6 text-gray-900">
+                                    État de la sortie
+                                </label>
+                                <select id="etat"
+                                        name="etat"
+                                        class="w-full rounded-md border-0 py-1.5 text-gray-900
+                                        shadow-sm ring-1 ring-inset ring-gray-300
+                                        placeholder:text-gray-400 focus:ring-2 focus:ring-inset
+                                        focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        <option value="" {% if app.request.get('etat') == "" %}selected{% endif %}>Tous les états</option>
+                                            {% for state in ['En création', 'Ouvert', 'Clôturée', 'En cours', 'Terminée', 'Annulée'] %}
+                                        <option value="{{ state }}"
+                                                {% if app.request.get('etat') == state %}
+                                        selected
+                                                {% endif %}>
+                                            {{ state }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            {% endif %}
                             <div class="sm:col-span-3 flex items-center justify-center">
                                 <button type="submit"
                                         class="rounded-md bg-indigo-600 px-3 py-2 sm:w-1/3 w-full
