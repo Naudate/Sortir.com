@@ -21,13 +21,14 @@ class Lieu
     private ?string $rue = null;
 
     #[ORM\Column(nullable: true)]
+
     #[Assert\Regex('/^[-+]?(90(\.0+)?|[1-8]?\d(\.\d+)?)$/',
         message: 'La latitude est comprise entre -90 et 90',)]
     private ?string $latitude = null;
 
     #[ORM\Column(nullable: true)]
     #[Assert\Regex('/^[-+]?(180(\.0+)?|(1[0-7]\d|0?\d{1,2})(\.\d+)?)$/',
-        message: 'La latitude est comprise entre -180 et 180',)]
+        message: 'La longitude est comprise entre -180 et 180',)]
     private ?string $longitude = null;
 
     #[ORM\ManyToOne(inversedBy: 'lieus')]

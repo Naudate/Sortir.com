@@ -38,7 +38,7 @@
                 <td class="px-6 py-4">{{ user.id }}</td>
                 <td class="px-6 py-4">{{ user.nom }}</td>
                 <td class="px-6 py-4">{{ user.prenom}}</td>
-                <td class="px-6 py-4"><a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="{{ path('user_details', {'id': user.id}) }}">{{ user.pseudo }}</a></td>
+                <td class="px-6 py-4"><a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="{{ path('user_edit', {'id': user.id}) }}">{{ user.pseudo }}</a></td>
                 <td class="px-6 py-4">
                     {% if user.telephone is null  %}
                         Aucun numéro de téléphone renseigné

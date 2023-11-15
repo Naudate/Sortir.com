@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Lieu;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -21,6 +22,21 @@ class LieuRepository extends ServiceEntityRepository
         parent::__construct($registry, Lieu::class);
     }
 
+    public function findlieuWithPagination (int $page =1){
+
+        $limit = 8;
+        $req = $this->createQueryBuilder('l')
+            ->setMaxResults($limit);
+
+        $offset = $limit * ($page -1);
+        $req->setFirstResult($offset);
+        $query = $req->getQuery();
+
+
+
+        $paginator = new Paginator($query, true);
+        return $paginator;
+    }
 //    /**
 //     * @return Lieu[] Returns an array of Lieu objects
 //     */

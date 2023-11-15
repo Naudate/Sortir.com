@@ -179,10 +179,8 @@ class SortieController extends AbstractController
         $dateActuelle = new \DateTime;
 
         //vérification que la date limite pour se désinscrire est valide
-        if ($sortie->getEtat() == Etat::OUVERT
-            && $sortie->isIsPublish()
-            && $dateActuelle < $sortie->getDateLimiteInscription()) {
-
+        if ( $sortie->isIsPublish()
+            && $dateActuelle < $sortie->getDateLimiteInscription() && $sortie->getEtat() == Etat::OUVERT || $sortie->getEtat() == Etat::CLOTURE) {
             if ($sortie->getParticipant()->contains($userConnect)) {
                 // suppression de l'utilisateur
                 $sortie->removeParticipant($userConnect);
@@ -201,9 +199,9 @@ class SortieController extends AbstractController
                 $this->addFlash("error", "Petit malin, eh non, tu n'a jamais fait parti des participants");
             }
 
-            return $this->redirectToRoute('app_home');
-
         }
+        return $this->redirectToRoute('app_home');
+
     }
 
 
@@ -271,7 +269,7 @@ class SortieController extends AbstractController
 
             // changement de l'état de la sortie
             $sortie->setEtat(Etat::OUVERT);
-
+            $sortie->setIsPublish(true);
             //persist des données
             $entityManager->persist($sortie);
             $entityManager->flush();
