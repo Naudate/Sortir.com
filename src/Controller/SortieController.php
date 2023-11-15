@@ -25,7 +25,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class SortieController extends AbstractController
 {
 
-    public function __construct(private EntityManagerInterface $em)
+    public function __construct(private EntityManagerInterface $em, private SortieRepository $sortieRepository)
     {
     }
 
@@ -279,5 +279,17 @@ class SortieController extends AbstractController
         else {
             throw new Exception("Qu'est-ce que tu n'as pas compris dans NOOOOOOONNNNN!",403);
         }
+    }
+
+    #[Route('/detail/{id}', name: '_detail')]
+    public function details(int $id )
+    {
+        // si pas id utilisateur connectee, récupération information utilisateur
+        $sortie = $this->sortieRepository->find($id);
+
+        //Affichage dans la vue information sortie
+        return $this->render('sortie/details.html.twig', [
+            'sortie' => $sortie
+        ]);
     }
 }
