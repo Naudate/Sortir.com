@@ -272,7 +272,8 @@
                                             or sortie.etat == 'Clôturée'%}
                                             <a href="{{ path('sortie_cancel', {'id' : sortie.id}) }}"
                                                class="text-sm font-semibold text-amber-600 underline underline-offset-2
-                                           outline-amber-600 hover:outline-amber-500 hover:text-amber-500">
+                                           outline-amber-600 hover:outline-amber-500 hover:text-amber-500"
+                                               onclick="return confirm('Êtes-vous sûr de vouloir annuler cette sortie?');">
                                                 Annuler
                                             </a>
                                         {% endif %}
