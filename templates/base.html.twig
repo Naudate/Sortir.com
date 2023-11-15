@@ -69,34 +69,37 @@
                                        aria-current="page">
                                         Accueil
                                     </a>
-                                    {% if 'ROLE_ADMIN' in app.user.roles %}
-                                    <a href="{{ path('user_home') }}"
-                                       class="text-gray-800 hover:bg-gray-700
-                                       hover:text-white rounded-md px-3 py-2
-                                       text-sm font-medium">
-                                        Utilisateurs
-                                    </a>
-                                    <a href="{{ path('gerer_villes') }}"
-                                       class="text-gray-800 hover:bg-gray-700
-                                   hover:text-white rounded-md px-3 py-2
-                                   text-sm font-medium">
-                                        Villes
-                                    </a>
-                                    {% endif %}
-                                    {% if 'ROLE_ADMIN' in app.user.roles %}
                                     <a href="{{ path('lieu_home') }}"
-
                                        class="text-gray-800 hover:bg-gray-700
                                hover:text-white rounded-md px-3 py-2
                                text-sm font-medium">
                                         Lieux
                                     </a>
+                                    {% if 'ROLE_ADMIN' in app.user.roles %}
+                                    <a href="{{ path('user_home') }}"
+                                       class="text-gray-800 hover:bg-gray-700
+                                       hover:text-white rounded-md px-3 py-2
+                                       text-sm font-medium">
+                                        Participants
+                                    </a>
+                                    <a href="#"
+                                       class="text-gray-800 hover:bg-gray-700
+                                       hover:text-white rounded-md px-3 py-2
+                                       text-sm font-medium">
+                                        Sites
+                                    </a>
+                                    <a href="{{ path('gerer_villes') }}"
+                                       class="text-gray-800 hover:bg-gray-700
+                                       hover:text-white rounded-md px-3 py-2
+                                       text-sm font-medium">
+                                        Villes
+                                    </a>
                                     {% else %}
                                     <a href="{{ path('sortie_create') }}"
                                        class="rounded-md bg-amber-600 px-3 py-2
-                                    text-sm font-semibold text-white shadow-sm hover:bg-amber-500
-                                    focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2
-                                    focus-visible:outline-amber-600">
+                                       text-sm font-semibold text-white shadow-sm hover:bg-amber-500
+                                       focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2
+                                       focus-visible:outline-amber-600">
                                         Créer une sortie
                                     </a>
                                     {% endif %}
@@ -143,17 +146,17 @@
                             Accueil
                         </a>
                         {% if 'ROLE_ADMIN' in app.user.roles %}
-                            <a href="{{ path('user_home') }}"
-                               class="text-gray-800 hover:bg-gray-700
-                                       hover:text-white rounded-md px-3 py-2
-                                       text-sm font-medium">
-                                Participants
-                            </a>
-                            <a href="#"
+                            <a href="{{ path('lieu_create') }}"
                                class="text-gray-800 hover:bg-gray-700
                                hover:text-white block rounded-md px-3
                                py-2 text-base font-medium">
-                                Villes
+                                Lieu
+                            </a>
+                            <a href="{{ path('user_home') }}"
+                               class="text-gray-800 hover:bg-gray-700
+                               hover:text-white block rounded-md px-3
+                               py-2 text-base font-medium">
+                                Participants
                             </a>
                             <a href="#"
                                class="text-gray-800 hover:bg-gray-700
@@ -161,6 +164,24 @@
                                py-2 text-base font-medium">
                                 Sites
                             </a>
+                            <a href="{{ path('gerer_villes') }}"
+                               class="text-gray-800 hover:bg-gray-700
+                               hover:text-white block rounded-md px-3
+                               py-2 text-base font-medium">
+                                Villes
+                            </a>
+                        {% else %}
+                            <div class="flex items-center justify-center">
+                                <a href="{{ path('sortie_create') }}"
+                                   class="bg-amber-600 text-white place-content-center
+                                   rounded-md hover:bg-amber-500 w-full flex
+                                   focus-visible:outline focus-visible:outline-2
+                                   focus-visible:outline-offset-2
+                                   focus-visible:outline-amber-600
+                                   px-3 py-2 text-base font-medium">
+                                    Créer une sortie
+                                </a>
+                            </div>
                         {% endif %}
                     </div>
                 </div>
