@@ -237,6 +237,7 @@
 
         // Attendez que le document soit prêt
         $(document).ready(function () {
+            loadLieuByVille();
             var submitFormSortie = {{ submitFormSortie ? 'true' : 'false' }}
             if(!submitFormSortie){
                 $('#{{ form.lieu.vars.id }}').empty(); // Effacez les options existantes

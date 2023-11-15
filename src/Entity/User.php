@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -78,6 +79,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column]
     private ?bool $isChangePassword = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $lastResetPassword = null;
 
     public function __construct()
     {
@@ -316,6 +320,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsChangePassword(bool $isChangePassword): static
     {
         $this->isChangePassword = $isChangePassword;
+
+        return $this;
+    }
+
+    public function getLastResetPassword(): ?\DateTimeInterface
+    {
+        return $this->lastResetPassword;
+    }
+
+    public function setLastResetPassword(?\DateTimeInterface $lastResetPassword): static
+    {
+        $this->lastResetPassword = $lastResetPassword;
 
         return $this;
     }
