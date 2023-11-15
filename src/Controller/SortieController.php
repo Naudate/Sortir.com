@@ -8,8 +8,10 @@ use App\Enum\Etat;
 use App\Form\CancelSortieFormType;
 use App\Form\LieuFormType;
 use App\Form\SortieType;
+use App\Repository\LieuRepository;
 use App\Repository\SortieRepository;
 use App\Repository\UserRepository;
+use App\Repository\VilleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Config\Definition\Exception\Exception;
@@ -25,7 +27,10 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class SortieController extends AbstractController
 {
 
-    public function __construct(private EntityManagerInterface $em, private SortieRepository $sortieRepository)
+    public function __construct(private EntityManagerInterface $em,
+                                private SortieRepository $sortieRepository,
+                                private LieuRepository $lieuRepository,
+                                private VilleRepository $villeRepository)
     {
     }
 
@@ -284,12 +289,93 @@ class SortieController extends AbstractController
     #[Route('/detail/{id}', name: '_detail')]
     public function details(int $id )
     {
-        // si pas id utilisateur connectee, récupération information utilisateur
         $sortie = $this->sortieRepository->find($id);
 
         //Affichage dans la vue information sortie
         return $this->render('sortie/details.html.twig', [
             'sortie' => $sortie
+        ]);
+    }
+
+    #[Route('/edit/{id}', name: '_edit')]
+    public function edit(Request $request, int $id )
+    {
+        $sortie = $this->sortieRepository->find($id);
+        $lieu = $this->lieuRepository->find($sortie->getLieu()->getId());
+        $ville = $this->villeRepository->find($lieu->getVille()->getId());
+
+        $newLieu = new Lieu();
+
+        if (in_array('ROLE_ADMIN', $this->getUser()->getRoles(), true)) {
+            throw new Exception("Accès refusé", 403);
+        }
+
+        $form = $this->createForm(SortieType::class, $sortie);
+
+        $form->get('ville')->setData($ville);
+
+        $formLieu = $this->createForm(LieuFormType::class, $newLieu);
+        $form->handleRequest($request);
+        $formLieu->handleRequest($request);
+
+        $errorLieu = false;
+        $submitFormSortie = false;
+
+        if ($formLieu->isSubmitted() && $formLieu->isValid()) {
+            $this->em->persist($newLieu);
+            $this->em->flush();
+            $this->addFlash("success", "Lieu créé");
+        }
+
+        if ($formLieu->isSubmitted() && !$formLieu->isValid()) {
+            $errorLieu = true;
+        }
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $submitFormSortie = true;
+
+            if ($sortie->getDateHeureDebut() < new \DateTime()) {
+                $form->get('dateHeureDebut')->addError(new FormError('La date de fin ne peut pas être antérieure à la date du jour.'));
+            }
+
+            if ($sortie->getDateLimiteInscription() < new \DateTime()) {
+                $form->get('dateLimiteInscription')->addError(new FormError('La date limite d\'inscription ne peut pas être antérieure à la date du jour.'));
+            }
+
+            if ($sortie->getDateHeureFin() < $sortie->getDateHeureDebut()) {
+                $form->get('dateHeureFin')->addError(new FormError('La date de fin ne peut pas être antérieure à la date de début.'));
+            }
+
+            if ($sortie->getDateLimiteInscription() > $sortie->getDateHeureDebut()) {
+                $form->get('dateLimiteInscription')->addError(new FormError('La date limite d\'inscription ne peut pas être supérieure à la date de début.'));
+            }
+
+            if ($form->getClickedButton() && 'publier' === $form->getClickedButton()->getName()) {
+                $sortie->setIsPublish(true);
+                $sortie->setEtat(Etat::OUVERT);
+            } else {
+                $sortie->setIsPublish(false);
+                $sortie->setEtat(Etat::EN_CREATION);
+            }
+
+            if ($form->getErrors(true)->count() == 0) {
+
+                $sortie->setOrganisateur($this->getUser());
+                $this->em->persist($sortie);
+                $this->em->flush();
+                $this->addFlash("success", "Sortie crée");
+
+                return $this->redirectToRoute('app_home');
+            }
+
+        }
+
+        return $this->render('sortie/update.html.twig', [
+            'form' => $form->createView(),
+            'lieuForm' => $formLieu->createView(),
+            'errorLieu' => $errorLieu,
+            'submitFormSortie' => $submitFormSortie
         ]);
     }
 }

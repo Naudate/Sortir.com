@@ -185,8 +185,7 @@
                         {% for sortie in pagination %}
                             <tr>
                                 <td class="px-6 py-4 text-center">
-
-                                    {{ sortie.nom }}
+                                    <a href="{{ path('sortie_detail', {'id' : sortie.id}) }}">{{ sortie.nom }}</a>
                                 </td>
                                 <td class="px-6 py-4">
                                     {{ sortie.dateHeureDebut |date("d/m/Y H:i") }}
@@ -234,6 +233,13 @@
                                 </td>
                                 <td class="px-6 py-4">
                                     {% if sortie.getDateLimiteInscription >= dateActuelle and sortie.etat != 'Annulée' %}
+                                    {% if (app.user == sortie.organisateur) and sortie.etat == 'Ouvert' or sortie.etat == 'En création'%}
+                                        <a href="{{ path('sortie_edit', {'id' : sortie.id}) }}"
+                                           class="text-sm font-semibold text-amber-600 underline underline-offset-2
+                                           outline-amber-600 hover:outline-amber-500 hover:text-amber-500">
+                                            Modifier
+                                        </a>
+                                    {% endif %}
 
                                         {% if (app.user == sortie.organisateur or 'ROLE_ADMIN' in app.user.roles) and sortie.etat == 'Ouvert'
                                             or sortie.etat == 'Clôturée'%}
