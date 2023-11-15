@@ -77,20 +77,24 @@ class UserController extends AbstractController
         $user = new User();
 
 
+
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
         if($form->isSubmitted()){
-
-            if(!preg_match('/^0([1-7]|9)\d{8}$/',$user->getTelephone())){
-              return $this->render('user/create.html.twig', [
-                    'registrationForm'=> $form->createView(),
-                ]);
+            if (!empty($user->getTelephone())){
+                if(!preg_match('/^0([1-7]|9)\d{8}$/',$user->getTelephone())){
+                    return $this->render('user/create.html.twig', [
+                        'registrationForm'=> $form->createView(),
+                    ]);
+                }
             }
+
 
             // vérification que le nouvel utilisateur n'existe pas en base de données
             $userExist=  $userRepository->findByEmailOrUsername($user->getEmail());
             if(!empty($userExist)){
+                dd('ok');
 
                 $this->addFlash("error", "Un utilisateur existe déjà avec cette adresse mail");
 
@@ -100,10 +104,10 @@ class UserController extends AbstractController
             }
 
             //dd($imageUpload);
-          /*  if(!empty($imageUpload) && $imageUpload instanceof UploadedFile){
-                $pathAvatar = $uploader->upload($imageUpload,'assets/avatar/', $form->get('pseudo')->getData() );
-                $user->setPhoto($pathAvatar);
-            }*/
+            /*  if(!empty($imageUpload) && $imageUpload instanceof UploadedFile){
+                  $pathAvatar = $uploader->upload($imageUpload,'assets/avatar/', $form->get('pseudo')->getData() );
+                  $user->setPhoto($pathAvatar);
+              }*/
 
             $user->setPseudo($userRepository->GeneratePseudo($user->getPrenom()));
 

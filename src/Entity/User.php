@@ -80,6 +80,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?bool $isChangePassword = null;
 
+    #[ORM\OneToMany(mappedBy: 'updated_by', targetEntity: Sortie::class)]
+    private Collection $updateSorties;
+
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $lastResetPassword = null;
 
@@ -87,6 +90,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->sorties = new ArrayCollection();
         $this->inscriptions = new ArrayCollection();
+        $this->updateSorties = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -324,6 +328,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * @return Collection<int, Sortie>
+     */
+    public function getUpdateSorties(): Collection
+    {
+        return $this->updateSorties;
+    }
+
+    public function addUpdateSorty(Sortie $updateSorty): static
+    {
+        if (!$this->updateSorties->contains($updateSorty)) {
+            $this->updateSorties->add($updateSorty);
+            $updateSorty->setUpdatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUpdateSorty(Sortie $updateSorty): static
+    {
+        if ($this->updateSorties->removeElement($updateSorty)) {
+            // set the owning side to null (unless already changed)
+            if ($updateSorty->getUpdatedBy() === $this) {
+                $updateSorty->setUpdatedBy(null);
+            }
+        }
+      return $this;
+    }
+  
     public function getLastResetPassword(): ?\DateTimeInterface
     {
         return $this->lastResetPassword;

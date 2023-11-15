@@ -77,6 +77,9 @@ class Sortie
     #[Assert\NotBlank]
     private ?Site $site = null;
 
+    #[ORM\ManyToOne(inversedBy: 'updateSorties')]
+    private ?User $updated_by = null;
+
     public function __construct()
     {
         $this->participant = new ArrayCollection();
@@ -251,6 +254,18 @@ class Sortie
     public function setSite(?Site $site): static
     {
         $this->site = $site;
+
+        return $this;
+    }
+
+    public function getUpdatedBy(): ?User
+    {
+        return $this->updated_by;
+    }
+
+    public function setUpdatedBy(?User $updated_by): static
+    {
+        $this->updated_by = $updated_by;
 
         return $this;
     }
