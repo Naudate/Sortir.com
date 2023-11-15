@@ -95,6 +95,9 @@
                             </div>
                             <div class="sm:col-span-3">
                                 {{ form_label(userForm.telephone) }}
+                                {% for message in app.flashes('errorTelephone') %}
+                                    <p class="mt-1 text-sm leading-6 text-red-700">{{ message }}</p>
+                                {% endfor %}
                                 <div class="mt-2">
                                     {{ form_widget(userForm.telephone) }}
                                     {{ form_errors(userForm.telephone) }}

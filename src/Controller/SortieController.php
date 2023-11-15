@@ -64,7 +64,7 @@ class SortieController extends AbstractController
                 $form->get('dateHeureDebut')->addError(new FormError('La date de fin ne peut pas être antérieure à la date du jour.'));
             }
 
-            if ($sortie->getDateHeureDebut() < new \DateTime()) {
+            if ($sortie->getDateLimiteInscription() < new \DateTime()) {
                 $form->get('dateLimiteInscription')->addError(new FormError('La date limite d\'inscription ne peut pas être antérieure à la date du jour.'));
             }
 
