@@ -11,6 +11,7 @@ use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -22,6 +23,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SortieType extends AbstractType
 {
+
+    public function __construct(Security $security)
+    {
+        $this->security = $security;
+    }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -82,6 +88,7 @@ class SortieType extends AbstractType
                 'placeholder' => 'Sélectionner un site',
                 'mapped' => true,
                 'required' => true,
+                'data' => $this->security->getUser()->getSite()
             ])
             ->add('ville', EntityType::class, [
                 'class' => Ville::class,

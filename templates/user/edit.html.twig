@@ -142,15 +142,17 @@
             </div>
             <div class="grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-6">
                 <div class="sm:col-span-2">
-                    <div class="mt-6 flex items-center justify-start gap-x-3">
                         {% if 'ROLE_ADMIN' in app.user.roles %}
+                        <div class="mt-6 flex items-center justify-start gap-x-3">
                             {{ form_row(userForm.isActif) }}
+                        </div>
                         {% else%}
+                        <div class="mt-6 flex items-center justify-start gap-x-3" style="display: none">
                             {{ form_row(userForm.isActif, {
                                 'attr':{'disabled':'disabled'}
                             }) }}
+                        </div>
                         {% endif %}
-                    </div>
                 </div>
                 <div class="sm:col-span-2">
                     <div class="mt-6 flex items-center justify-center gap-x-3">

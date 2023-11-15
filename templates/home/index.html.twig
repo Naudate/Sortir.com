@@ -285,3 +285,11 @@
     </div>
 
 {% endblock %}
+
+{% block javascripts %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            localStorage.removeItem('formDataSortie');
+        });
+    </script>
+{% endblock %}
