@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -81,6 +82,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToMany(mappedBy: 'updated_by', targetEntity: Sortie::class)]
     private Collection $updateSorties;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $lastResetPassword = null;
 
     public function __construct()
     {
@@ -350,6 +354,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $updateSorty->setUpdatedBy(null);
             }
         }
+      return $this;
+    }
+  
+    public function getLastResetPassword(): ?\DateTimeInterface
+    {
+        return $this->lastResetPassword;
+    }
+
+    public function setLastResetPassword(?\DateTimeInterface $lastResetPassword): static
+    {
+        $this->lastResetPassword = $lastResetPassword;
 
         return $this;
     }

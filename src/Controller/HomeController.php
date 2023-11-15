@@ -35,6 +35,8 @@ class HomeController extends AbstractController
         $selectedSite = $request->query->get('site');
         $registered = $request->query->get('registered');
         $unregistered = $request->query->get('unregistered');
+        $selectedState = $request->query->get('etat');
+
         // Si c'est la première visite (aucun paramètre dans l'URL)
         if ($request->query->count() === 0) {
             $registered = true;
@@ -49,6 +51,7 @@ class HomeController extends AbstractController
             $organisateurOnly,
             $this->getUser(),
             $selectedSite,
+            $selectedState
         );
 
         if ($voirSortiesPassees) {

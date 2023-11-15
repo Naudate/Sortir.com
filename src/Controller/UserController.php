@@ -8,6 +8,7 @@ use App\Form\RegistrationFormType;
 use App\Form\UserFormType;
 use App\Helper\Uploader;
 use App\Repository\UserRepository;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Config\Definition\Exception\Exception;
@@ -225,12 +226,21 @@ class UserController extends AbstractController
     public function changePassword(int $id, Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, UserRepository $userRepository){
 
         $user = $userRepository->find($id);
+        $contactAdmin = false;
 
         if(empty($user)){
             throw new Exception("Utilisateur inconnu", 404);
         }
         if ($user->getId() != $this->getUser()->getId()){
             throw new Exception("Accès refusé, mon petit", 403);
+        }
+
+        dump((new DateTime())->modify('-15 minutes'));
+
+        if($user->isIsChangePassword()
+            && $user->getLastResetPassword() != null
+            && $user->getLastResetPassword() < (new DateTime())->modify('-15 minutes') ){
+            $contactAdmin = true;
         }
 
         //initialisation du formulaire
@@ -269,6 +279,7 @@ class UserController extends AbstractController
 
         return $this->render('user/changePassword.html.twig', [
             'passwordForm'=> $passwordForm->createView(),
+            'contactAdmin' => $contactAdmin
         ]);
     }
 
@@ -286,6 +297,7 @@ class UserController extends AbstractController
                 )
             );
             $user->setIsChangePassword(true);
+            $user->setLastResetPassword(new DateTime());
             $entityManager->persist($user);
             $entityManager->flush();
             $this->addFlash("success", "Mot de passe réinitialisé avec succès");
