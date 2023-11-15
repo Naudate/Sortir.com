@@ -35,7 +35,12 @@ class HomeController extends AbstractController
         $selectedSite = $request->query->get('site');
         $registered = $request->query->get('registered');
         $unregistered = $request->query->get('unregistered');
-
+        // Si c'est la première visite (aucun paramètre dans l'URL)
+        if ($request->query->count() === 0) {
+            $registered = true;
+            $unregistered = true;
+            $organisateurOnly = true;
+        }
         // Filtrer les sorties en fonction des dates
         $sorties = $sortieRepository->findBetweenDates(
             $dateDebut,
