@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello UserController!{% endblock %}
+{% block title %}Site !{% endblock %}
 
 {% block body %}
 
@@ -12,11 +12,11 @@
     <br/>
     <div class="relative overflow-x-auto container pl-5 pr-5 pt-5">
         <div class="sm:col-span-3 flex items-center justify-start ml-2">
-            <a href="{{ path('lieu_create') }}" class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2
+            <a href="{{ path('site_create') }}" class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2
         text-sm font-semibold text-white shadow-sm hover:bg-indigo-500
         focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2
         focus-visible:outline-indigo-600 flex-shrink-0">
-                Créer un lieu
+                Créer un site
             </a>
         </div>
         <br>
@@ -25,22 +25,18 @@
             <tr>
                 <th scope="col" class="px-6 py-3">ID</th>
                 <th scope="col" class="px-6 py-3">Nom</th>
-                <th scope="col" class="px-6 py-3">Rue</th>
-                <th scope="col" class="px-6 py-3">Ville</th>
                 <th scope="col" class="px-6 py-3">Action</th>
             </tr>
             </thead>
             <tbody>
-            {% for lieu in lieux %}
+            {% for site in sites %}
                 <tr class="bg-white border-b">
-                    <td class="px-6 py-4">{{ lieu.id }}</td>
-                    <td class="px-6 py-4"><a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="{{ path('lieu_details', {'id': lieu.id}) }}">{{ lieu.nom }}</a></td>
-                    <td class="px-6 py-4">{{ lieu.rue}}</td>
-                    <td class="px-6 py-4">{{ lieu.ville.nom }}</td>
+                    <td class="px-6 py-4">{{ site.id }}</td>
+                    <td class="px-6 py-4"><a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="{{ path('site_details', {'id': site.id}) }}">{{ site.nom }}</a></td>
 
                     <td class="px-6 py-4">
-                        <a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="{{ path('lieu_edit', {'id': lieu.id}) }}">Modifier</a>
-                        <a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="{{ path('lieu_delete', {'id': lieu.id}) }}">Supprimer</a>
+                        <a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="{{ path('site_edit', {'id': site.id}) }}">Modifier</a>
+                        <a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="{{ path('site_delete', {'id': site.id}) }}">Supprimer</a>
                     </td>
 
                 </tr>
