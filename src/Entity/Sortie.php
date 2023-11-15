@@ -40,6 +40,10 @@ class Sortie
         value: 1,
         message: 'Il doit y avoir au moins 1 participant',
     )]
+    #[Assert\LessThanOrEqual(
+        value:  2147483647,
+        message: 'Il doit y avoir moins de 2147483647 participants',
+    )]
     private ?int $nombreMaxParticipant = null;
 
     #[ORM\Column(length: 500, nullable: true)]
