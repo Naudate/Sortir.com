@@ -183,27 +183,29 @@
                         </tr>
                         </thead>
                         <tbody class="text-sm text-gray-900">
+
                         {% for sortie in pagination %}
                             <tr>
                                 <td class="px-6 py-4 text-center">
+
                                     {{ sortie.nom }}
                                 </td>
-                                <td class="px-6 py-4 text-center">
+                                <td class="px-6 py-4">
                                     {{ sortie.dateHeureDebut |date("d/m/Y H:i") }}
                                 </td>
-                                <td class="px-6 py-4 text-center">
+                                <td class="px-6 py-4">
                                     {{ sortie.dateHeureFin |date("d/m/Y H:i") }}
                                 </td>
-                                <td class="px-6 py-4 text-center">
+                                <td class="px-6 py-4">
                                     {{ sortie.dateLimiteInscription |date("d/m/Y") }}
                                 </td>
-                                <td class="px-6 py-4 text-center">
+                                <td class="px-6 py-4">
                                     {{ sortie.participant |length }} / {{ sortie.nombreMaxParticipant }}
                                 </td>
-                                <td class="px-6 py-4 text-center">
+                                <td class="px-6 py-4">
                                     {{ sortie.etat }}
                                 </td>
-                                <td class="flex px-6 py-4 items-center justify-center">
+                                <td class="flex px-6 py-4 justify-center">
                                     {% if app.user in sortie.participant %}
                                         <svg xmlns="http://www.w3.org/2000/svg"
                                              fill="none"
@@ -229,10 +231,10 @@
                                         </svg>
                                     {% endif %}
                                 </td>
-                                <td class="px-6 py-4 text-center">
+                                <td class="px-6 py-4">
                                     {{ sortie.organisateur.nom }}  {{ sortie.organisateur.prenom }}
                                 </td>
-                                <td class="px-6 py-4 text-center">
+                                <td class="px-6 py-4">
                                     {% if sortie.getDateLimiteInscription >= dateActuelle and sortie.etat != 'Annulée' %}
 
                                         {% if (app.user == sortie.organisateur or 'ROLE_ADMIN' in app.user.roles) and sortie.etat == 'Ouvert'
@@ -253,16 +255,16 @@
                                            outline-red-600 hover:outline-red-500 hover:text-red-500">
                                                     Se désister
                                                 </a>
-                                            {% endif %}
-                                            {% if app.user not in sortie.participant and 'ROLE_ADMIN' not in app.user.roles
-                                                and app.user != sortie.organisateur and sortie.etat == 'Ouvert'
-                                                or sortie.etat == 'Clôturée'  %}
-                                                <a href="{{ path('sortie_register', {'id' : sortie.id}) }}"
+                                           {% endif %}
+                                           {% if app.user not in sortie.participant and 'ROLE_ADMIN' not in app.user.roles
+                                               and app.user != sortie.organisateur and sortie.etat == 'Ouvert'
+                                               or sortie.etat == 'Clôturée'  %}
+                                               <a href="{{ path('sortie_register', {'id' : sortie.id}) }}"
                                                    class="text-sm font-semibold text-indigo-600 underline underline-offset-2
-                                           outline-indigo-600 hover:outline-indigo-500 hover:text-indigo-500">
-                                                    S'inscrire
-                                                </a>
-                                            {% endif %}
+                                                        outline-indigo-600 hover:outline-indigo-500 hover:text-indigo-500">
+                                                   S'inscrire
+                                               </a>
+                                           {% endif %}
                                         {% endif %}
                                     {% if sortie.etat =='En création' and 'ROLE_ADMIN' not in app.user.roles %}
                                         <a href="{{ path('sortie_publish', {'id' : sortie.id}) }}"

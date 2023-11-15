@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier un site!{% endblock %}
+
+{% block body %}
+    <style>
+        .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+        .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+    </style>
+
+    <div class="example-wrapper">
+        <div class="space-y-12">
+            <div class="border-b border-gray-900/10 pb-12">
+                <h2 class="text-base font-semibold leading-7 text-gray-900">
+                    Modification d'un site
+                </h2>
+                <p class="mt-1 text-sm leading-6 text-gray-600">
+                    Espace pour la modification d'un site.
+                </p>
+                <div>
+                    {{ form_start(siteForm) }}
+                    <div class="border-b pb-6">
+                        <div class="mt-6 border-gray-100">
+                            {{ form_label(siteForm.nom, null, {
+                                'label_attr' : { 'class': 'after:content-["*"] after:ml-0.5
+                                 after:text-red-500 text-gray-800'}
+                            }) }}
+                            {{ form_errors(siteForm.nom) }}
+                            {{ form_widget(siteForm.nom) }}
+                            {{ form_help(siteForm.nom) }}
+                            {% for message in app.flashes('error') %}
+                                <p class="mt-1 text-sm leading-6 text-red-700">{{ message }}</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div>
+                        <div class="mt-6 flex items-center justify-end gap-x-3">
+                            <button type="submit" class="rounded-md bg-indigo-600 px-3 py-2
+             text-sm font-semibold text-white shadow-sm hover:bg-indigo-500
+             focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2
+             focus-visible:outline-indigo-600">
+                                Modifier
+                            </button>
+                            <a class="btn" type="button" href="{{ path('site_home') }}">Annuler</a>
+                        </div>
+                    </div>
+                    {{ form_end(siteForm) }}
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

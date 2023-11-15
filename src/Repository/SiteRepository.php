@@ -4,7 +4,9 @@ namespace App\Repository;
 
 use App\Entity\Site;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @extends ServiceEntityRepository<Site>
@@ -21,6 +23,30 @@ class SiteRepository extends ServiceEntityRepository
         parent::__construct($registry, Site::class);
     }
 
+    public function findSiteWithPagination (int $page =1){
+
+        $limit = 8;
+        $req = $this->createQueryBuilder('s')
+            ->setMaxResults($limit);
+
+        $offset = $limit * ($page -1);
+        $req->setFirstResult($offset);
+        $query = $req->getQuery();
+
+
+
+        $paginator = new Paginator($query, true);
+        return $paginator;
+    }
+
+    public function findByNom(string $nom): ?Site
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.nom = :nom')
+            ->setParameter('nom', $nom)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 //    /**
 //     * @return Site[] Returns an array of Site objects
 //     */
