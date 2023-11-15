@@ -23,17 +23,17 @@ class LieuController extends AbstractController
     {
     }
 
-    #[Route('/{page}', name: '_home', defaults: ['page' => 1])]
+    #[Route('/list/{page}', name: '_home', defaults: ['page' => 1])]
     #[IsGranted('ROLE_ADMIN')]
-    public function index(int $page=1, LieuRepository $lieuRepository): Response
+    public function index(int $page, LieuRepository $lieuRepository): Response
     {
-        $lieus = $lieuRepository->findlieuWithPagination($page);
+        $lieux = $lieuRepository->findlieuWithPagination($page);
 
         $maxPage = ceil($lieuRepository->count([]) / 8);
 
 
         return $this->render('lieu/index.html.twig', [
-            'lieus'=> $lieus,
+            'lieux'=> $lieux,
             'currentPage' => $page,
             'maxPage' => $maxPage
         ]);
@@ -59,7 +59,7 @@ class LieuController extends AbstractController
     }
 
     #[Route('/create', name: '_create')]
-    public function create(Request $request):Response
+    public function create(Request $request, EntityManagerInterface $entityManager):Response
     {
         $lieu = new Lieu();
         $form = $this->createForm(LieuFormType::class, $lieu);
@@ -67,8 +67,8 @@ class LieuController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid()){
 
-            $this->entityManager->persist($lieu);
-            $this->entityManager->flush();
+            $entityManager->persist($lieu);
+            $entityManager->flush();
 
             $this->addFlash('success', 'Nouveau lieu créé');
             return $this->redirectToRoute('lieu_details', array('id'=> $lieu->getId()));
@@ -134,7 +134,7 @@ class LieuController extends AbstractController
         $this->entityManager->flush();
 
         $this->addFlash('success', 'Le lieu à été supprimé avec succès');
-        return $this->redirectToRoute('lieu_home');
+        return $this->redirectToRoute('lieu_home', array('page'=> '1'));
     }
 
     #[Route('/getByVille', name: '_getByVille', methods: "POST")]
