@@ -11,6 +11,7 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Config\Definition\Exception\Exception;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -80,6 +81,12 @@ class UserController extends AbstractController
 
         if($form->isSubmitted()){
 
+            if(!preg_match('/^0([1-7]|9)\d{8}$/',$user->getTelephone())){
+              return $this->render('user/create.html.twig', [
+                    'registrationForm'=> $form->createView(),
+                ]);
+            }
+
             // vérification que le nouvel utilisateur n'existe pas en base de données
             $userExist=  $userRepository->findByEmailOrUsername($user->getEmail());
             if(!empty($userExist)){
@@ -90,6 +97,7 @@ class UserController extends AbstractController
                     'registrationForm'=> $form->createView(),
                 ]);
             }
+
             //dd($imageUpload);
           /*  if(!empty($imageUpload) && $imageUpload instanceof UploadedFile){
                 $pathAvatar = $uploader->upload($imageUpload,'assets/avatar/', $form->get('pseudo')->getData() );
@@ -150,6 +158,11 @@ class UserController extends AbstractController
            //dd($userPasswordHasher->isPasswordValid($user, trim($userForm->get('password')->getData())));
 
             if($userForm->isSubmitted()){
+
+                if(!preg_match('/^0([1-7]|9)\d{8}$/',$user->getTelephone())){
+                    $this->addFlash("errorTelephone", "Le numéro de téléphone doit commencer par 01 à 07 ou 09 et être composé de 10 chiffres.");
+                    return $this->redirectToRoute('user_edit',array('id'=> $user->getId()));
+                }
 
                 if(!$userPasswordHasher->isPasswordValid($userConnect, $userForm->get('password')->getData())){
                     $this->addFlash("error", "Mot de passe incorrecte");
