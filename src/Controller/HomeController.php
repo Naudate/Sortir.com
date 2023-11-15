@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Knp\Component\Pager\PaginatorInterface;
+
 
 class HomeController extends AbstractController
 {
@@ -20,12 +22,10 @@ class HomeController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager,
         SortieRepository $sortieRepository,
-        SiteRepository $siteRepository)
+        SiteRepository $siteRepository,
+        PaginatorInterface $paginator)
     {
         $sites = $siteRepository->findAll();
-        /*$sorties = $sortieRepository->findAll();
-        dump($sorties);
-        return $this->render('home/index.html.twig', ["sorties" => $sorties]);*/
 
         $searchInput = $request->query->get('nom');
         $dateDebut = $request->query->get('dateDebut');
@@ -35,7 +35,12 @@ class HomeController extends AbstractController
         $selectedSite = $request->query->get('site');
         $registered = $request->query->get('registered');
         $unregistered = $request->query->get('unregistered');
-
+        // Si c'est la première visite (aucun paramètre dans l'URL)
+        if ($request->query->count() === 0) {
+            $registered = true;
+            $unregistered = true;
+            $organisateurOnly = true;
+        }
         // Filtrer les sorties en fonction des dates
         $sorties = $sortieRepository->findBetweenDates(
             $dateDebut,
@@ -45,6 +50,7 @@ class HomeController extends AbstractController
             $this->getUser(),
             $selectedSite,
         );
+
         if ($voirSortiesPassees) {
             $sorties = array_filter($sorties, function ($sortie) {
                 return $sortie->getDateHeureDebut() < new \DateTime();
@@ -61,7 +67,14 @@ class HomeController extends AbstractController
             $sorties = array_filter($sorties, function ($sortie) {
                 return !$sortie->getParticipant()->contains($this->getUser());
             });
-        }   
+        }
+
+
+        $pagination = $paginator->paginate(
+            $sorties, // Requête contenant les données
+            $request->query->get('page', 1), // Numéro de la page. La valeur par défaut est 1.
+            4 // Nombre d'éléments par page
+        );
 
         date_default_timezone_set('Europe/Paris');
         $dateActuelle = new \DateTime;
@@ -75,6 +88,7 @@ class HomeController extends AbstractController
             "sites" => $sites,  // Passer la liste des sites au template
             "registered" => $registered, // Ajout de la variable
             "unregistered" => $unregistered, // Ajout de la variable
+            "pagination" => $pagination,
         ]);
     }
 }

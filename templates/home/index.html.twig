@@ -128,17 +128,17 @@
                                                    {% if app.request.get('voirSortiesPassees') %}checked{% endif %}>
                                         </div>
                                         <div class="flex items-center justify-end">
-                                            <label for="organisateur"
-                                                   class="text-sm font-medium leading-6 text-gray-900">
+                                            <label for="organisateur" class="text-sm font-medium leading-6 text-gray-900">
                                                 Sorties de l'organisation
                                             </label>
                                             <input type="checkbox"
                                                    id="organisateur"
                                                    name="organisateur"
                                                    class="rounded-md border-0 py-1.5
-                                               shadow-sm ring-1 ring-inset ring-gray-300
-                                               focus:ring-2 focus:ring-inset
-                                               focus:ring-indigo-600 sm:leading-6">
+                                                     shadow-sm ring-1 ring-inset ring-gray-300
+                                                     focus:ring-2 focus:ring-inset
+                                                     focus:ring-indigo-600 sm:leading-6"
+                                                   {% if organisateurOnly %}checked{% endif %}>
                                         </div>
                                     </div>
                                 </div>
@@ -157,6 +157,9 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="pagination">
+        {{ knp_pagination_render(pagination) }}
     </div>
     <div class="mx-auto max-w-full px-4 pb-6 sm:px-6 sm:pb-12 lg:px-8">
         <div class="mx-auto max-w-full">
@@ -180,9 +183,11 @@
                         </tr>
                         </thead>
                         <tbody class="text-sm text-gray-900">
-                        {% for sortie in sorties %}
-                            <tr class="text-center items-center">
-                                <td class="px-6 py-4">
+
+                        {% for sortie in pagination %}
+                            <tr>
+                                <td class="px-6 py-4 text-center">
+
                                     {{ sortie.nom }}
                                 </td>
                                 <td class="px-6 py-4">
