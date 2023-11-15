@@ -55,14 +55,14 @@ class LieuFormType extends AbstractType
                     ]),
                 ]
             ])
-            ->add('latitude',NumberType::class,[
+            ->add('latitude',TextType::class,[
                 'required'=> true,
                 'attr'=> array(
                     'placeholder' => '-4634789'
                 ),
                 'label'=> 'Latitude',
             ])
-            ->add('longitude',NumberType::class,[
+            ->add('longitude',TextType::class,[
                 'required'=> true,
                 'attr'=> array(
                     'placeholder' => '+983489'

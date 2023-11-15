@@ -4,12 +4,14 @@ namespace App\Controller;
 
 use App\Entity\Lieu;
 use App\Form\LieuFormType;
+use App\Form\UserFormType;
 use App\Repository\LieuRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -21,20 +23,38 @@ class LieuController extends AbstractController
     {
     }
 
-    #[Route('/', name: '_home')]
-    public function index(): Response
+    #[Route('/{page}', name: '_home', defaults: ['page' => 1])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function index(int $page=1, LieuRepository $lieuRepository): Response
     {
+        $lieus = $lieuRepository->findlieuWithPagination($page);
+
+        $maxPage = ceil($lieuRepository->count([]) / 8);
+
+
         return $this->render('lieu/index.html.twig', [
-            'controller_name' => 'LieuController',
+            'lieus'=> $lieus,
+            'currentPage' => $page,
+            'maxPage' => $maxPage
         ]);
     }
 
     #[Route('/show/{id}', name: '_details', requirements: ['id'=> '\d+'])]
-    public function details(int $id):Response
+    public function details(int $id, LieuRepository $lieuRepository):Response
     {
+        // vérification du role
+        if ( !in_array('ROLE_ADMIN', $this->getUser()->getRoles(), true)){
+            throw  new \Exception('J\'aurais pu te laisser, mais comment te dire que NOOOOONNNNNN', 403);
+        }
+        // récupération du lieu
         $lieu = $this->lieuRepository->find($id);
+
+        if (empty($lieu)){
+            throw  new \Exception('Tient, tient, un leiu qui n\'existe pas !', 404);
+        }
+
         return $this->render('lieu/details.html.twig', [
-            'controller_name' => 'LieuController',
+            'lieu' => $lieu
         ]);
     }
 
@@ -45,7 +65,7 @@ class LieuController extends AbstractController
         $form = $this->createForm(LieuFormType::class, $lieu);
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isEmpty()){
+        if($form->isSubmitted() && $form->isValid()){
 
             $this->entityManager->persist($lieu);
             $this->entityManager->flush();
@@ -61,11 +81,60 @@ class LieuController extends AbstractController
 
     #[Route('/edit/{id}', name: '_edit', requirements: ['id'=> '\d+'])]
     #[IsGranted('ROLE_ADMIN')]
-    public function edit(Request $request): Response
+    public function edit(int $id, EntityManagerInterface $entityManager,Request $request, LieuRepository $lieuRepository): Response
     {
+
+        // vérification du role
+        if ( !in_array('ROLE_ADMIN', $this->getUser()->getRoles(), true)){
+            throw  new \Exception('J\'aurais pu te laisser, mais comment te dire que NOOOOONNNNNN', 403);
+        }
+
+        $userConnect = $this->getUser();
+
+        $lieu= $lieuRepository->find($id);
+
+        if (empty($lieu)){
+            throw  new \Exception('Tient, tient, un lieu qui n\'existe pas !', 404);
+        }
+
+        $lieuForm = $this->createForm(LieuFormType::class, $lieu);
+
+        $lieuForm->handleRequest($request);
+
+        if($lieuForm->isSubmitted() && $lieuForm->isValid()){
+
+            $this->entityManager->persist($lieu);
+            $this->entityManager->flush();
+
+            $this->addFlash('success', 'Le lieu à été modifié avec succès');
+            return $this->redirectToRoute('lieu_details', array('id'=> $lieu->getId()));
+        }
+
         return $this->render('lieu/edit.html.twig', [
-            'controller_name' => 'LieuController',
+            'lieuForm' => $lieuForm
         ]);
+    }
+
+    #[Route('/delete/{id}', name: '_delete', requirements: ['id'=> '\d+'])]
+    public function delete(int $id, LieuRepository $lieuRepository, EntityManagerInterface $entityManager):Response
+    {
+        // vérification du role
+        if (!in_array('ROLE_ADMIN', $this->getUser()->getRoles(), true)) {
+            throw  new \Exception('J\'aurais pu te laisser, mais comment te dire que NOOOOONNNNNN', 403);
+        }
+        // récupération du lieu
+        $lieu = $this->lieuRepository->find($id);
+
+        if (empty($lieu)) {
+            throw  new \Exception('Tient, tient, un leiu qui n\'existe pas !', 404);
+        }
+
+        // suppression du lieu
+        $this->entityManager->remove($lieu);
+        $this->entityManager->flush();
+
+        $this->addFlash('success', 'Le lieu à été supprimé avec succès');
+        return $this->redirectToRoute('lieu_home');
     }
 
     #[Route('/getByVille', name: '_getByVille', methods: "POST")]
