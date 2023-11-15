@@ -23,17 +23,17 @@ class LieuController extends AbstractController
     {
     }
 
-    #[Route('/{page}', name: '_home', defaults: ['page' => 1])]
+    #[Route('/list/{page}', name: '_home', defaults: ['page' => 1])]
     #[IsGranted('ROLE_ADMIN')]
-    public function index(int $page=1, LieuRepository $lieuRepository): Response
+    public function index(int $page, LieuRepository $lieuRepository): Response
     {
-        $lieus = $lieuRepository->findlieuWithPagination($page);
+        $lieux = $lieuRepository->findlieuWithPagination($page);
 
         $maxPage = ceil($lieuRepository->count([]) / 8);
 
 
         return $this->render('lieu/index.html.twig', [
-            'lieus'=> $lieus,
+            'lieux'=> $lieux,
             'currentPage' => $page,
             'maxPage' => $maxPage
         ]);
