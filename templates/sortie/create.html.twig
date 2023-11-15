@@ -157,6 +157,84 @@
     {{ parent() }}
 
     <script>
+
+        function loadLieuByVille () {
+            // Récupérez la valeur de la ville sélectionnée
+            var selectedVille = $('#{{ form.ville.vars.id }}').val();
+
+            // Faites une requête AJAX pour récupérer les lieux associés à la ville
+            $.ajax({
+                url: "{{ path('lieu_getByVille') }}",
+                type: 'POST',
+                data: {ville: selectedVille},
+                success: function (response) {
+                    $('#{{ form.lieu.vars.id }}').empty(); // Effacez les options existantes
+                    if (response.length === 0) {
+                        $('#{{ form.lieu.vars.id }}').append('<option> Cette ville n\'a pas de lieu</option>');
+                    } else {
+                        // Mettez à jour les options du champ "lieu" avec les données de la réponse JSON
+                        $.each(response, function (index, lieu) {
+                            $('#{{ form.lieu.vars.id }}').append('<option value="' + lieu.id + '">' + lieu.nom + '</option>');
+                        });
+                        loadLieuById();
+                    }
+
+                }
+            });
+        }
+
+        function loadLieuById () {
+            // Récupérez la valeur de la ville sélectionnée
+            var selectedLieu = $('#{{ form.lieu.vars.id }}').val();
+
+            // Faites une requête AJAX pour récupérer les lieux associés à la ville
+            $.ajax({
+                url: "{{ path('lieu_getByLieu') }}",
+                type: 'POST',
+                data: {lieu: selectedLieu},
+                success: function (response) {
+                    document.getElementById("rueChoose").innerText=response[0].rue;
+                    document.getElementById("codePostalChoose").innerText=response[0].ville.codePostal;
+                }
+            });
+
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // Enregistrez les données du formulaire de sortie lors de la soumission du formulaire de lieu
+            document.getElementById('lieu_form').addEventListener('submit', function () {
+                var formDataSortie = {
+                    nom: document.getElementById('sortie_nom').value,
+                    dateHeureDebut: document.getElementById('sortie_dateHeureDebut').value,
+                    dateHeureFin: document.getElementById('sortie_dateHeureFin').value,
+                    dateLimiteInscription: document.getElementById('sortie_dateLimiteInscription').value,
+                    nbMaxParticipant: document.getElementById('sortie_nombreMaxParticipant').value,
+                    description: document.getElementById('sortie_description').value,
+                    site: document.getElementById('sortie_site').value,
+                    ville: document.getElementById('sortie_ville').value,
+                    lieu: document.getElementById('sortie_lieu').value,
+
+                };
+                localStorage.setItem('formDataSortie', JSON.stringify(formDataSortie));
+            });
+
+            // Restaurez les données du formulaire de sortie si elles existent
+            var formDataSortie = localStorage.getItem('formDataSortie');
+            if (formDataSortie) {
+                formDataSortie = JSON.parse(formDataSortie);
+                document.getElementById('sortie_nom').value = formDataSortie.nom;
+                document.getElementById('sortie_dateHeureDebut').value = formDataSortie.dateHeureDebut;
+                document.getElementById('sortie_dateHeureFin').value = formDataSortie.dateHeureFin;
+                document.getElementById('sortie_dateLimiteInscription').value = formDataSortie.dateLimiteInscription;
+                document.getElementById('sortie_nombreMaxParticipant').value = formDataSortie.nbMaxParticipant;
+                document.getElementById('sortie_description').value = formDataSortie.description;
+                document.getElementById('sortie_site').value = formDataSortie.site;
+                document.getElementById('sortie_ville').value = formDataSortie.ville;
+                document.getElementById('sortie_lieu').value = formDataSortie.lieu;
+                loadLieuByVille()
+            }
+        });
+
         // Attendez que le document soit prêt
         $(document).ready(function () {
             var submitFormSortie = {{ submitFormSortie ? 'true' : 'false' }}
@@ -169,48 +247,6 @@
             // Écoutez les changements de la ville
             $('#{{ form.ville.vars.id }}').change(loadLieuByVille);
             $('#{{ form.lieu.vars.id }}').change(loadLieuById);
-
-            function loadLieuByVille () {
-                // Récupérez la valeur de la ville sélectionnée
-                var selectedVille = $('#{{ form.ville.vars.id }}').val();
-
-                // Faites une requête AJAX pour récupérer les lieux associés à la ville
-                $.ajax({
-                    url: "{{ path('lieu_getByVille') }}",
-                    type: 'POST',
-                    data: {ville: selectedVille},
-                    success: function (response) {
-                        $('#{{ form.lieu.vars.id }}').empty(); // Effacez les options existantes
-                        if (response.length === 0) {
-                            $('#{{ form.lieu.vars.id }}').append('<option> Cette ville n\'a pas de lieu</option>');
-                        } else {
-                            // Mettez à jour les options du champ "lieu" avec les données de la réponse JSON
-                            $.each(response, function (index, lieu) {
-                                $('#{{ form.lieu.vars.id }}').append('<option value="' + lieu.id + '">' + lieu.nom + '</option>');
-                            });
-                            loadLieuById();
-                        }
-
-                    }
-                });
-            }
-
-            function loadLieuById () {
-                // Récupérez la valeur de la ville sélectionnée
-                var selectedLieu = $('#{{ form.lieu.vars.id }}').val();
-
-                // Faites une requête AJAX pour récupérer les lieux associés à la ville
-                $.ajax({
-                    url: "{{ path('lieu_getByLieu') }}",
-                    type: 'POST',
-                    data: {lieu: selectedLieu},
-                    success: function (response) {
-                        document.getElementById("rueChoose").innerText=response[0].rue;
-                        document.getElementById("codePostalChoose").innerText=response[0].ville.codePostal;
-                    }
-                });
-
-            }
 
         });
     </script>
@@ -225,7 +261,6 @@
             }
             // Écoutez le clic sur le bouton "Ajouter un lieu"
             $('#openModal').click(function () {
-                console.log("open modal")
                 // Affichez la modal
                 $('#lieuModal').show();
                 $('#closeModal').show();
@@ -233,7 +268,6 @@
             });
 
             $('#closeModal').click(function () {
-                console.log("close modal")
                 // Affichez la modal
                 $('#lieuModal').hide();
                 $('#openModal').show();
@@ -241,4 +275,7 @@
             });
         });
     </script>
+
+
+
 {% endblock %}
