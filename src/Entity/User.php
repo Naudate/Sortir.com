@@ -53,8 +53,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $photo = null;
 
     #[ORM\Column(length: 10, nullable: true)]
-    #[Assert\Regex('/^\d{10}$/',
-        message: 'Le numéro de téléphone doit être composé de 10 chiffres',)]
+    #[Assert\Regex('/^0([1-7]|9)\d{8}$/',
+        message: 'Le numéro de téléphone doit commencer par 01 à 07 ou 09 et être composé de 10 chiffres',)]
     private ?string $telephone = null;
 
     #[ORM\Column(length: 255, unique: true)]

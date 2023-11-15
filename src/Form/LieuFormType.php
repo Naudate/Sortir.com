@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Lieu;
 use App\Entity\Ville;
 use App\Repository\VilleRepository;
+use SebastianBergmann\CodeCoverage\Report\Text;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -55,15 +56,15 @@ class LieuFormType extends AbstractType
                     ]),
                 ]
             ])
-            ->add('latitude',NumberType::class,[
-                'required'=> true,
+            ->add('latitude',TextType::class,[
+                'required'=> false,
                 'attr'=> array(
                     'placeholder' => '-4634789'
                 ),
                 'label'=> 'Latitude',
             ])
-            ->add('longitude',NumberType::class,[
-                'required'=> true,
+            ->add('longitude',TextType::class,[
+                'required'=> false,
                 'attr'=> array(
                     'placeholder' => '+983489'
                 ),
