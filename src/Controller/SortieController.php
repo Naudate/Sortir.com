@@ -364,7 +364,7 @@ class SortieController extends AbstractController
                 $sortie->setOrganisateur($this->getUser());
                 $this->em->persist($sortie);
                 $this->em->flush();
-                $this->addFlash("success", "Sortie crée");
+                $this->addFlash("success", "Sortie modifiée");
 
                 return $this->redirectToRoute('app_home');
             }
@@ -374,6 +374,7 @@ class SortieController extends AbstractController
         return $this->render('sortie/update.html.twig', [
             'form' => $form->createView(),
             'lieuForm' => $formLieu->createView(),
+            'sortie' => $sortie,
             'errorLieu' => $errorLieu,
             'submitFormSortie' => $submitFormSortie
         ]);

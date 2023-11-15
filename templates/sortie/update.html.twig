@@ -131,7 +131,13 @@
                 <div class="grid grid-cols-3 gap-x-6 gap-y-6">
                     <div class="col-end-4">
                         <div class="flex items-center justify-end gap-x-6">
-                            {{ form_row(form.enregistrer) }}
+
+                            {% if sortie.etat == 'En création' %}
+                                {{ form_row(form.enregistrer) }}
+                            {% else %}
+                                {{ form_row(form.enregistrer, {'attr' : {'style' : 'display : none;'}}) }}
+                            {% endif %}
+
                             {{ form_row(form.publier) }}
                             <a id="sortie_annuler" href="{{ path('app_home') }}" class="text-base font-semibold leading-7 text-gray-900">Annuler</a>
                             {{ form_end(form) }}
