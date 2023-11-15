@@ -1,10 +1,10 @@
 DELIMITER //
-CREATE PROCEDURE update_sorties_ouvert_to_cloture()
+CREATE PROCEDURE update_sorties_publier_to_encours()
 BEGIN
   -- Mettre à jour les sorties dont la dateDébut est inférieure à la date d'aujourd'hui et l'état est 'Ouvert'
 UPDATE sortie
-SET etat = 'Clôturé'
-WHERE date_limite_inscription <= NOW() AND etat = 'Ouvert';
+SET etat = 'En cours'
+WHERE date_heure_debut <= NOW() AND etat = 'Ouvert';
 END //
 DELIMITER ;
 
@@ -12,4 +12,4 @@ DELIMITER ;
 CREATE EVENT IF NOT EXISTS schedule_verifier_sorties
 ON SCHEDULE EVERY 1 MINUTE
 DO
-  CALL update_sorties_ouvert_to_cloture();
+  CALL update_sorties_publier_to_encours();
