@@ -69,20 +69,20 @@
                                        aria-current="page">
                                         Accueil
                                     </a>
+                                    {% if 'ROLE_ADMIN' in app.user.roles %}
                                     <a href="{{ path('lieu_home') }}"
                                        class="text-gray-800 hover:bg-gray-700
-                               hover:text-white rounded-md px-3 py-2
-                               text-sm font-medium">
+                                        hover:text-white rounded-md px-3 py-2
+                                        text-sm font-medium">
                                         Lieux
                                     </a>
-                                    {% if 'ROLE_ADMIN' in app.user.roles %}
                                     <a href="{{ path('user_home') }}"
                                        class="text-gray-800 hover:bg-gray-700
                                        hover:text-white rounded-md px-3 py-2
                                        text-sm font-medium">
                                         Participants
                                     </a>
-                                    <a href="#"
+                                    <a href="{{ path('site_home') }}"
                                        class="text-gray-800 hover:bg-gray-700
                                        hover:text-white rounded-md px-3 py-2
                                        text-sm font-medium">
@@ -93,13 +93,6 @@
                                        hover:text-white rounded-md px-3 py-2
                                        text-sm font-medium">
                                         Villes
-                                    </a>
-                                    <a href="{{ path('site_home') }}"
-
-                                       class="text-gray-800 hover:bg-gray-700
-                           hover:text-white rounded-md px-3 py-2
-                           text-sm font-medium">
-                                        Sites
                                     </a>
                                     {% else %}
                                     <a href="{{ path('sortie_create') }}"
@@ -157,7 +150,7 @@
                                class="text-gray-800 hover:bg-gray-700
                                hover:text-white block rounded-md px-3
                                py-2 text-base font-medium">
-                                Lieu
+                                Lieux
                             </a>
                             <a href="{{ path('user_home') }}"
                                class="text-gray-800 hover:bg-gray-700
@@ -165,7 +158,7 @@
                                py-2 text-base font-medium">
                                 Participants
                             </a>
-                            <a href="#"
+                            <a href="{{ path('site_home') }}"
                                class="text-gray-800 hover:bg-gray-700
                                hover:text-white block rounded-md px-3
                                py-2 text-base font-medium">
