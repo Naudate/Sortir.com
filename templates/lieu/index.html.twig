@@ -1,20 +1,71 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello LieuController!{% endblock %}
+{% block title %}Hello UserController!{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    {% for message in app.flashes('success') %}
+        <p class="mt-1 text-sm leading-6 text-green-700">{{ message }}</p>
+    {% endfor %}
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ '/Users/francispiq/Downloads/Projet/Sortir.com/src/Controller/LieuController.php'|file_link(0) }}">src/Controller/LieuController.php</a></code></li>
-        <li>Your template at <code><a href="{{ '/Users/francispiq/Downloads/Projet/Sortir.com/templates/lieu/index.html.twig'|file_link(0) }}">templates/lieu/index.html.twig</a></code></li>
-    </ul>
-</div>
+
+    <br/>
+    <div class="relative overflow-x-auto container pl-5 pr-5 pt-5">
+        <div class="sm:col-span-3 flex items-center justify-start ml-2">
+            <a href="{{ path('lieu_create') }}" class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2
+        text-sm font-semibold text-white shadow-sm hover:bg-indigo-500
+        focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2
+        focus-visible:outline-indigo-600 flex-shrink-0">
+                Créer un lieu
+            </a>
+        </div>
+        <br>
+        <table class="w-full text-sm text-left text-gray-500">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+            <tr>
+                <th scope="col" class="px-6 py-3">ID</th>
+                <th scope="col" class="px-6 py-3">Nom</th>
+                <th scope="col" class="px-6 py-3">Rue</th>
+                <th scope="col" class="px-6 py-3">Ville</th>
+                <th scope="col" class="px-6 py-3">Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for lieu in lieus %}
+                <tr class="bg-white border-b">
+                    <td class="px-6 py-4">{{ lieu.id }}</td>
+                    <td class="px-6 py-4"><a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="{{ path('lieu_details', {'id': lieu.id}) }}">{{ lieu.nom }}</a></td>
+                    <td class="px-6 py-4">{{ lieu.rue}}</td>
+                    <td class="px-6 py-4">{{ lieu.ville.nom }}</td>
+
+                    <td class="px-6 py-4">
+                        <a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="{{ path('lieu_edit', {'id': lieu.id}) }}">Modifier</a>
+                        <a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="{{ path('lieu_delete', {'id': lieu.id}) }}">Supprimer</a>
+                    </td>
+
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="flex justify-end pr-4 pt-5">
+        {% if currentPage > 1 %}
+            <a href="{{ path('user_home', {'page': currentPage - 1}) }}" class="flex items-center justify-center px-4 h-10 mr-3 text-base font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                <svg class="w-3.5 h-3.5 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5H1m0 0 4 4M1 5l4-4"/>
+                </svg>
+                Previous
+            </a>
+        {% endif %}
+        {% if currentPage < maxPage %}
+            <a href="{{ path('user_home', {'page' : currentPage + 1}) }}" class="flex items-center justify-center px-4 h-10 text-base font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                Next
+                <svg class="w-3.5 h-3.5 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                </svg>
+            </a>
+        {% endif%}
+    </div>
+
 {% endblock %}
