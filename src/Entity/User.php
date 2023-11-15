@@ -79,10 +79,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?bool $isChangePassword = null;
 
+    #[ORM\OneToMany(mappedBy: 'updated_by', targetEntity: Sortie::class)]
+    private Collection $updateSorties;
+
     public function __construct()
     {
         $this->sorties = new ArrayCollection();
         $this->inscriptions = new ArrayCollection();
+        $this->updateSorties = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -316,6 +320,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsChangePassword(bool $isChangePassword): static
     {
         $this->isChangePassword = $isChangePassword;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Sortie>
+     */
+    public function getUpdateSorties(): Collection
+    {
+        return $this->updateSorties;
+    }
+
+    public function addUpdateSorty(Sortie $updateSorty): static
+    {
+        if (!$this->updateSorties->contains($updateSorty)) {
+            $this->updateSorties->add($updateSorty);
+            $updateSorty->setUpdatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUpdateSorty(Sortie $updateSorty): static
+    {
+        if ($this->updateSorties->removeElement($updateSorty)) {
+            // set the owning side to null (unless already changed)
+            if ($updateSorty->getUpdatedBy() === $this) {
+                $updateSorty->setUpdatedBy(null);
+            }
+        }
 
         return $this;
     }
