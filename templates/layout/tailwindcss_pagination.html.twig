@@ -1,0 +1,86 @@
+{# tailwindcss Sliding pagination control implementation #}
+{% if pageCount > 1 %}
+    <div class="inline-flex">
+        <div class="flex items-baseline flex-row border rounded-md border-gray-400 shadow-md">
+        {% if first is defined and current != first %}
+            <span class="bg-white text-blue-600 px-3 py-2 text-md border-r rounded-l-md border-gray-400 font-bold">
+                <a href="{{ path(route, query|merge({(pageParameterName): first})) }}">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         fill="none"
+                         viewBox="0 0 24 24"
+                         stroke-width="1.5"
+                         stroke="currentColor"
+                         class="inline w-4 h-4">
+                      <path stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M18.75 19.5l-7.5-7.5 7.5-7.5m-6 15L5.25 12l7.5-7.5" />
+                    </svg>
+
+                </a>
+            </span>
+        {% endif %}
+
+        {% if previous is defined %}
+            <span class="bg-white text-blue-600 px-3 text-md py-2 border-r border-gray-400 content-center">
+                <a rel="prev" href="{{ path(route, query|merge({(pageParameterName): previous})) }}">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         fill="none"
+                         viewBox="0 0 24 24"
+                         stroke-width="1.5"
+                         stroke="currentColor"
+                         class="inline w-4 h-4">
+                      <path stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M15.75 19.5L8.25 12l7.5-7.5" />
+                    </svg>
+
+                </a>
+            </span>
+        {% endif %}
+
+        {% for page in pagesInRange %}
+            {% if page != current %}
+                <span class="bg-white text-blue-600 px-3 py-2 text-md border-r  border-gray-400">
+                    <a href="{{ path(route, query|merge({(pageParameterName): page})) }}">{{ page }}</a>
+                </span>
+            {% else %}
+                <span class="bg-blue-600 text-white px-3 py-2 text-md font-bold">{{ page }}</span>
+            {% endif %}
+        {% endfor %}
+
+        {% if next is defined %}
+            <span class="bg-white text-blue-600 px-3 py-2 text-md border-r border-gray-400">
+                <a rel="next" href="{{ path(route, query|merge({(pageParameterName): next})) }}">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         fill="none"
+                         viewBox="0 0 24 24"
+                         stroke-width="1.5"
+                         stroke="currentColor"
+                         class="inline w-4 h-4">
+                      <path stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                    </svg>
+                </a>
+            </span>
+        {% endif %}
+
+        {% if last is defined and current != last %}
+            <span class="bg-white text-blue-600 px-3 py-2 text-md border-gray-400 rounded-r-md font-bold">
+                <a href="{{ path(route, query|merge({(pageParameterName): last})) }}">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         fill="none"
+                         viewBox="0 0 24 24"
+                         stroke-width="1.5"
+                         stroke="currentColor"
+                         class="inline w-4 h-4">
+                      <path stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5" />
+                    </svg>
+                </a>
+            </span>
+        {% endif %}
+        </div>
+    </div>
+{% endif %}
