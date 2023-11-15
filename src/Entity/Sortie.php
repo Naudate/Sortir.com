@@ -80,6 +80,9 @@ class Sortie
     #[ORM\ManyToOne(inversedBy: 'updateSorties')]
     private ?User $updated_by = null;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $dateUpdate = null;
+
     public function __construct()
     {
         $this->participant = new ArrayCollection();
@@ -266,6 +269,18 @@ class Sortie
     public function setUpdatedBy(?User $updated_by): static
     {
         $this->updated_by = $updated_by;
+
+        return $this;
+    }
+
+    public function getDateUpdate(): ?\DateTimeInterface
+    {
+        return $this->dateUpdate;
+    }
+
+    public function setDateUpdate(?\DateTimeInterface $dateUpdate): static
+    {
+        $this->dateUpdate = $dateUpdate;
 
         return $this;
     }

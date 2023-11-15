@@ -3,11 +3,9 @@ CREATE  TRIGGER after_delete_sortie
     AFTER delete
     ON sortie FOR EACH ROW
 BEGIN
-    DECLARE organisateurSortie VARCHAR(255);
-	DECLARE updateBy VARCHAR(255);
-
-    DECLARE siteSortie VARCHAR(255);
-     DECLARE lieuSortie_nom VARCHAR(255);
+    DECLARE siteSortie_id VARCHAR(255);
+    DECLARE siteSortie_nom VARCHAR(255);
+    DECLARE lieuSortie_nom VARCHAR(255);
     DECLARE lieuSortie_rue VARCHAR(255);
     DECLARE lieuSortie_ville_nom VARCHAR(255);
 	DECLARE lieuSortie_ville_id int;
@@ -16,6 +14,8 @@ BEGIN
     DECLARE lieuSortie_latitude VARCHAR(255);
   #  declare lieuSortie lieu;
   #declare villeSortie ville;
+
+
 
 
     select nom into siteSortie from site s  where s.id = old.site_id;
