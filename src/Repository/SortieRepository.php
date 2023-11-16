@@ -29,6 +29,7 @@ class SortieRepository extends ServiceEntityRepository
         $user,
         $selectedSite,
         $selectedState,
+        $voirSortiesPassees
     )
     {
         $qb = $this->createQueryBuilder('s');
@@ -62,6 +63,9 @@ class SortieRepository extends ServiceEntityRepository
         if($selectedState){
             $qb->andWhere('s.etat = :selectedState')
                 ->setParameter('selectedState', $selectedState);
+        }
+        if ($voirSortiesPassees) {
+            $qb->andWhere('s.dateHeureDebut <  CURRENT_DATE()');
         }
 
         $qb->andWhere('s.etat != :etat OR (s.etat = :etat AND s.organisateur = :user)')
