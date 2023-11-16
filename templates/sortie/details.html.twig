@@ -71,6 +71,14 @@
                         </div>
                         <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                             <dt class="text-sm font-medium leading-6 text-gray-900">
+                                Organisateur
+                            </dt>
+                            <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                                {{ sortie.organisateur.nom }} {{ sortie.organisateur.prenom }}
+                            </dd>
+                        </div>
+                        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                            <dt class="text-sm font-medium leading-6 text-gray-900">
                                 Description
                             </dt>
                             <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
@@ -143,7 +151,13 @@
                                 <tbody>
                                 {% for participant in sortie.participant %}
                                     <tr class="bg-white border-b text-center">
+                                        {% if sortie.organisateur.id  == app.user.id %}
+                                        <td class="px-6 py-4 text-indigo-600 hover:underline"><a href="{{ path('user_details',
+                                                { 'id': participant.id,
+                                                  'idSortie': sortie.id}) }}">{{ participant.pseudo }}</a></td>
+                                        {% else %}
                                         <td class="px-6 py-4">{{ participant.pseudo }}</td>
+                                        {% endif %}
                                         <td class="px-6 py-4">{{ participant.nom }}</td>
                                     </tr>
                                 {% endfor %}
