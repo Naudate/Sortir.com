@@ -32,6 +32,7 @@
                                 <th scope="col" class="px-6 py-3">TELEPHONE</th>
                                 <th scope="col" class="px-6 py-3">MAIL</th>
                                 <th scope="col" class="px-6 py-3">SITE</th>
+                                <th scope="col" class="px-6 py-3">ACTION</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -56,6 +57,7 @@
                                         {{ user.site.nom }}
                                     {% endif %}
                                 </td>
+                                <td class="px-6 py-4"><a class="font-medium text-red-600 dark:text-red-500 hover:underline" href="{{ path('user_delete',{'id': user.id}) }}">Supprimer</a></td>
                             </tr>
                         {% endfor %}
                         </tbody>
