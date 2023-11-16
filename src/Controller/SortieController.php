@@ -89,9 +89,22 @@ class SortieController extends AbstractController
                 $sortie->setEtat(Etat::EN_CREATION);
             }
 
-            if ($form->getErrors(true)->count() == 0) {
+            $sortie->setOrganisateur($this->getUser());
 
-                $sortie->setOrganisateur($this->getUser());
+            $sortieBDD = $this->sortieRepository->findBy(
+                array('nom' => $sortie->getNom(),
+                    'dateHeureDebut' => $sortie->getDateHeureDebut(),
+                    'dateHeureFin' => $sortie->getDateHeureFin(),
+                    'etat' => $sortie->getEtat(),
+                    'site' => $sortie->getSite(),
+                    'organisateur' => $sortie->getOrganisateur()
+                ));
+
+            if($sortieBDD){
+                $form->addError(new FormError("Cette sortie existe déjà !"));
+            }
+
+            if ($form->getErrors(true)->count() == 0) {
                 $sortie->setUpdatedBy(null);
                 $sortie->setDateUpdate(null);
                 $this->em->persist($sortie);
@@ -129,7 +142,6 @@ class SortieController extends AbstractController
         $nbrParticipant = $sortie->getParticipant()->count();
         date_default_timezone_set('Europe/Paris');
         $dateActuelle = new \DateTime;
-        //dd($sortie);
 
         if ($sortie->getNombreMaxParticipant()> $nbrParticipant
                 && $sortie->getEtat() == Etat::OUVERT || $sortie->getEtat() == Etat::CLOTURE
@@ -142,7 +154,6 @@ class SortieController extends AbstractController
             // persist des données
             $entityManager->persist($sortie);
             $entityManager->flush();
-            //dd($sortie);
 
             if ($sortie->getNombreMaxParticipant() == $sortie->getParticipant()->count()) {
                 $sortie->setEtat(Etat::CLOTURE);
@@ -220,7 +231,6 @@ class SortieController extends AbstractController
         $userConnect =  $this->getUser();
         $form = $this->createForm(CancelSortieFormType::class, $sortie);
         $form->handleRequest($request);
-       //dd($form->isValid());
 
         // vérification que la sortie existe
         if(empty($sortie)){
@@ -308,7 +318,6 @@ class SortieController extends AbstractController
 
         $sortie = $this->sortieRepository->find($id);
 
-        $dateActuelle = new \DateTime;
         $userConnect = $this->getUser();
 
         if (empty($sortie)){
