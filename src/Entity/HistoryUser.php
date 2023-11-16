@@ -2,11 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\HistorySortieRepository;
+use App\Repository\HistoryUserRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: HistorySortieRepository::class)]
-class HistorySortie
+#[ORM\Entity(repositoryClass: HistoryUserRepository::class)]
+class HistoryUser
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -14,10 +14,10 @@ class HistorySortie
     private ?int $id = null;
 
     #[ORM\Column]
-    private array $sortie = [];
+    private array $user = [];
 
-    #[ORM\Column]
-    private array $organisateur = [];
+    #[ORM\Column(nullable: true)]
+    private ?array $sortie = null;
 
     #[ORM\Column(nullable: true)]
     private ?array $participants = null;
@@ -27,26 +27,26 @@ class HistorySortie
         return $this->id;
     }
 
-    public function getSortie(): array
+    public function getUser(): array
     {
-        return $this->sortie;
+        return $this->user;
     }
 
-    public function setSortie(array $sortie): static
+    public function setUser(array $user): static
     {
-        $this->sortie = $sortie;
+        $this->user = $user;
 
         return $this;
     }
 
-    public function getOrganisateur(): array
+    public function getSortie(): ?array
     {
-        return $this->organisateur;
+        return $this->sortie;
     }
 
-    public function setOrganisateur(array $organisateur): static
+    public function setSortie(?array $sortie): static
     {
-        $this->organisateur = $organisateur;
+        $this->sortie = $sortie;
 
         return $this;
     }
