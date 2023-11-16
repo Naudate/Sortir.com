@@ -39,9 +39,30 @@ class HomeController extends AbstractController
 
         // Si c'est la première visite (aucun paramètre dans l'URL)
         if ($request->query->count() === 0) {
+            dump("test0");
             $registered = true;
             $unregistered = true;
             $organisateurOnly = true;
+            if (!in_array('ROLE_ADMIN', $this->getUser()->getRoles(), true)){
+                return $this->redirectToRoute('app_home',
+                    array('nom' => $searchInput ?? '',
+                        'dateDebut' => $dateDebut ?? '',
+                        'dateFin' => $dateFin ?? '',
+                        'organisateur' => $organisateurOnly ?? '',
+                        'voirSortiesPassees' => $voirSortiesPassees ?? '',
+                        'site' => $selectedSite ?? '',
+                        'registered' => $registered ?? '',
+                        'unregistered' => $unregistered ?? ''
+                    ));
+            }else{
+                return $this->redirectToRoute('app_home',
+                    array('nom' => $searchInput ?? '',
+                        'dateDebut' => $dateDebut ?? '',
+                        'dateFin' => $dateFin ?? '',
+                        'site' => $selectedSite ?? '',
+                        'etat' => $selectedState ?? ''
+                    ));
+            }
         }
         // Filtrer les sorties en fonction des dates
         $sorties = $sortieRepository->findBetweenDates(
@@ -51,14 +72,10 @@ class HomeController extends AbstractController
             $organisateurOnly,
             $this->getUser(),
             $selectedSite,
-            $selectedState
+            $selectedState,
+            $voirSortiesPassees
         );
 
-        if ($voirSortiesPassees) {
-            $sorties = array_filter($sorties, function ($sortie) {
-                return $sortie->getDateHeureDebut() < new \DateTime();
-            });
-        }
         // Filtrer les sorties en fonction de l'inscription de l'utilisateur
         if ($registered && !$unregistered) {
             $sorties = array_filter($sorties, function ($sortie) {
@@ -81,6 +98,7 @@ class HomeController extends AbstractController
 
         date_default_timezone_set('Europe/Paris');
         $dateActuelle = new \DateTime;
+
         return $this->render('home/index.html.twig', [
 
             "sorties" => $sorties,
@@ -88,9 +106,10 @@ class HomeController extends AbstractController
             "dateFin" => $dateFin,
             "organisateurOnly" => $organisateurOnly,
             "dateActuelle"=>$dateActuelle,
-            "sites" => $sites,  // Passer la liste des sites au template
-            "registered" => $registered, // Ajout de la variable
-            "unregistered" => $unregistered, // Ajout de la variable
+            "sites" => $sites,
+            "voirSortiesPassees" => $voirSortiesPassees,
+            "registered" => $registered,
+            "unregistered" => $unregistered,
             "pagination" => $pagination,
         ]);
     }
