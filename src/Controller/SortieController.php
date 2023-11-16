@@ -293,6 +293,9 @@ class SortieController extends AbstractController
     {
         $sortie = $this->sortieRepository->find($id);
 
+        if (empty($sortie)){
+            throw new Exception("Je crains fort que cette sortie est comme ta grand-mère, un ancêtre !",404);
+        }
         //Affichage dans la vue information sortie
         return $this->render('sortie/details.html.twig', [
             'sortie' => $sortie
