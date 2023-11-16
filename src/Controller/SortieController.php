@@ -92,6 +92,8 @@ class SortieController extends AbstractController
             if ($form->getErrors(true)->count() == 0) {
 
                 $sortie->setOrganisateur($this->getUser());
+                $sortie->setUpdatedBy(null);
+                $sortie->setDateUpdate(null);
                 $this->em->persist($sortie);
                 $this->em->flush();
                 $this->addFlash("success", "Sortie crée");
@@ -361,6 +363,11 @@ class SortieController extends AbstractController
 
             if ($form->getErrors(true)->count() == 0) {
 
+                date_default_timezone_set('Europe/Paris');
+                $dateActuelle = new \DateTime;
+                $userConnect = $this->getUser();
+                $sortie->setDateUpdate($dateActuelle);
+                $sortie->setUpdatedBy($userConnect);
                 $sortie->setOrganisateur($this->getUser());
                 $this->em->persist($sortie);
                 $this->em->flush();

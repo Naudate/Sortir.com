@@ -44,7 +44,9 @@ class UserController extends AbstractController
     #[Route('/show/{id}/{idSortie}', name: '_details', requirements: ['id' => '\d+'])]
     #[IsGranted('ROLE_USER')]
     public function details(UserRepository $userRepository, SortieRepository $sortieRepository, int $id, int $idSortie = 0, ){
-        //Récupération des informations de l'utilisateur connectée`
+
+      //Récupération des informations de l'utilisateur connectée
+
         $userConnect = $this->getUser();
 
         // récupération de la sortie si > 0
@@ -107,7 +109,7 @@ class UserController extends AbstractController
             // vérification que le nouvel utilisateur n'existe pas en base de données
             $userExist=  $userRepository->findByEmailOrUsername($user->getEmail());
             if(!empty($userExist)){
-                dd('ok');
+                //dd('ok');
 
                 $this->addFlash("error", "Un utilisateur existe déjà avec cette adresse mail");
 
