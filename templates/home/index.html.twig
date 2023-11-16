@@ -87,28 +87,32 @@
                                        class="block text-sm font-medium leading-6 text-gray-900">
                                     Date de début
                                 </label>
-                                <input type="date"
-                                       id="dateDebut"
-                                       name="dateDebut"
-                                       value="{{ dateDebut }}"
-                                       class="w-full rounded-md border-0 py-1.5 text-gray-900
+                                <div class="mt-2">
+                                    <input type="date"
+                                           id="dateDebut"
+                                           name="dateDebut"
+                                           value="{{ dateDebut }}"
+                                           class="w-full rounded-md border-0 py-1.5 text-gray-900
                                        shadow-sm ring-1 ring-inset ring-gray-300
                                        placeholder:text-gray-400 focus:ring-2 focus:ring-inset
                                        focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                </div>
                             </div>
                             <div>
                                 <label for="dateFin"
                                        class="block text-sm font-medium leading-6 text-gray-900">
                                     Date de fin
                                 </label>
-                                <input type="date"
-                                       id="dateFin"
-                                       name="dateFin"
-                                       value="{{ dateFin }}"
-                                       class="w-full rounded-md border-0 py-1.5 text-gray-900
+                                <div class="mt-2">
+                                    <input type="date"
+                                           id="dateFin"
+                                           name="dateFin"
+                                           value="{{ dateFin }}"
+                                           class="w-full rounded-md border-0 py-1.5 text-gray-900
                                        shadow-sm ring-1 ring-inset ring-gray-300
                                        placeholder:text-gray-400 focus:ring-2 focus:ring-inset
                                        focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                </div>
                             </div>
                             {% if 'ROLE_ADMIN' not in app.user.roles %}
                             <div class="flex items-end justify-end">
@@ -146,26 +150,28 @@
                             </div>
                             {% endif %}
                             {% if 'ROLE_ADMIN' in app.user.roles %}
-                            <div class="mt-2">
+                            <div>
                                 <label for="etat" class="block text-sm font-medium leading-6 text-gray-900">
                                     État de la sortie
                                 </label>
-                                <select id="etat"
-                                        name="etat"
-                                        class="w-full rounded-md border-0 py-1.5 text-gray-900
+                                <div>
+                                    <select id="etat"
+                                            name="etat"
+                                            class="w-full rounded-md border-0 py-1.5 text-gray-900
                                         shadow-sm ring-1 ring-inset ring-gray-300
                                         placeholder:text-gray-400 focus:ring-2 focus:ring-inset
                                         focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                         <option value="" {% if app.request.get('etat') == "" %}selected{% endif %}>Tous les états</option>
-                                            {% for state in ['En création', 'Ouvert', 'Clôturée', 'En cours', 'Terminée', 'Annulée'] %}
-                                        <option value="{{ state }}"
-                                                {% if app.request.get('etat') == state %}
-                                        selected
-                                                {% endif %}>
-                                            {{ state }}
-                                        </option>
-                                    {% endfor %}
-                                </select>
+                                        {% for state in ['En création', 'Ouvert', 'Clôturée', 'En cours', 'Terminée', 'Annulée'] %}
+                                            <option value="{{ state }}"
+                                                    {% if app.request.get('etat') == state %}
+                                            selected
+                                                    {% endif %}>
+                                                {{ state }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
                             </div>
                             {% endif %}
                             <div class="sm:col-span-3 flex items-center justify-center">
@@ -214,22 +220,22 @@
                                 <td class="px-6 py-4 text-center text-indigo-600 hover:underline">
                                     <a href="{{ path('sortie_detail', {'id' : sortie.id}) }}">{{ sortie.nom }}</a>
                                 </td>
-                                <td class="px-6 py-4">
+                                <td class="px-6 py-4 text-center">
                                     {{ sortie.dateHeureDebut |date("d/m/Y H:i") }}
                                 </td>
-                                <td class="px-6 py-4">
+                                <td class="px-6 py-4 text-center">
                                     {{ sortie.dateHeureFin |date("d/m/Y H:i") }}
                                 </td>
-                                <td class="px-6 py-4">
+                                <td class="px-6 py-4 text-center">
                                     {{ sortie.dateLimiteInscription |date("d/m/Y") }}
                                 </td>
-                                <td class="px-6 py-4">
+                                <td class="px-6 py-4 text-center">
                                     {{ sortie.participant |length }} / {{ sortie.nombreMaxParticipant }}
                                 </td>
-                                <td class="px-6 py-4">
+                                <td class="px-6 py-4 text-center">
                                     {{ sortie.etat }}
                                 </td>
-                                <td class="flex px-6 py-4 justify-center">
+                                <td class="flex px-6 py-4 items-center justify-center">
                                     {% if app.user in sortie.participant %}
                                         <svg xmlns="http://www.w3.org/2000/svg"
                                              fill="none"
@@ -243,22 +249,13 @@
                                         </svg>
 
                                     {% else %}
-                                        <svg xmlns="http://www.w3.org/2000/svg"
-                                             fill="none"
-                                             viewBox="0 0 24 24"
-                                             stroke-width="1.5"
-                                             stroke="currentColor"
-                                             class="w-6 h-6 text-red-600">
-                                            <path stroke-linecap="round"
-                                                  stroke-linejoin="round"
-                                                  d="M6 18L18 6M6 6l12 12"/>
-                                        </svg>
+
                                     {% endif %}
                                 </td>
-                                <td class="px-6 py-4">
+                                <td class="px-6 py-4 text-center">
                                     {{ sortie.organisateur.nom }}  {{ sortie.organisateur.prenom }}
                                 </td>
-                                <td class="px-6 py-4">
+                                <td class="px-6 py-4 text-center">
                                     {% if sortie.getDateLimiteInscription >= dateActuelle and sortie.etat != 'Annulée' %}
                                     {% if (app.user == sortie.organisateur) and sortie.etat == 'Ouvert' or sortie.etat == 'En création'%}
                                         <a href="{{ path('sortie_edit', {'id' : sortie.id}) }}"
@@ -268,8 +265,8 @@
                                         </a>
                                     {% endif %}
 
-                                        {% if (app.user == sortie.organisateur or 'ROLE_ADMIN' in app.user.roles) and sortie.etat == 'Ouvert'
-                                            or sortie.etat == 'Clôturée'%}
+                                        {% if (app.user == sortie.organisateur or 'ROLE_ADMIN' in app.user.roles) and (sortie.etat == 'Ouvert'
+                                            or sortie.etat == 'Clôturée')%}
                                             <a href="{{ path('sortie_cancel', {'id' : sortie.id}) }}"
                                                class="text-sm font-semibold text-amber-600 underline underline-offset-2
                                            outline-amber-600 hover:outline-amber-500 hover:text-amber-500"
@@ -280,17 +277,17 @@
                                         <br>
 
                                         {% if app.user in sortie.participant and 'ROLE_ADMIN' not in app.user.roles
-                                                and app.user != sortie.organisateur and sortie.etat == 'Ouvert'
-                                                or sortie.etat == 'Clôturée' %}
+                                                and app.user != sortie.organisateur and (sortie.etat == 'Ouvert'
+                                                or sortie.etat == 'Clôturée') %}
                                                 <a href="{{ path('sortie_unregister', {'id' : sortie.id}) }}"
                                                    class="text-sm font-semibold text-red-600 underline underline-offset-2
                                            outline-red-600 hover:outline-red-500 hover:text-red-500">
                                                     Se désister
                                                 </a>
                                            {% endif %}
-                                           {% if app.user not in sortie.participant and 'ROLE_ADMIN' not in app.user.roles
-                                               and app.user != sortie.organisateur and sortie.etat == 'Ouvert'
-                                               or sortie.etat == 'Clôturée'  %}
+                                           {% if app.user not in sortie.participant and app.user != sortie.organisateur
+                                                and (sortie.etat == 'Ouvert'
+                                               or sortie.etat == 'Clôturée') and 'ROLE_ADMIN' not in app.user.roles %}
                                                <a href="{{ path('sortie_register', {'id' : sortie.id}) }}"
                                                    class="text-sm font-semibold text-indigo-600 underline underline-offset-2
                                                         outline-indigo-600 hover:outline-indigo-500 hover:text-indigo-500">
