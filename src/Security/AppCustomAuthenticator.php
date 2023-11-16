@@ -47,7 +47,7 @@ class AppCustomAuthenticator extends AbstractLoginFormAuthenticator
                     throw new UserNotFoundException();
                 }
                 if(!$user->isIsActif()){
-                    throw new CustomUserMessageAuthenticationException("Utilisateur non actif. Contactez l'administrasteur pour plus d'inforamtions");
+                    throw new CustomUserMessageAuthenticationException("Utilisateur non actif. Contactez l'administrasteur pour plus d'informations");
                 }
                 return $user;
             }),

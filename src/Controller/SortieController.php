@@ -302,9 +302,22 @@ class SortieController extends AbstractController
     #[Route('/edit/{id}', name: '_edit')]
     public function edit(Request $request, int $id )
     {
+
         $sortie = $this->sortieRepository->find($id);
+
+        $dateActuelle = new \DateTime;
+        $userConnect = $this->getUser();
+
+        if (empty($sortie)){
+            throw new Exception("Prions, pour cette sortie tant rêvée qui n'a jamais existée", 404);
+        }
+
+        if ($sortie->getOrganisateur() != $userConnect){
+            throw new Exception("Vous ne passerez pas !!!!", 403);
+        }
         $lieu = $this->lieuRepository->find($sortie->getLieu()->getId());
         $ville = $this->villeRepository->find($lieu->getVille()->getId());
+
 
         $newLieu = new Lieu();
 
@@ -367,7 +380,6 @@ class SortieController extends AbstractController
                 $dateActuelle = new \DateTime;
                 $userConnect = $this->getUser();
                 $sortie->setDateUpdate($dateActuelle);
-                $sortie->setUpdatedBy($userConnect);
                 $sortie->setOrganisateur($this->getUser());
                 $this->em->persist($sortie);
                 $this->em->flush();

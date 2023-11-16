@@ -179,13 +179,15 @@ class UserController extends AbstractController
 
             if($userForm->isSubmitted()){
 
-                if(!preg_match('/^0([1-7]|9)\d{8}$/',$user->getTelephone())){
-                    $this->addFlash("errorTelephone", "Le numéro de téléphone doit commencer par 01 à 07 ou 09 et être composé de 10 chiffres.");
-                    return $this->redirectToRoute('user_edit',array('id'=> $user->getId()));
+                if (!empty($user->getTelephone())){
+                    if(!preg_match('/^0([1-7]|9)\d{8}$/',$user->getTelephone())){
+                        $this->addFlash("errorTelephone", "Le numéro de téléphone doit commencer par 01 à 07 ou 09 et être composé de 10 chiffres.");
+                        return $this->redirectToRoute('user_edit',array('id'=> $user->getId()));
+                    }
                 }
 
                 if(!$userPasswordHasher->isPasswordValid($userConnect, $userForm->get('password')->getData())){
-                    $this->addFlash("error", "Mot de passe incorrecte");
+                    $this->addFlash("error", "Mot de passe incorrect");
                     return $this->redirectToRoute('user_edit',array('id'=> $user->getId()));
                 }
                 else{
@@ -317,6 +319,23 @@ class UserController extends AbstractController
             $entityManager->flush();
             $this->addFlash("success", "Mot de passe réinitialisé avec succès");
             return $this->redirectToRoute('user_edit', array('id'=> $user->getId()));
+        }
+        else{
+            throw new Exception("Accès refusé, ON SE CALME ET DEMI-TOUR !", 403);
+        }
+    }
+
+    #[Route('/delete/{id}', name: '_delete', requirements: ['id' => '\d+'])]
+    public function delete(UserRepository $userRepository, UserPasswordHasherInterface $userPasswordHasher, int $id, EntityManagerInterface $entityManager){
+        if ( in_array('ROLE_ADMIN', $this->getUser()->getRoles(), true)){
+            $user = $userRepository->find($id);
+            if(empty($user)){
+                throw new Exception("J'ai existé, maintenant c'est fini. Utilisateur inconnu", 404);
+            }
+            $entityManager->remove($user);
+            $entityManager->flush();
+            $this->addFlash("success", "Utilisateur supprimé avec succès");
+            return $this->redirectToRoute('user_home');
         }
         else{
             throw new Exception("Accès refusé, ON SE CALME ET DEMI-TOUR !", 403);
