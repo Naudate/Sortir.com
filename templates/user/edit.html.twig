@@ -6,6 +6,9 @@
         {% for message in app.flashes('success') %}
             <p class="mt-1 text-sm leading-6 text-green-700">{{ message }}</p>
         {% endfor %}
+        {% for message in app.flashes('error') %}
+            <p class="mt-1 text-sm leading-6 text-red-700">{{ message }}</p>
+        {% endfor %}
         <div class="mx-auto max-w-2xl">
             {{ form_start(userForm) }}
 

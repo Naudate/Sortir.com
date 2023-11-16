@@ -159,10 +159,10 @@ class UserController extends AbstractController
 
     #[Route('/edit/{id}', name: '_edit', requirements: ['id' => '\d+'])]
     #[IsGranted('ROLE_USER')]
-    public function edit(int $id,Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, UserRepository $userRepository){
+    public function edit(int $id,User $user,Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, UserRepository $userRepository){
         $userConnect = $this->getUser();
 
-        $user= $userRepository->find($id);
+        //$user= $userRepository->find($id);
 
         if(empty($user)){
             throw new Exception("Hélas, l'utilisateur recherché n'est plus de ce monde", Response::HTTP_NOT_FOUND);
@@ -177,36 +177,76 @@ class UserController extends AbstractController
             $userForm->handleRequest($request);
            //dd($userPasswordHasher->isPasswordValid($user, trim($userForm->get('password')->getData())));
 
-            if($userForm->isSubmitted()){
 
-                if (!empty($user->getTelephone())){
-                    if(!preg_match('/^0([1-7]|9)\d{8}$/',$user->getTelephone())){
-                        $this->addFlash("errorTelephone", "Le numéro de téléphone doit commencer par 01 à 07 ou 09 et être composé de 10 chiffres.");
+            if (in_array('ROLE_ADMIN', $this->getUser()->getRoles(), true)){
+                if($userForm->isSubmitted() && $userForm->isValid()){
+
+                    if (!empty($user->getTelephone())){
+                        if(!preg_match('/^0([1-7]|9)\d{8}$/',$user->getTelephone())){
+                            $this->addFlash("errorTelephone", "Le numéro de téléphone doit commencer par 01 à 07 ou 09 et être composé de 10 chiffres.");
+                            return $this->redirectToRoute('user_edit',array('id'=> $user->getId()));
+                        }
+                    }
+
+
+
+                    if(!$userPasswordHasher->isPasswordValid($userConnect, $userForm->get('password')->getData())){
+                        $this->addFlash("error", "Mot de passe incorrect");
                         return $this->redirectToRoute('user_edit',array('id'=> $user->getId()));
                     }
-                }
-
-                if(!$userPasswordHasher->isPasswordValid($userConnect, $userForm->get('password')->getData())){
-                    $this->addFlash("error", "Mot de passe incorrect");
-                    return $this->redirectToRoute('user_edit',array('id'=> $user->getId()));
-                }
-                else{
-                    $user->setIsChangePassword(false);
-
-                    if ($user->getSite() == null){
-                        $user->setSite(null);
-                    }
-                    //dd($userForm);
-                    $entityManager->persist($user);
-                    $entityManager->flush();
-
-                    if ($userConnect->getId() == $user->getId()){
-                        $this->addFlash("success", "Votre profil a bien été modifié");
-                    }
                     else{
-                        $this->addFlash("success", "Le profil de l'utilisateur a bien été modifié");
+                        $user->setIsChangePassword(false);
+
+                        if ($user->getSite() == null){
+                            $user->setSite(null);
+                        }
+
+                        //dd($userForm);
+                        $entityManager->persist($user);
+                        $entityManager->flush();
+
+                        if ($userConnect->getId() == $user->getId()){
+                            $this->addFlash("success", "Votre profil a bien été modifié");
+                        }
+                        else{
+                            $this->addFlash("success", "Le profil de l'utilisateur a bien été modifié");
+                        }
+                        return $this->redirectToRoute('user_details',array('id'=> $user->getId()));
                     }
-                    return $this->redirectToRoute('user_details',array('id'=> $user->getId()));
+                }
+            }
+            else {
+                if($userForm->isSubmitted()) {
+
+                    if (!empty($user->getTelephone())) {
+                        if (!preg_match('/^0([1-7]|9)\d{8}$/', $user->getTelephone())) {
+                            $this->addFlash("errorTelephone", "Le numéro de téléphone doit commencer par 01 à 07 ou 09 et être composé de 10 chiffres.");
+                            return $this->redirectToRoute('user_edit', array('id' => $user->getId()));
+                        }
+                    }
+
+
+                    if (!$userPasswordHasher->isPasswordValid($userConnect, $userForm->get('password')->getData())) {
+                        $this->addFlash("error", "Mot de passe incorrect");
+                        return $this->redirectToRoute('user_edit', array('id' => $user->getId()));
+                    } else {
+                        $user->setIsChangePassword(false);
+
+                        if ($user->getSite() == null) {
+                            $user->setSite(null);
+                        }
+
+                        //dd($userForm);
+                        $entityManager->persist($user);
+                        $entityManager->flush();
+
+                        if ($userConnect->getId() == $user->getId()) {
+                            $this->addFlash("success", "Votre profil a bien été modifié");
+                        } else {
+                            $this->addFlash("success", "Le profil de l'utilisateur a bien été modifié");
+                        }
+                        return $this->redirectToRoute('user_details', array('id' => $user->getId()));
+                    }
                 }
             }
         }
