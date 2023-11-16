@@ -37,12 +37,6 @@ class HomeController extends AbstractController
         $unregistered = $request->query->get('unregistered');
         $selectedState = $request->query->get('etat');
 
-        // Si c'est la première visite (aucun paramètre dans l'URL)
-        if ($request->query->count() === 0) {
-            $registered = true;
-            $unregistered = true;
-            $organisateurOnly = true;
-        }
         // Filtrer les sorties en fonction des dates
         $sorties = $sortieRepository->findBetweenDates(
             $dateDebut,
@@ -51,14 +45,10 @@ class HomeController extends AbstractController
             $organisateurOnly,
             $this->getUser(),
             $selectedSite,
-            $selectedState
+            $selectedState,
+            $voirSortiesPassees
         );
 
-        if ($voirSortiesPassees) {
-            $sorties = array_filter($sorties, function ($sortie) {
-                return $sortie->getDateHeureDebut() < new \DateTime();
-            });
-        }
         // Filtrer les sorties en fonction de l'inscription de l'utilisateur
         if ($registered && !$unregistered) {
             $sorties = array_filter($sorties, function ($sortie) {
@@ -81,6 +71,14 @@ class HomeController extends AbstractController
 
         date_default_timezone_set('Europe/Paris');
         $dateActuelle = new \DateTime;
+
+        // Si c'est la première visite (aucun paramètre dans l'URL)
+        if ($request->query->count() === 0) {
+            $registered = true;
+            $unregistered = true;
+            $organisateurOnly = true;
+        }
+
         return $this->render('home/index.html.twig', [
 
             "sorties" => $sorties,
@@ -88,9 +86,10 @@ class HomeController extends AbstractController
             "dateFin" => $dateFin,
             "organisateurOnly" => $organisateurOnly,
             "dateActuelle"=>$dateActuelle,
-            "sites" => $sites,  // Passer la liste des sites au template
-            "registered" => $registered, // Ajout de la variable
-            "unregistered" => $unregistered, // Ajout de la variable
+            "sites" => $sites,
+            "voirSortiesPassees" => $voirSortiesPassees,
+            "registered" => $registered,
+            "unregistered" => $unregistered,
             "pagination" => $pagination,
         ]);
     }
