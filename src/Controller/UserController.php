@@ -7,6 +7,7 @@ use App\Form\PasswordFormType;
 use App\Form\RegistrationFormType;
 use App\Form\UserFormType;
 use App\Helper\Uploader;
+use App\Repository\SortieRepository;
 use App\Repository\UserRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -40,11 +41,23 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/show/{id}', name: '_details', requirements: ['id' => '\d+'])]
+    #[Route('/show/{id}/{idSortie}', name: '_details', requirements: ['id' => '\d+'])]
     #[IsGranted('ROLE_USER')]
-    public function details(UserRepository $userRepository, int $id ){
-      //Récupération des informations de l'utilisateur connectée`
+    public function details(UserRepository $userRepository, SortieRepository $sortieRepository, int $id, int $idSortie = 0, ){
+        //Récupération des informations de l'utilisateur connectée`
         $userConnect = $this->getUser();
+
+        // récupération de la sortie si > 0
+        if ($idSortie>0){
+            $sortie= $sortieRepository->find($idSortie);
+            if ($sortie->getOrganisateur() == $userConnect){
+                $user = $userRepository->find($id);
+                return $this->render('user/details.html.twig', [
+                    'user' => $user
+                ]);
+            }
+        }
+
         // si utilisateur connecter cherche a consulter son profil et quil a le role user
         if($userConnect->getId() == $id && in_array('ROLE_USER', $this->getUser()->getRoles(), true) ){
 

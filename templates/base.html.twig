@@ -18,7 +18,7 @@
     </head>
     <body class="h-full">
         {% if is_granted('IS_AUTHENTICATED') %}
-            <nav class="bg-indigo-100">
+            <nav class="bg-blue-400">
                 <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
                     <div class="relative flex h-16 items-center justify-between">
                         <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
@@ -96,10 +96,10 @@
                                     </a>
                                     {% else %}
                                     <a href="{{ path('sortie_create') }}"
-                                       class="rounded-md bg-amber-600 px-3 py-2
-                                       text-sm font-semibold text-white shadow-sm hover:bg-amber-500
+                                       class="rounded-md bg-amber-800 px-3 py-2
+                                       text-sm font-semibold text-white shadow-sm hover:bg-amber-700
                                        focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2
-                                       focus-visible:outline-amber-600">
+                                       focus-visible:outline-amber-800">
                                         Créer une sortie
                                     </a>
                                     {% endif %}
@@ -173,11 +173,11 @@
                         {% else %}
                             <div class="flex items-center justify-center">
                                 <a href="{{ path('sortie_create') }}"
-                                   class="bg-amber-600 text-white place-content-center
-                                   rounded-md hover:bg-amber-500 w-full flex
+                                   class="bg-amber-800 text-white place-content-center
+                                   rounded-md hover:bg-amber-700 w-full flex
                                    focus-visible:outline focus-visible:outline-2
                                    focus-visible:outline-offset-2
-                                   focus-visible:outline-amber-600
+                                   focus-visible:outline-amber-800
                                    px-3 py-2 text-base font-medium">
                                     Créer une sortie
                                 </a>
@@ -189,7 +189,7 @@
         {% endif %}
         {% block body %}{% endblock %}
         {% if is_granted('IS_AUTHENTICATED') %}
-            <footer class="flex bg-indigo-100 bottom-0 h-fit w-full">
+            <footer class="flex bg-blue-400 bottom-0 h-fit w-full">
                 <div class="mx-auto max-w-full px-2 sm:px-6 lg:px-8 place-content-center">
                     <div class="grid md:grid-cols-9 gap-x-3 justify-items-center text-sm">
                         <div class="md:col-span-3">
